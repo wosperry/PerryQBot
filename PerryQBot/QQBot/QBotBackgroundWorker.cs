@@ -23,7 +23,10 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
         Bot.MessageReceived.SubscribeGroupMessage(OnGroupMessageReceived);
         Bot.MessageReceived.SubscribeFriendMessage(OnFriendMessageReceived);
         await Bot.LaunchAsync();
-        MessageManager.SendFriendMessageAsync("593281239", new PlainMessage("机器人启动成功"));
+
+        await MessageManager.SendFriendMessageAsync("593281239", new PlainMessage("机器人启动成功"));
+
+        await Task.Delay(3000);
     }
 
     private async void OnGroupMessageReceived(GroupMessageReceiver message)
