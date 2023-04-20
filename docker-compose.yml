@@ -1,0 +1,24 @@
+version: "3.4"
+services:
+  # bot container
+  perrybot_bot:
+    # define container name
+    container_name: perrybot_bot
+    # build from Dockerfile in ./aspnet-core/PerryQChatGPT
+    build:
+      context: .
+      dockerfile: ./PerryQBot/Dockerfile
+    # join network pqcnet
+    # networks:
+    #   - pqcnet
+    # restart container when it exits
+    restart: always
+    # expose port 9020
+    ports:
+      - "9020:80"
+    # mount appsettings.json
+    volumes:
+      - ./PerryQBotConfig/appsettings.json:/app/appsettings.json
+networks:
+  pqcnet:
+    driver: bridge
