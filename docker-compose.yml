@@ -18,7 +18,7 @@ services:
       - "9020:80"
     # mount appsettings.json
     volumes:
-      - ./PerryQBotConfig/appsettings.json:/app/appsettings.json
+      - /perry/PerryQBotConfig/appsettings.json:/app/appsettings.json
 networks:
   pqcnet:
     driver: bridge
