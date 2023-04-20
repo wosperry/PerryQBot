@@ -3,6 +3,7 @@ using Mirai.Net.Data.Messages;
 using Mirai.Net.Data.Messages.Concretes;
 using Mirai.Net.Data.Messages.Receivers;
 using Mirai.Net.Sessions;
+using Mirai.Net.Sessions.Http.Managers;
 using Mirai.Net.Utils.Scaffolds;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.BackgroundWorkers;
@@ -22,6 +23,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
         Bot.MessageReceived.SubscribeGroupMessage(OnGroupMessageReceived);
         Bot.MessageReceived.SubscribeFriendMessage(OnFriendMessageReceived);
         await Bot.LaunchAsync();
+        await MessageManager.SendFriendMessageAsync("593281239", new PlainMessage("机器人启动成功"));
     }
 
     private async void OnGroupMessageReceived(GroupMessageReceiver message)
