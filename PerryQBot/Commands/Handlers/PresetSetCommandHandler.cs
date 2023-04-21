@@ -20,6 +20,7 @@ namespace PerryQBot.Commands.Handlers
                 {
                     QQ = context.SenderId,
                     QQNickName = context.SenderName,
+                    History = new List<UserHistory>(),
                     Preset = presetMessage
                 });
             }
