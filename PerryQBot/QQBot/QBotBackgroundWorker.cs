@@ -15,9 +15,10 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
     public IBackgroundJobManager JobManager { get; set; }
     public IOptions<MiraiBotOptions> BotOptions { get; set; }
 
-    public QBotBackgroundWorker(MiraiBot bot)
+    public QBotBackgroundWorker(MiraiBot bot, IOptions<MiraiBotOptions> botOptions)
     {
         Bot = bot;
+        BotOptions = botOptions;
     }
 
     public override async Task StartAsync(CancellationToken cancellationToken = default)
