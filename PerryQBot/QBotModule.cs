@@ -1,41 +1,23 @@
-﻿using Mirai.Net.Sessions;
-using PerryQBot.Options;
-using Volo.Abp;
-using Volo.Abp.AspNetCore;
-using Volo.Abp.BackgroundJobs;
-using Volo.Abp.BackgroundWorkers;
-using Volo.Abp.DistributedLocking;
-using Volo.Abp.EventBus;
+﻿using PerryQBot.EntityFrameworkCore;
+using PerryQBot.QQBot;
+using Volo.Abp.AspNetCore.Mvc;
+using Volo.Abp.Autofac;
 using Volo.Abp.Modularity;
+using Volo.Abp.Uow;
 
-[DependsOn(
-    typeof(AbpEventBusModule),
-    typeof(AbpAspNetCoreModule),
-    typeof(AbpBackgroundJobsModule),
-    typeof(AbpBackgroundWorkersModule)
-)]
-public class QBotModule : AbpModule
+namespace PerryQBot
 {
-    public override void ConfigureServices(ServiceConfigurationContext context)
+    [DependsOn(
+        typeof(AbpAspNetCoreMvcModule),
+        typeof(AbpUnitOfWorkModule),
+        typeof(AbpAutofacModule)
+    )]
+    [DependsOn(
+        typeof(QBotOpenAIModule),
+        typeof(QBotEntityFrameworkModule),
+        typeof(QBotMiraiQQModule)
+    )]
+    public class QBotModule : AbpModule
     {
-        var configuration = context.Services.GetConfiguration();
-        var botOptions = new MiraiBotOptions();
-        var botOptionsSection = configuration.GetSection("MiraiBotOptions");
-        botOptionsSection.Bind(botOptions);
-
-        context.Services.AddSingleton(new MiraiBot
-        {
-            Address = $"{botOptions.Host}:{botOptions.Port}",
-            QQ = $"{botOptions.QQ}",
-            VerifyKey = botOptions.VerifyKey
-        });
-
-        Configure<MiraiBotOptions>(botOptionsSection);
-        Configure<OpenAiOptions>(configuration.GetSection("OpenAiOptions"));
-    }
-
-    public override async void OnApplicationInitialization(ApplicationInitializationContext context)
-    {
-        await context.AddBackgroundWorkerAsync<QBotBackgroundWorker>();
     }
 }

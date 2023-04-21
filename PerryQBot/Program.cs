@@ -1,3 +1,4 @@
+using PerryQBot;
 using Serilog;
 using Serilog.Events;
 

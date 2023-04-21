@@ -1,10 +1,35 @@
-﻿using Volo.Abp.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using PerryQBot.EntityFrameworkCore.Entities;
+using Volo.Abp.Domain.Repositories;
 
-[Command("修改预设", "修改我的预设")]
-public class PresetSetCommandHandler : CommandHandlerBase
+namespace PerryQBot.Commands.Handlers
 {
-    public override string HandleAndResponseAsync(CommandContext context)
+    [Command("修改预设", "修改我的预设")]
+    public class PresetSetCommandHandler : CommandHandlerBase
     {
-        return $"您的预设成功修改为：{this.GetMessageString(context.Message)}";
+        public IRepository<User> UserRepository { get; set; }
+
+        public override async Task<string> HandleAndResponseAsync(CommandContext context)
+        {
+            var presetMessage = this.GetMessageString(context.Message);
+            var user = await UserRepository.FirstOrDefaultAsync(t => t.QQ == context.SenderId);
+
+            if (user is null)
+            {
+                await UserRepository.InsertAsync(new User
+                {
+                    QQ = context.SenderId,
+                    QQNickName = context.SenderName,
+                    Preset = presetMessage
+                });
+            }
+            else
+            {
+                user.Preset = presetMessage;
+                await UserRepository.UpdateAsync(user);
+            }
+
+            return $"您的预设成功修改为：{presetMessage}";
+        }
     }
 }

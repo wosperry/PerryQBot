@@ -8,6 +8,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.5">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
 	</ItemGroup>
@@ -16,10 +20,12 @@
 		<PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
 		<PackageReference Include="Flurl.Http" Version="3.2.4" />
 		<PackageReference Include="Mirai.Net" Version="2.4.8" />
-		<PackageReference Include="Volo.Abp.EventBus" Version="7.0.3" />
-		<PackageReference Include="Volo.Abp.Autofac" Version="7.0.3" />
-		<PackageReference Include="Volo.Abp.AspNetCore" Version="7.0.3" />
-		<PackageReference Include="Volo.Abp.BackgroundWorkers" Version="7.0.3" />
-		<PackageReference Include="Volo.Abp.BackgroundJobs" Version="7.0.3" />
+		<PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="7.1.1" />
+		<PackageReference Include="Volo.Abp.EventBus" Version="7.1.1" />
+		<PackageReference Include="Volo.Abp.Autofac" Version="7.1.1" />
+		<PackageReference Include="Volo.Abp.BackgroundWorkers" Version="7.1.1" />
+		<PackageReference Include="Volo.Abp.BackgroundJobs" Version="7.1.1" />
+		<PackageReference Include="Volo.Abp.EntityFrameworkCore.PostgreSql" Version="7.1.1" />
+		<PackageReference Include="Volo.Abp.Uow" Version="7.1.1" />
 	</ItemGroup>
 </Project>
