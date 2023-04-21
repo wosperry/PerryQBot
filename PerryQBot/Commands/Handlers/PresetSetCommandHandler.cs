@@ -26,6 +26,7 @@ namespace PerryQBot.Commands.Handlers
             else
             {
                 user.Preset = presetMessage;
+                user.History.Clear();
                 await UserRepository.UpdateAsync(user);
             }
 
