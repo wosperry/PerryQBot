@@ -23,8 +23,9 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
             .WithHeader("Authorization", $"Bearer {OpenAiOptions.Value.Key}");
         try
         {
-            var friendMessage = args.Messages.Last();
-            Logger.LogInformation("请求OpenAI：{friendMessage}", friendMessage);
+            var currentMessage = args.Messages[^1];
+            Logger.LogInformation("请求OpenAI：{friendMessage}", currentMessage);
+
             var requestContent = new AiRequestContent(args.Messages.Select(m => new OpenAiMessage("user", m)).ToList());
 
             var flurlResult = await url.PostAsync(JsonContent.Create(requestContent));
@@ -36,8 +37,7 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
                 if (args.Type == MessageReceivers.Friend)
                 {
                     MessageManager.SendFriendMessageAsync(args.SenderId, new PlainMessage(message)).Wait();
-                    var friendName = args.SenderName;
-                    Logger.LogInformation("成功回复QQ好友【{friendName}】: {message}", friendName, message);
+                    Logger.LogInformation("成功回复QQ好友【{friendName}】: {message}", args.SenderName, message);
                 }
                 if (args.Type == MessageReceivers.Group)
                 {
@@ -47,8 +47,7 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
                         .Build();
 
                     MessageManager.SendGroupMessageAsync(args.GroupId, messageChain).Wait();
-                    var groupName = args.GroupName;
-                    Logger.LogInformation("成功回复群聊【{groupName}】：{message}", groupName, message);
+                    Logger.LogInformation("成功回复群聊【{groupName}】：{message}", args.GroupName, message);
                 }
             }
         }
