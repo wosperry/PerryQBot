@@ -1,5 +1,5 @@
 ﻿using System.Reactive.Linq;
-using Mirai.Net.Data.Events.Concretes.Request;
+using Microsoft.Extensions.Options;
 using Mirai.Net.Data.Messages;
 using Mirai.Net.Data.Messages.Concretes;
 using Mirai.Net.Data.Messages.Receivers;
@@ -13,6 +13,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
 {
     public MiraiBot Bot { get; }
     public IBackgroundJobManager JobManager { get; set; }
+    public IOptions<MiraiBotOptions> BotOptions { get; set; }
 
     public QBotBackgroundWorker(MiraiBot bot)
     {
@@ -25,7 +26,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
         Bot.MessageReceived.SubscribeFriendMessage(OnFriendMessageReceived);
 
         await Bot.LaunchAsync();
-        await MessageManager.SendFriendMessageAsync("593281239", new PlainMessage("机器人启动成功"));
+        await MessageManager.SendFriendMessageAsync(BotOptions.Value.AdminQQ, new PlainMessage("机器人启动成功"));
     }
 
     private async void OnGroupMessageReceived(GroupMessageReceiver message)
