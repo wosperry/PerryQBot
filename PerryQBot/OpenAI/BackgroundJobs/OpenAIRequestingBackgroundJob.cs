@@ -5,6 +5,7 @@ using Mirai.Net.Data.Messages;
 using Mirai.Net.Data.Messages.Concretes;
 using Mirai.Net.Sessions.Http.Managers;
 using Mirai.Net.Utils.Scaffolds;
+using Newtonsoft.Json;
 using PerryQBot.Options;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.DependencyInjection;
@@ -13,6 +14,7 @@ using Volo.Abp.DistributedLocking;
 public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackgroundJobArgs>, ITransientDependency
 {
     public IOptions<OpenAiOptions> OpenAiOptions { get; set; }
+    public IOptions<MiraiBotOptions> BotOptions { get; set; }
     public IAbpDistributedLock DistributedLock { get; set; }
 
     public override async void Execute(OpenAIRequestingBackgroundJobArgs args)
@@ -53,6 +55,14 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
         catch (Exception ex)
         {
             Logger.LogError("OpenAI请求失败", ex);
+            await MessageManager.SendFriendMessageAsync(BotOptions.Value.AdminQQ, new PlainMessage(JsonConvert.SerializeObject(new
+            {
+                ErrorType = "OpenAI请求失败",
+                ErrorMessage = "执行失败：" + ex.Message,
+                args.SenderId,
+                args.SenderName,
+                Message = args.Messages.Last(),
+            }, Formatting.Indented)));
         }
     }
 }
