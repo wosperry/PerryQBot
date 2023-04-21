@@ -3,7 +3,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace PerryQBot.Commands.Handlers;
 
-[Command("修改预设", "修改我的预设")]
+[Command("查看预设", "查看我的预设")]
 public class PresetGetCommandHandler : CommandHandlerBase
 {
     public IRepository<User> UserRepository { get; set; }
