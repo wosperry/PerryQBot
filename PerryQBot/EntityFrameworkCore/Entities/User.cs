@@ -6,6 +6,13 @@ namespace PerryQBot.EntityFrameworkCore.Entities
     {
         public string QQ { get; set; }
         public string Preset { get; set; }
-        public string QQNickName { get; internal set; }
+        public string QQNickName { get; set; }
+        public List<UserHistory> History { get; set; }
+    }
+
+    public class UserHistory
+    {
+        public string Message { get; set; }
+        public DateTime DateTime { get; set; }
     }
 }

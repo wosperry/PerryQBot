@@ -17,6 +17,7 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
     public IOptions<MiraiBotOptions> BotOptions { get; set; }
     public IAbpDistributedLock DistributedLock { get; set; }
 
+    // TODO: 考虑发消息改到一个独立的后台任务中
     public override async void Execute(OpenAIRequestingBackgroundJobArgs args)
     {
         var url = new Url(new Uri(OpenAiOptions.Value.CompletionUrl))
