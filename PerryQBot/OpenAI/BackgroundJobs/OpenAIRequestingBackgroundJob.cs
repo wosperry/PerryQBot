@@ -41,7 +41,7 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
                 {
                     var messageChain = new MessageChainBuilder()
                         .At(args.SenderId)
-                        .Plain($" 大佬好\r\n{message}")
+                        .Plain($" 大佬，\r\n{message}")
                         .Build();
 
                     MessageManager.SendGroupMessageAsync(args.GroupId, messageChain).Wait();
