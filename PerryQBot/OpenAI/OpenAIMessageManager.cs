@@ -2,6 +2,7 @@
 using PerryQBot.EntityFrameworkCore.Entities;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Uow;
 
 namespace PerryQBot.OpenAI;
 
@@ -9,7 +10,8 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
 {
     public IRepository<User> UserRepository { get; set; }
 
-    public async Task<List<string>> BuildUserRequestMessagesAsync(string senderId, string message)
+    [UnitOfWork]
+    public virtual async Task<List<string>> BuildUserRequestMessagesAsync(string senderId, string message)
     {
         var result = new List<string>();
         var user = await UserRepository.FirstOrDefaultAsync(t => t.QQ == senderId);
