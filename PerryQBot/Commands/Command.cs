@@ -1,4 +1,4 @@
-﻿public static class UserCommand
+﻿public static class Command
 {
     public static string Ping = "#ping";
     public static string Help = "#帮助";

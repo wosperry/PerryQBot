@@ -75,14 +75,14 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
 
     private async Task<bool> HandleUserCommandAsync(MessageReceiverBase message)
     {
-        var handlers = ServiceProvider.GetServices<IUserCommandHandler>();
+        var handlers = ServiceProvider.GetServices<ICommandHandler>();
         foreach (var handler in handlers)
         {
             Logger.LogInformation("正在处理命令：{command}", handler.GetType().Name);
             if (handler.IsCommand(message.MessageChain.GetPlainMessage()))
             {
                 Logger.LogInformation("收到命令：{command}", handler.GetType().Name);
-                var context = new UserCommandContext
+                var context = new CommandContext
                 {
                     Type = message.Type,
                     Message = message.MessageChain.GetPlainMessage(),

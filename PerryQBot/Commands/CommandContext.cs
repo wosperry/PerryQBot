@@ -1,6 +1,6 @@
 ﻿using Mirai.Net.Data.Messages;
 
-public class UserCommandContext
+public class CommandContext
 {
     public MessageReceivers Type { get; set; }
     public string SenderId { get; set; }
