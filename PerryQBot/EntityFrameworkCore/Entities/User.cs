@@ -9,10 +9,4 @@ namespace PerryQBot.EntityFrameworkCore.Entities
         public string QQNickName { get; set; }
         public List<UserHistory> History { get; set; }
     }
-
-    public class UserHistory
-    {
-        public string Message { get; set; }
-        public DateTime DateTime { get; set; }
-    }
 }

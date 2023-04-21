@@ -32,6 +32,8 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
                     result.Add(his.Message);
                 }
             }
+            user.History.Add(new UserHistory { Message = message, DateTime = DateTime.Now });
+            await UserRepository.UpdateAsync(user);
         }
         // 添加当前请求
         result.Add(message);
