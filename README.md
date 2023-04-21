@@ -17,8 +17,8 @@
 
 #### 使用
 
-1. 按说明修改 `appsettings.json` 里的配置
-2. 运行（如果是docker compose 的话，注意有个appsettings.json的文件挂载，需要文件先存在，然后把yml文件里的挂载改为合适的）
+1. 请根据说明更改 `appsettings.json` 中的配置。
+2. 运行程序时，请注意如果使用 Docker Compose，需要先将 `appsettings.json` 文件存放在正确的位置，并修改 `.yml` 文件中对应的挂载路径。如果不挂载配置文件，可以把docker-compose.yml内的挂载部分删掉。
 
 #### 进度
 
