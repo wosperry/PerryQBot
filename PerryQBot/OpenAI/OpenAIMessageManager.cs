@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using NUglify.JavaScript.Syntax;
 using PerryQBot.EntityFrameworkCore.Entities;
@@ -12,6 +13,7 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
 {
     public IRepository<User> UserRepository { get; set; }
     public ILogger<OpenAIMessageManager> Logger { get; set; }
+    public IOptions<MiraiBotOptions> BotOptions { get; set; }
 
     [UnitOfWork]
     public virtual async Task<List<string>> BuildUserRequestMessagesAsync(string senderId, string message)
@@ -34,11 +36,12 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
                     result.Add(his.Message);
                 }
             }
-            if (user.History.Count > 2)
+
+            user.History.Add(new UserHistory { Message = message, DateTime = DateTime.Now });
+            if (user.History.Count > BotOptions.Value.MaxHistory)
             {
                 user.History.Remove(user.History.OrderBy(x => x.DateTime).First());
             }
-            user.History.Add(new UserHistory { Message = message, DateTime = DateTime.Now });
             await UserRepository.UpdateAsync(user);
         }
         // 添加当前请求
