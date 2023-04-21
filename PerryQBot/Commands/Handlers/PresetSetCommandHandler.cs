@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PerryQBot.EntityFrameworkCore.Entities;
+using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
 
 namespace PerryQBot.Commands.Handlers
 {
     [Command("预设")]
-    public class PresetSetCommandHandler : CommandHandlerBase, ICommandHandler
+    [ExposeServices(typeof(ICommandHandler))]
+    public class PresetSetCommandHandler : CommandHandlerBase
     {
         public IRepository<User> UserRepository { get; set; }
 
