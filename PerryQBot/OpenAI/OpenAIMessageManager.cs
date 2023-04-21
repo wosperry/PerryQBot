@@ -32,6 +32,10 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
                     result.Add(his.Message);
                 }
             }
+            if (user.History.Count > 2)
+            {
+                user.History.Remove(user.History.OrderBy(x => x.DateTime).First());
+            }
             user.History.Add(new UserHistory { Message = message, DateTime = DateTime.Now });
             await UserRepository.UpdateAsync(user);
         }
