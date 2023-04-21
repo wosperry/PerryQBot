@@ -74,7 +74,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
         await JobManager.EnqueueAsync(new OpenAIRequestingBackgroundJobArgs
         {
             SenderId = message.Sender.Id,
-            SenderName = message.Sender.NickName,
+            SenderName = message.FriendName,
             Type = MessageReceivers.Friend,
             Messages = messages
         });
