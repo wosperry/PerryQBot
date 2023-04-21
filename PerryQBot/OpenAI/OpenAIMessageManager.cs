@@ -50,9 +50,9 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
             {
                 QQ = senderId,
                 QQNickName = senderId,
-                History = new List<UserHistory>(),
+                History = new List<UserHistory>() { new UserHistory { Message = message, DateTime = DateTime.Now } },
                 Preset = ""
-            });
+            }, true);
         }
         // 添加当前请求
         result.Add(message);
