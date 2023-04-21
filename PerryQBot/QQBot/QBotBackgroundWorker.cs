@@ -23,16 +23,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
     {
         Bot.MessageReceived.SubscribeGroupMessage(OnGroupMessageReceived);
         Bot.MessageReceived.SubscribeFriendMessage(OnFriendMessageReceived);
-        Bot.EventReceived.OfType<NewFriendRequestedEvent>().Subscribe(async f =>
-        {
-            var friendId = "2429629876";
-            if (f.FromId == friendId)
-            {
-                await f.ApproveAsync();
-                await Task.Delay(1000);
-                await MessageManager.SendFriendMessageAsync(friendId, new PlainMessage("哈喽，我现在还是一个刚做好的程序，只会一句一句对话哦，还不能联系上文连续对话呢~ 过几天Perry努努力说不定就可以了~"));
-            }
-        });
+
         await Bot.LaunchAsync();
         await MessageManager.SendFriendMessageAsync("593281239", new PlainMessage("机器人启动成功"));
     }
