@@ -1,4 +1,5 @@
-﻿using System.Reactive.Linq;
+﻿using System.Collections.Generic;
+using System.Reactive.Linq;
 using Microsoft.Extensions.Options;
 using Mirai.Net.Data.Messages;
 using Mirai.Net.Data.Messages.Concretes;
@@ -14,7 +15,6 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
     public IBackgroundJobManager JobManager { get; set; }
     public IOptions<MiraiBotOptions> BotOptions { get; set; }
     public MiraiBot Bot { get; set; }
-    public IEnumerable<IUserCommandHandler> CommandHandlers { get; set; }
 
     public override async Task StartAsync(CancellationToken cancellationToken = default)
     {
@@ -75,7 +75,8 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
 
     private async Task<bool> HandleUserCommandAsync(MessageReceiverBase message)
     {
-        foreach (var handler in CommandHandlers)
+        var handlers = ServiceProvider.GetServices<IUserCommandHandler>();
+        foreach (var handler in handlers)
         {
             Logger.LogInformation("正在处理命令：{command}", handler.GetType().Name);
             if (handler.IsCommand(message.MessageChain.GetPlainMessage()))
@@ -109,7 +110,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
             }
         }
 
-        Logger.LogInformation($"全部{CommandHandlers.Count()}个Handler都过了一遍，没有命中");
+        Logger.LogInformation($"全部{handlers.Count()}个Handler都过了一遍，没有命中");
         return false;
     }
 }
