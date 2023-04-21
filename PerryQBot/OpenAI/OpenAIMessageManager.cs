@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using NUglify.JavaScript.Syntax;
 using PerryQBot.EntityFrameworkCore.Entities;
 using Volo.Abp.DependencyInjection;
@@ -16,7 +17,8 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
     public virtual async Task<List<string>> BuildUserRequestMessagesAsync(string senderId, string message)
     {
         var result = new List<string>();
-        var user = await UserRepository.FirstOrDefaultAsync(t => t.QQ == senderId);
+        var user = await (await UserRepository.WithDetailsAsync(x => x.History))
+            .FirstOrDefaultAsync(t => t.QQ == senderId);
 
         if (user is not null)
         {
