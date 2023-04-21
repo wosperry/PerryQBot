@@ -1,16 +1,13 @@
 ﻿[AttributeUsage(AttributeTargets.Class)]
 public class CommandAttribute : Attribute
 {
-    public CommandAttribute(string command, string description)
+    public CommandAttribute(string command)
     {
         Command = command;
-        Description = description;
     }
 
     public CommandAttribute()
     { }
 
     public string Command { get; set; }
-
-    public string Description { get; set; }
 }
