@@ -12,7 +12,7 @@ public abstract class CommandHandlerBase : ICommandHandler
 
     public abstract string GetResponseMessage(CommandContext context);
 
-    public bool IsCommand(string message) => message.StartsWith(GetCommand());
+    public bool IsCommand(string message) => message.TrimStart().StartsWith(GetCommand());
 
     public async Task HandleAsync(CommandContext context)
     {
