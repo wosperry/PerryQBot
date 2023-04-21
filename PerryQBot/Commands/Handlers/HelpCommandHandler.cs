@@ -6,11 +6,11 @@ public class HelpCommandHandler : CommandHandlerBase, ITransientDependency
 {
     public override string GetCommand() => "#帮助";
 
-    public override async Task HandleAsync(CommandContext context)
-    {
-        if (context.Type == MessageReceivers.Friend)
-        {
-            await MessageManager.SendFriendMessageAsync(context.SenderId, "这是一段帮助信息");
-        }
-    }
+    public override string GetCommandDescription() => "获取帮助信息";
+
+    public override string GetResponseMessage(CommandContext context) =>
+    """
+        #帮助：获取帮助信息
+        #预设：修改个人的预设
+    """;
 }
