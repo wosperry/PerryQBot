@@ -6,17 +6,11 @@ public abstract class CommandHandlerBase : ICommandHandler
 {
     public ILogger<HelpCommandHandler> Logger { get; set; }
 
-    public abstract string GetCommand();
-
-    public abstract string GetCommandDescription();
-
-    public abstract string GetResponseMessage(CommandContext context);
-
-    public bool IsCommand(string message) => message.TrimStart().StartsWith(GetCommand());
+    public abstract string HandleAndResponseAsync(CommandContext context);
 
     public async Task HandleAsync(CommandContext context)
     {
-        var message = GetResponseMessage(context);
+        var message = HandleAndResponseAsync(context);
         if (context.Type == MessageReceivers.Friend)
         {
             await MessageManager.SendFriendMessageAsync(context.SenderId, message);
