@@ -1,5 +1,34 @@
 version: "3.4"
-services:
+services: 
+  perrybot_postgresql:
+    # image 
+    image: postgres:latest
+    # define container name
+    container_name: perrybot_postgresql
+    # restart container when it exits
+    restart: always
+    # expose port 65432 
+    ports:
+      - "65432:5432"
+    # mount /perry/ai-db to /var/lib/postgresql/data in container
+    volumes:
+      - /perry/PerryQBotDB:/var/lib/postgresql/data 
+    # environment
+    environment:
+      # username
+      POSTGRES_USER: "postgres"
+      # password
+      POSTGRES_PASSWORD: "Aa123456."
+      # database name
+      POSTGRES_DB: "ai-db"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # join network pqcnet
+    networks:
+      - pqcnet
   # bot container
   perrybot_bot:
     # define container name
@@ -9,9 +38,8 @@ services:
       context: .
       dockerfile: ./PerryQBot/Dockerfile
     # join network pqcnet
-    # networks:
-    #   - pqcnet
-    # restart container when it exits
+    networks:
+      - pqcnet
     restart: always
     # expose port 9020
     ports:
