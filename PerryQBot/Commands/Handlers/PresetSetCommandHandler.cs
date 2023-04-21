@@ -12,7 +12,7 @@ namespace PerryQBot.Commands.Handlers
         public override async Task<string> HandleAndResponseAsync(CommandContext context)
         {
             var presetMessage = this.GetMessageString(context.Message);
-            var user = await UserRepository.FirstOrDefaultAsync(t => t.QQ == context.SenderId);
+            var user = await (await UserRepository.WithDetailsAsync(x => x.History)).FirstOrDefaultAsync(t => t.QQ == context.SenderId);
 
             if (user is null)
             {
