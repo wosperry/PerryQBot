@@ -20,8 +20,8 @@ public class QBotModule : AbpModule
     {
         var configuration = context.Services.GetConfiguration();
         var botOptions = new MiraiBotOptions();
-        var section = configuration.GetSection("MiraiBotOptions");
-        section.Bind(botOptions);
+        var botOptionsSection = configuration.GetSection("MiraiBotOptions");
+        botOptionsSection.Bind(botOptions);
 
         context.Services.AddSingleton(new MiraiBot
         {
@@ -30,6 +30,7 @@ public class QBotModule : AbpModule
             VerifyKey = botOptions.VerifyKey
         });
 
+        Configure<MiraiBotOptions>(botOptionsSection);
         Configure<OpenAiOptions>(configuration.GetSection("OpenAiOptions"));
     }
 

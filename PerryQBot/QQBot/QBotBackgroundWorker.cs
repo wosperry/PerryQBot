@@ -1,4 +1,5 @@
 ﻿using System.Reactive.Linq;
+using Microsoft.Extensions.Options;
 using Mirai.Net.Data.Messages;
 using Mirai.Net.Data.Messages.Concretes;
 using Mirai.Net.Data.Messages.Receivers;
@@ -12,6 +13,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
 {
     public MiraiBot Bot { get; }
     public IBackgroundJobManager JobManager { get; set; }
+    public IOptions<MiraiBotOptions> BotOptions { get; set; }
 
     public QBotBackgroundWorker(MiraiBot bot)
     {
@@ -22,17 +24,19 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
     {
         Bot.MessageReceived.SubscribeGroupMessage(OnGroupMessageReceived);
         Bot.MessageReceived.SubscribeFriendMessage(OnFriendMessageReceived);
-        await Bot.LaunchAsync();
 
-        // TODO: 不知道为什么不发消息给我。。。
-        await MessageManager.SendFriendMessageAsync("593281239", new PlainMessage("机器人启动成功"));
+        await Bot.LaunchAsync();
+        await MessageManager.SendFriendMessageAsync(BotOptions.Value.AdminQQ, new PlainMessage("机器人启动成功"));
     }
 
     private async void OnGroupMessageReceived(GroupMessageReceiver message)
     {
         if (message.MessageChain.Any(t => (t is AtMessage at) && at.Target == Bot.QQ))
         {
-            Logger.LogInformation("有人@我");
+            var friendName = message.Sender.Name;
+            var groupName = message.GroupName;
+            var plainText = message.MessageChain.GetPlainMessage();
+            Logger.LogInformation("{friendName}在群【{groupName}】@我：{plainText}", friendName, groupName, plainText);
 
             await JobManager.EnqueueAsync(new OpenAIRequestingBackgroundJobArgs
             {
@@ -53,7 +57,8 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
     private async void OnFriendMessageReceived(FriendMessageReceiver message)
     {
         var qqMessage = message.MessageChain.GetPlainMessage();
-        Logger.LogInformation("有人私聊我：{qqMessage}", qqMessage);
+        var friendName = message.FriendName;
+        Logger.LogInformation("{friendName} 私聊我：{qqMessage}", friendName, qqMessage);
 
         await JobManager.EnqueueAsync(new OpenAIRequestingBackgroundJobArgs
         {
