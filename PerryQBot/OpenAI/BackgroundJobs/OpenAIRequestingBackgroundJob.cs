@@ -27,7 +27,7 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
 
             var flurlResult = await url.PostAsync(JsonContent.Create(requestContent));
             var result = await flurlResult.GetJsonAsync<AiResponse>();
-            var message = result.Choices.FirstOrDefault()?.Message?.Content?.Replace("\r\n\r\n", "\r\n") ?? "我不知道怎么回答你";
+            var message = " " + result.Choices.FirstOrDefault()?.Message?.Content?.Replace("\r\n\r\n", "\r\n") ?? "我不知道怎么回答你";
 
             lock ("bot")
             {
@@ -41,7 +41,6 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
                 {
                     var messageChain = new MessageChainBuilder()
                         .At(args.SenderId)
-                        .Append(new PlainMessage($" {args.SenderName}，你好。\r\n"))
                         .Plain(message)
                         .Build();
 
