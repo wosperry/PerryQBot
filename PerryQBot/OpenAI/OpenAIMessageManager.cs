@@ -44,6 +44,16 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
             }
             await UserRepository.UpdateAsync(user);
         }
+        else
+        {
+            await UserRepository.InsertAsync(new User
+            {
+                QQ = senderId,
+                QQNickName = senderId,
+                History = new List<UserHistory>(),
+                Preset = ""
+            });
+        }
         // 添加当前请求
         result.Add(message);
 
