@@ -1,7 +1,7 @@
 ﻿namespace PerryQBot.Commands.Handlers;
 
 [Command("帮助")]
-public class HelpCommandHandler : CommandHandlerBase
+public class HelpCommandHandler : CommandHandlerBase, ICommandHandler
 {
     public override async Task<string> HandleAndResponseAsync(CommandContext context)
     {
