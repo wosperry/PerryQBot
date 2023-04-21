@@ -109,7 +109,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
             }
         }
 
-        Logger.LogInformation("全部Handler都过了一遍，没有命中");
+        Logger.LogInformation($"全部{CommandHandlers.Count()}个Handler都过了一遍，没有命中");
         return false;
     }
 }
