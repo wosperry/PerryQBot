@@ -78,10 +78,8 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
         var handlers = ServiceProvider.GetServices<ICommandHandler>();
         foreach (var handler in handlers)
         {
-            Logger.LogInformation("正在处理命令：{command}", handler.GetType().Name);
             if (handler.IsCommand(message.MessageChain.GetPlainMessage()))
             {
-                Logger.LogInformation("收到命令：{command}", handler.GetType().Name);
                 var context = new CommandContext
                 {
                     Type = message.Type,
@@ -103,14 +101,11 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
                 }
 
                 // 执行命令
-                Logger.LogInformation("正在执行命令：{command}", handler.GetType().Name);
                 await handler.HandleAsync(context);
-                Logger.LogInformation("命令执行结束");
                 return true;
             }
         }
 
-        Logger.LogInformation($"全部{handlers.Count()}个Handler都过了一遍，没有命中");
         return false;
     }
 }
