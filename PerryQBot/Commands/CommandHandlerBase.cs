@@ -1,8 +1,9 @@
 ﻿using Mirai.Net.Data.Messages;
 using Mirai.Net.Sessions.Http.Managers;
 using Mirai.Net.Utils.Scaffolds;
+using Volo.Abp.DependencyInjection;
 
-public abstract class CommandHandlerBase : ICommandHandler
+public abstract class CommandHandlerBase : ICommandHandler,ITransientDependency
 {
     public ILogger<HelpCommandHandler> Logger { get; set; }
 
