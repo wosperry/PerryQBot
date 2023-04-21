@@ -1,6 +1,6 @@
 ﻿using Volo.Abp.DependencyInjection;
 
-[Command("#帮助", "获取帮助信息")]
+[Command("帮助", "获取帮助信息")]
 public class HelpCommandHandler : CommandHandlerBase, ITransientDependency
 {
     public override string HandleAndResponseAsync(CommandContext context)

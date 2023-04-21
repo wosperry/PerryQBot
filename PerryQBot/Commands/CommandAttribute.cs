@@ -8,9 +8,9 @@ public class CommandAttribute : Attribute
     }
 
     public CommandAttribute()
-    {
-    }
+    { }
 
     public string Command { get; set; }
+
     public string Description { get; set; }
 }

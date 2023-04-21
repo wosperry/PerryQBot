@@ -4,11 +4,13 @@ public static class CommandHandlerExtensions
 {
     public static bool IsCommand<TCommand>(this TCommand handler, string message) where TCommand : ICommandHandler
     {
-        if (typeof(TCommand).IsDefined(typeof(CommandAttribute), false))
+        var attributes = typeof(TCommand).GetCustomAttributes();
+        var commandAttribute = attributes.FirstOrDefault(a => a is CommandAttribute) as CommandAttribute;
+        if (commandAttribute is null)
         {
-            var command = typeof(TCommand).GetCustomAttribute<CommandAttribute>();
-            return message.TrimStart().StartsWith(command.Command);
+            return false;
         }
-        return false;
+
+        return message.TrimStart().StartsWith($"#{commandAttribute.Command}");
     }
 }
