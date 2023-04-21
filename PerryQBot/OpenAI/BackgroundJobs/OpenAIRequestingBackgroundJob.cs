@@ -29,7 +29,7 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
 
             var flurlResult = await url.PostAsync(JsonContent.Create(requestContent));
             var result = await flurlResult.GetJsonAsync<AiResponse>();
-            var message = " " + (result.Choices.FirstOrDefault()?.Message?.Content?.Replace("\r\n\r\n", "\r\n") ?? "啊对对对");
+            var message = " " + (result.Choices.FirstOrDefault()?.Message?.Content?.Replace("\r\n", "\r") ?? "啊对对对");
 
             lock ("bot")
             {
