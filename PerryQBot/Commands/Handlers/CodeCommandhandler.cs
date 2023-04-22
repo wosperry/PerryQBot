@@ -9,12 +9,16 @@ namespace PerryQBot.Commands.Handlers;
 [Command("原始碼")]
 [Command("源代码")]
 [Command("github")]
+[Command("gitee")]
 [ExposeServices(typeof(ICommandHandler))]
 public class CodeCommandhandler : CommandHandlerBase
 {
     public override async Task<string> HandleAndResponseAsync(CommandContext context)
     {
         await Task.CompletedTask;
-        return "https://github.com/wosperry/PerryQBot";
+        return """
+            Gitee: https://gitee.com/wosperry/PerryQBot
+            Github: https://github.com/wosperry/PerryQBot
+            """;
     }
 }
