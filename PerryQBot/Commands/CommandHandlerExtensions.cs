@@ -11,7 +11,7 @@ public static class CommandHandlerExtensions
         // help特殊处理，以免不知道前缀时无法唤醒
         if (commandStrings.Any(t => t.StartsWith(commandStartChar + "help", StringComparison.OrdinalIgnoreCase)))
         {
-            if (message.Trim() == "帮助" || message.Trim() == "幫助" || message.Trim().Equals("help", StringComparison.OrdinalIgnoreCase))
+            if (message.Trim() == "命令" || message.Trim() == "帮助" || message.Trim() == "幫助" || message.Trim().Equals("help", StringComparison.OrdinalIgnoreCase))
             {
                 return (true, "help", "");
             }
