@@ -46,7 +46,7 @@
 代码结构
 
 ``` mathematica
-PerryQBot               项目根目录
+PerryQBot               #项目根目录
 ├─Commands              命令相关文件夹
 │  └─Handlers           命令处理程序
 ├─EntityFrameworkCore   数据库实体相关文件夹
