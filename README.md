@@ -47,19 +47,16 @@
 
 ``` mathematica
 PerryQBot               # 项目根目录
-├─Commands              # 命令相关文件夹
-│  └─Handlers           # 命令处理程序
-├─EntityFrameworkCore   # 数据库实体相关文件夹
-│  ├─Configurations     # 实体配置文件夹
-│  └─Entities           # 实体文件夹
-├─Migrations            # 数据库迁移文件夹
-├─OpenAI                # OpenAI相关文件夹
-│  ├─BackgroundJobs     # 后台任务文件夹
-│  └─HttpRequests       # HTTP请求文件夹
-├─Options               # 选项相关文件夹
-├─Properties            # 项目属性相关文件夹
-└─QQBot                 # QQ机器人相关文件夹
-
+├─Commands              #   命令相关文件夹
+│  └─Handlers           #       命令处理程序 可在此处参考原有的Handler创建新的命令，重新运行之后即可生效
+├─EntityFrameworkCore   #   EFCore
+│  ├─Configurations     #       实体配置文件夹
+│  └─Entities           #   实体文件夹
+├─OpenAI                #   OpenAI
+│  ├─BackgroundJobs     #       后台任务执行OpenAI请求、发送QQ消息回复（这个考虑迁到QQBot）
+│  └─HttpRequests       #       管理OpenAI请求参数等
+├─Options               #   管理选项配置
+└─QQBot                 #   QQ信息监听等，如果是添加命令建议直接添加命令Handler实现。
 ```
 
 
