@@ -205,7 +205,7 @@ services:
    - 标记 `[Command("[不带前缀的命令字符]")]` 特性
    - 标记 `[ExposeService(typeof(ICommandHandler))]` 特性（可选，如果你认为Abp框架可以正常注入这个类型，则可以不写这个特性。）
    
-   代码示例：
+3. 代码示例：
       ``` csharp
       using Volo.Abp.DependencyInjection;
 
