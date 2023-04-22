@@ -17,8 +17,8 @@ public class MessageCollectionQueryCommandHandler : CommandHandlerBase
     public override async Task ExecuteAsync(CommandContext context)
     {
         var result = await (await DialogCollectionRepository.GetQueryableAsync())
-            .Where(t => t.Message.Contains(context.Message, StringComparison.OrdinalIgnoreCase)
-                || t.QuoteMessage.Contains(context.Message, StringComparison.OrdinalIgnoreCase))
+            .Where(t => t.Message.Contains(context.Message)
+                || t.QuoteMessage.Contains(context.Message))
             .Take(MessageCollectionOptions.Value.MaxResultCount)
             .ToListAsync();
 
