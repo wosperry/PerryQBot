@@ -44,11 +44,11 @@ services:
       # 指定Dockerfile
       dockerfile: ./PerryQBot/Dockerfile
     # 加入到网络 pqcnet
-    networks:
-      - pqcnet
     restart: always
     volumes:
       # 这里其实是由于开源项目，我的真实配置放在了 /perry/PerryQBotConfig/appsettings.json
       # 挂载路径下的appsettings.json文件到容器内的/app/appsettings.json使用
       # 这里容器里的/app，是Dockerfile内指定的工作目录，如果需要修改，则需要一起改。
       - /perry/PerryQBotConfig/appsettings.json:/app/appsettings.json
+    networks:
+      - pqcnet

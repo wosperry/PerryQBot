@@ -52,6 +52,15 @@
 
 ### 使用 Docker Compose
 
+1. 需要安装 Docker 和 Docker Compose。
+2. 在 `docker-compose.yml` 文件所在目录下，运行 `docker-compose up -d`。
+3. 如果需要修改配置，请先将 `appsettings.json` 文件存放在正确的位置，并修改 `.yml` 文件中对应的挂载路径。如果不挂载配置文件，可以把docker-compose.yml内的挂载部分删掉。
+4. 注意appsettings.json内的连接字符串配置的主机地址应该是数据库容器的名称，而不是localhost.
+5. 首次运行的时候数据库是不存在的，你需要在项目所在的地方修改配置为真实的连接字符串，并执行EntityFrameworkCore.Tools的Update-Database命令，将数据库结构生成出来。
+6. 运行Bot的机器需要可以访问外网。
+
+### `docker-compose.yml`
+
 ``` yaml
 version: "3.4"
 
@@ -70,16 +79,16 @@ services:
     restart: always
     # 映射宿主机端口12345到数据库容器的5432，用于外部使用工具访问数据库查看数据
     ports:
-      - "12345:5432"
+      - "65432:5432"
     # 挂载路径
     volumes:
       - /perry/PerryQBotDB:/var/lib/postgresql/data 
     environment:
       # 这里2个容器同在名为pqcnet的docker网络，直接使用容器名字和5432端口即可访问数据库
-      # Bot里使用的连接字符串是是 "Host=perrybot_postgresql;Database=PerryQQBot;User ID=postgres;Password=123456;"
+      # Bot里使用的连接字符串是appsettings.json里指定的 "Host=perrybot_postgresql;Database=PerryQQBot;User ID=postgres;Password=123456;"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "Aa123456."
-      POSTGRES_DB: "ai-db"
+      POSTGRES_DB: "PerryQQBot"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -108,4 +117,27 @@ services:
       # 这里容器里的/app，是Dockerfile内指定的工作目录，如果需要修改，则需要一起改。
       - /perry/PerryQBotConfig/appsettings.json:/app/appsettings.json
 
+```
+
+### 程序配置介绍
+
+``` json
+{
+  "MiraiBotOptions": {
+    "Host": "your-website.com", // Mirai所在的服务器地址
+    "Port": 9010, // Mirai放出来的端口
+    "QQ": "12345678", // Mirai登录的QQ
+    "AdminQQ": "1111111", // 管理员QQ，接收登录或者超时消息
+    "MaxHistory": 4, // 连续对话最大历史条数
+    "VerifyKey": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", // Mirai 设置的http-client的 verifyKey
+    "CommandStartChar": "#" // 命令前缀 如 #帮助 $$帮助
+  },
+  "OpenAiOptions": {
+    "CompletionUrl": "https://api.openai.com/v1/chat/completions",
+    "Key": "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  "ConnectionStrings": {
+    "Default": "Host=localhost;Port=5432;Database=MyBotDB;User ID=postgres;Password=postgres;"
+  }
+}
 ```
