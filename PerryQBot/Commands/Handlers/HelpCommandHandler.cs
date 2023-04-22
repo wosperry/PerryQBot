@@ -1,6 +1,9 @@
-﻿namespace PerryQBot.Commands.Handlers;
+﻿using Volo.Abp.DependencyInjection;
+
+namespace PerryQBot.Commands.Handlers;
 
 [Command("帮助")]
+[ExposeServices(typeof(ICommandHandler))]
 public class HelpCommandHandler : CommandHandlerBase
 {
     public override async Task<string> HandleAndResponseAsync(CommandContext context)
