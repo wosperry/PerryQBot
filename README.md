@@ -2,16 +2,17 @@
 
 ## 介绍
 
-使用 `Mirai.Net` 与 `Mirai` 机器人通信，收到消息后调用OpenAI接口，然后回复消息到QQ。
+使用了Mirai.Net类库对接Mirai，能够自动处理QQ消息并回复。该项目的主要功能是管理QQ用户或者群聊中@机器人的人的消息，每个用户都有一个预设功能，并且都保留若干条历史记录。通过拼接参数并访问openai api，实现智能的自动回复。
 
+此项目采用AGPL3.0开源协议，任何人都可以自由使用、复制、修改和传播该项目的代码。当您使用该项目及代码的时候，需要遵循AGPL3.0协议的规定，即在您发布基于该项目的代码时，必须发布您的代码，并且将其中的修改也一并开源。此外，您还需要将该项目的许可证和版权信息放在您发布的文档和代码文件中。
 
 ## 引用
 
 使用了以下开源组件:
 
+- [Mirai.Net](https://github.com/project-mirai/mirai.net) - 用于编写 QQ 机器人。
 - [Serilog.AspNetCore](https://github.com/serilog/serilog-aspnetcore) - 用于记录应用程序日志。
 - [Flurl.Http](https://github.com/tmenier/Flurl) - 用于 HTTP 请求。
-- [Mirai.Net](https://github.com/project-mirai/mirai.net) - 用于编写 QQ 机器人。
 - [Volo.Abp.AspNetCore.Mvc](https://abp.io/) - ASP.NET Core MVC 集成。
 - [Volo.Abp.EventBus](https://abp.io/) - 事件总线。
 - [Volo.Abp.Autofac](https://abp.io/) - 依赖注入与控制反转。
