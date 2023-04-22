@@ -87,7 +87,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
     {
         foreach (var handler in CommandHandlers)
         {
-            var (isCommand, commandString, messageString) = handler.TryGetCommand(message.MessageChain.GetPlainMessage(), BotOptions.Value.CommandStartChar);
+            var (isCommand, commandString, messageString) = handler.TryGetCommand(message.MessageChain.GetPlainMessage(), BotOptions.Value.CommandPrefix);
             if (isCommand)
             {
                 var context = new CommandContext

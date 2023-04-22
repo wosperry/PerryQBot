@@ -6,5 +6,5 @@
     public string AdminQQ { get; set; }
     public string VerifyKey { get; set; }
     public int MaxHistory { get; set; }
-    public string CommandStartChar { get; set; } = "$$";
+    public string CommandPrefix { get; set; } = "$$";
 }
