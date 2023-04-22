@@ -151,6 +151,9 @@ services:
   },
   "ConnectionStrings": {
     "Default": "Host=localhost;Port=5432;Database=MyBotDB;User ID=postgres;Password=postgres;"
+  },
+  "MessageCollectionOptions": {
+    "MaxResultCount": 3 
   }
 }
 ```
@@ -171,6 +174,8 @@ services:
 3. ConnectionStrings
    - Default: 数据库连接字符串，这里使用的是PostgreSQL，如果要使用其他数据库，需要修改对应的Nuget包，然后修改这里的连接字符串。并且修改程序里所依赖的 `AbpEntityFrameworkCoreXXXModule` 为对应的module
 
+4. MessageCollectionOptions
+   - MaxResultCount: 每次查询的最大条数
 
 ## 命令
 
@@ -229,6 +234,10 @@ services:
    [ExposeServices(typeof(ICommandHandler))]
    public class GreetingCommandHandler : CommandHandlerBase
    {
+       // 这里可以直接属性注入
+       // 比如 public IOptions<XxxxOptions> Options { get; set; }
+       // 或者 public IStringLocalizer<XxxxResource> L { get; set; }
+
        public override async Task HandleAndResponseAsync(CommandContext context)
        {
            // 这里为了代码直观，直接等待完成了
