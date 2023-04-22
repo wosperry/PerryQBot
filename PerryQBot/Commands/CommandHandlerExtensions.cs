@@ -9,7 +9,7 @@ public static class CommandHandlerExtensions
         var commandStrings = handler.GetCommandStrings(commandStartChar);
 
         // help特殊处理，以免不知道前缀时无法唤醒
-        if (commandStrings.Any(t => t == "help"))
+        if (commandStrings.Any(t => t.StartsWith(commandStartChar + "help", StringComparison.OrdinalIgnoreCase)))
         {
             if (message.Trim() == "帮助" || message.Trim() == "幫助" || message.Trim().Equals("help", StringComparison.OrdinalIgnoreCase))
             {
