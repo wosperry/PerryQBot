@@ -2,9 +2,9 @@
 
 namespace PerryQBot.Commands.Handlers
 {
-    [Command("ai", WithPrefix = false)]
-    [Command("喵", WithPrefix = false)]
-    [Command("呐", WithPrefix = false)]
+    [Command("ai", false)]
+    [Command("喵", false)]
+    [Command("呐", false)]
     [ExposeServices(typeof(ICommandHandler))]
     public class WakeKeywordCommandHandler : CommandHandlerBase
     {
