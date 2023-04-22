@@ -48,7 +48,7 @@
 代码结构
 
 ``` mathematica
-PerryQBot               # 项目根目录
+PerryQBot                # 项目根目录
 ├──Commands              #   命令相关文件夹
 │  └──Handlers           #       命令处理程序 可在此处参考原有的Handler创建新的命令，重新运行之后即可生效
 ├──EntityFrameworkCore   #   EFCore
