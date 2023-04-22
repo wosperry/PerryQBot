@@ -1,27 +1,27 @@
-version: "3.4"
+ï»¿version: "3.4"
 
-# ¶¨ÒåÍøÂç
+# å®šä¹‰ç½‘ç»œ
 networks:
   pqcnet:
     driver: bridge
 
-# ¶¨Òå·şÎñ
+# å®šä¹‰æœåŠ¡
 services: 
-  # Êı¾İ¿â
+  # æ•°æ®åº“
   perrybot_postgresql:
     image: postgres:latest
-    # ÈİÆ÷Ãû
+    # å®¹å™¨å
     container_name: perrybot_postgresql
     restart: always
-    # Ó³ÉäËŞÖ÷»ú¶Ë¿Ú12345µ½Êı¾İ¿âÈİÆ÷µÄ5432£¬ÓÃÓÚÍâ²¿Ê¹ÓÃ¹¤¾ß·ÃÎÊÊı¾İ¿â²é¿´Êı¾İ
+    # æ˜ å°„å®¿ä¸»æœºç«¯å£12345åˆ°æ•°æ®åº“å®¹å™¨çš„5432ï¼Œç”¨äºå¤–éƒ¨ä½¿ç”¨å·¥å…·è®¿é—®æ•°æ®åº“æŸ¥çœ‹æ•°æ®
     ports:
       - "12345:5432"
-    # ¹ÒÔØÂ·¾¶
+    # æŒ‚è½½è·¯å¾„
     volumes:
       - /perry/PerryQBotDB:/var/lib/postgresql/data 
     environment:
-      # ÕâÀï2¸öÈİÆ÷Í¬ÔÚÃûÎªpqcnetµÄdockerÍøÂç£¬Ö±½ÓÊ¹ÓÃÈİÆ÷Ãû×ÖºÍ5432¶Ë¿Ú¼´¿É·ÃÎÊÊı¾İ¿â
-      # BotÀïÊ¹ÓÃµÄÁ¬½Ó×Ö·û´®ÊÇÊÇ "Host=perrybot_postgresql;Database=PerryQQBot;User ID=postgres;Password=123456;"
+      # è¿™é‡Œ2ä¸ªå®¹å™¨åŒåœ¨åä¸ºpqcnetçš„dockerç½‘ç»œï¼Œç›´æ¥ä½¿ç”¨å®¹å™¨åå­—å’Œ5432ç«¯å£å³å¯è®¿é—®æ•°æ®åº“
+      # Boté‡Œä½¿ç”¨çš„è¿æ¥å­—ç¬¦ä¸²æ˜¯æ˜¯ "Host=perrybot_postgresql;Database=PerryQQBot;User ID=postgres;Password=123456;"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "Aa123456."
       POSTGRES_DB: "PerryQQBot"
@@ -30,25 +30,25 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    # ¼ÓÈëµ½ÍøÂç pqcnet
+    # åŠ å…¥åˆ°ç½‘ç»œ pqcnet
     networks:
       - pqcnet
 
   # QBot
   perrybot_bot:
-    # ÈİÆ÷Ãû
+    # å®¹å™¨å
     container_name: perrybot_bot
     build:
-      # Ö¸¶¨Ö´ĞĞÎ»ÖÃ
+      # æŒ‡å®šæ‰§è¡Œä½ç½®
       context: .
-      # Ö¸¶¨Dockerfile
+      # æŒ‡å®šDockerfile
       dockerfile: ./PerryQBot/Dockerfile
-    # ¼ÓÈëµ½ÍøÂç pqcnet
+    # åŠ å…¥åˆ°ç½‘ç»œ pqcnet
     networks:
       - pqcnet
     restart: always
     volumes:
-      # ÕâÀïÆäÊµÊÇÓÉÓÚ¿ªÔ´ÏîÄ¿£¬ÎÒµÄÕæÊµÅäÖÃ·ÅÔÚÁË /perry/PerryQBotConfig/appsettings.json
-      # ¹ÒÔØÂ·¾¶ÏÂµÄappsettings.jsonÎÄ¼şµ½ÈİÆ÷ÄÚµÄ/app/appsettings.jsonÊ¹ÓÃ
-      # ÕâÀïÈİÆ÷ÀïµÄ/app£¬ÊÇDockerfileÄÚÖ¸¶¨µÄ¹¤×÷Ä¿Â¼£¬Èç¹ûĞèÒªĞŞ¸Ä£¬ÔòĞèÒªÒ»Æğ¸Ä¡£
+      # è¿™é‡Œå…¶å®æ˜¯ç”±äºå¼€æºé¡¹ç›®ï¼Œæˆ‘çš„çœŸå®é…ç½®æ”¾åœ¨äº† /perry/PerryQBotConfig/appsettings.json
+      # æŒ‚è½½è·¯å¾„ä¸‹çš„appsettings.jsonæ–‡ä»¶åˆ°å®¹å™¨å†…çš„/app/appsettings.jsonä½¿ç”¨
+      # è¿™é‡Œå®¹å™¨é‡Œçš„/appï¼Œæ˜¯Dockerfileå†…æŒ‡å®šçš„å·¥ä½œç›®å½•ï¼Œå¦‚æœéœ€è¦ä¿®æ”¹ï¼Œåˆ™éœ€è¦ä¸€èµ·æ”¹ã€‚
       - /perry/PerryQBotConfig/appsettings.json:/app/appsettings.json
