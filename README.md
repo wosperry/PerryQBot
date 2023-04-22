@@ -171,7 +171,11 @@ services:
    - Default: 数据库连接字符串，这里使用的是PostgreSQL，如果要使用其他数据库，需要修改对应的Nuget包，然后修改这里的连接字符串。并且修改程序里所依赖的 `AbpEntityFrameworkCoreXXXModule` 为对应的module
 
 
-## 命令说明
+## 命令
+
+当收到私聊@机器人时，如果聊天开头是以命令开头的，则进入命令处理程序，不走OpenAI请求。
+
+### 命令说明
 
 命令前缀默认为"$$"，如果需要修改，在配置文件的`MiraiBotOptions`下修改`CommandPrefix`的值。
 以下是以"#"为前缀的命令说明
@@ -187,8 +191,20 @@ services:
 3. #清空历史
    - 说明：清空历史记录（不包含预设）
 
-``` mathematica
-PerryQBot               # 项目根目录
-├─Commands              #   命令相关文件夹
-│  └─Handlers           #       命令处理程序 可在此处参考原有的Handler创建新的命令，重新运行之后即可生效
-```
+### 命令处理程序
+
+1. 位置
+   ``` mathematica
+   PerryQBot               # 项目根目录
+   ├─Commands              #   命令相关文件夹
+   │  └─Handlers           #       命令处理程序 可在此处参考原有的Handler创建新的命令，重新运行之后即可生效
+   ```
+2. 添加自定义命令处理程序
+   在1中位置，创建新的类，比如 `GreetingCommandHandler.cs`，要成为一个可被框架使用的命令，还需要满足以下条件：
+   - 继承 `CommandHandlerBase` 并重写 `HandleAndResponseAsync` 方法，添加你的逻辑，并返回需要回复用户的消息。
+   - 标记 `[Command("[不带前缀的命令字符]")]` 特性
+   - 标记 `[ExposeService(typeof(ICommandHandler))]` 特性（可选，如果你认为Abp框架可以正常注入这个类型，则可以不写这个特性。）
+   代码示例：
+      ``` csharp
+      
+      ```
