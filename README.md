@@ -217,12 +217,12 @@ services:
    [ExposeServices(typeof(ICommandHandler))]
    public class GreetingCommandHandler : CommandHandlerBase
    {
-       public override async Task<string> HandleAndResponseAsync(CommandContext context)
+       public override async Task HandleAndResponseAsync(CommandContext context)
        {
            // 这里为了代码直观，直接等待完成了
            await Task.CompletedTask; 
    
-           return $"你好，{context.SenderName}";
+           ResponseMessage = $"你好，{context.SenderName}";
        }
    }
    ```
