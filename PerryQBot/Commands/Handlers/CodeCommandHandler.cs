@@ -3,7 +3,7 @@
     [Command("代码")]
     public class CodeCommandHandler : CommandHandlerBase
     {
-        public override Task ExecuteAsync(CommandContext context)
+        public override async Task ExecuteAsync(CommandContext context)
         {
             ResponseMessage = """
                 我很乐意为您介绍项目PerryQBot。
@@ -14,6 +14,7 @@
                 https://github.com/wosperry/PerryQBot
                 感谢您的兴趣和支持！
                 """;
+            await Task.CompletedTask;
         }
     }
 }
