@@ -226,12 +226,12 @@ services:
    ```
 
 4. 效果
-```
-wosperry 17:58:54
-#你好
-
-Mochi 17:58:54
-你好，wosperry
-
-```
+   ```
+   wosperry 17:58:54
+   #你好
+   
+   Mochi 17:58:54
+   你好，wosperry
+   
+   ```
 
