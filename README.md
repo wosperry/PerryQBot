@@ -179,35 +179,36 @@ services:
 
 ## 命令
 
-当收到私聊@机器人时，如果聊天开头是以命令开头的，则进入命令处理程序，不走OpenAI请求。
+当收到私聊@机器人时，如果聊天开头是以命令开头的，则进入命令处理程序，默认不走OpenAI请求。
+若要继续走OpenAI请求，则在方法修改 `IsContinueAfterHandled = true;` 或者参考`WakeKeywordCommandHandler`重写它 `public override bool IsContinueAfterHandled => true;`
 
 ### 命令说明
 
 命令前缀默认为"$$"，如果需要修改，在配置文件的`MiraiBotOptions`下修改`CommandPrefix`的值。
-以下是以"#"为前缀的命令说明
+比如我部署的时候，就将其设置为了 ` "CommandPrefix": "#" `
 
-1. #帮助
+1. $$帮助
    - 说明：显示帮助信息
-2. #预设
+2. $$预设
    - 参数：预设文本
    - 说明：修改发送者的预设文本，同时清理发送者的历史消息
    - 示例：
-      - #预设 你好，我的名字叫Perry。
-      - #预设 我想让你充当英英词典，对于给出的英文单词，你要给出其中文意思以及英文解释，此外不要有其他反馈，第一个单词是“Hello"。
-3. #清空历史
+      - $$预设 你好，我的名字叫Perry。
+      - $$预设 我想让你充当英英词典，对于给出的英文单词，你要给出其中文意思以及英文解释，此外不要有其他反馈，第一个单词是“Hello"。
+3. $$清空历史
    - 说明：清空历史记录（不包含预设）
-4. #收藏 [额外文本]
+4. $$收藏 [额外文本]
    - 参数：额外文本
    - 说明：收藏发送者引用的文本及当前发送的文本
    - 示例：
-      - #收藏 你好，我的名字叫Perry。
-      - #收藏 我想让你充当英英词典，对于给出的英文单词，你要给出其中文意思以及英文解释，此外不要有其他反馈，第一个单词是“Hello"。
-      - [长按引用的前面的消息] #收藏 加上了我自己补充的内容
-5. #查询收藏 [条件]
+      - $$收藏 你好，我的名字叫Perry。
+      - $$收藏 我想让你充当英英词典，对于给出的英文单词，你要给出其中文意思以及英文解释，此外不要有其他反馈，第一个单词是“Hello"。
+      - [长按引用的前面的消息] $$收藏 加上了我自己补充的内容
+5. $$查询收藏 [条件]
    - 说明：根据参数搜索查询收藏，最多返回展示3条结果
    - 示例：
-      - #查询收藏 Perry
-      - #查询收藏 MongoDB
+      - $$查询收藏 Perry
+      - $$查询收藏 MongoDB
 
 ### 命令处理程序
 
@@ -219,12 +220,23 @@ services:
    ```
 2. 添加自定义命令处理程序
    在1中位置，创建新的类，比如 `GreetingCommandHandler.cs`，要成为一个可被框架使用的命令，还需要满足以下条件：
-   - 继承 `CommandHandlerBase` 并重写 `HandleAndResponseAsync` 方法，添加你的逻辑，并返回需要回复用户的消息。
+   - 继承 `CommandHandlerBase` 并重写 `ExecuteAsync` 方法，添加你的逻辑，需要回复用户的消息，在方法内修改ResponseMessage即可。
    - 标记 `[Command("[不带前缀的命令字符]")]` 特性
    - 标记 `[ExposeService(typeof(ICommandHandler))]` 特性
       `[ExposeService(typeof(ICommandHandler))]` 可选，如果你认为Abp框架可以正常注入这个类型，则可以不写这个特性。
-   
-3. 代码示例：
+
+3. `CommandContext` 上下文说明
+   - Type: 枚举，Group/Friend
+   - SenderId: 发送者的ID（QQ）
+   - SenderName: 发送者的昵称
+   - GroupId: 群号
+   - GroupName: 群名
+   - Message: 带命令的原始PlainMessage消息内容
+   - CommandString: 截取的Command字符串，比如 $$帮助，没什么用，我就打了个日志用了这个。
+   - MessageChain: 从Mirai.Net收到的原始消息链，可通过这个获取到更多的消息类型，比如图片、表情、文本、At
+
+      
+4. 代码示例：
    ``` csharp
    using Volo.Abp.DependencyInjection;
    
@@ -238,7 +250,7 @@ services:
        // 比如 public IOptions<XxxxOptions> Options { get; set; }
        // 或者 public IStringLocalizer<XxxxResource> L { get; set; }
 
-       public override async Task HandleAndResponseAsync(CommandContext context)
+       public override async Task ExecuteAsync(CommandContext context)
        {
            // 这里为了代码直观，直接等待完成了
            await Task.CompletedTask; 
@@ -248,7 +260,7 @@ services:
    }
    ```
 
-4. 效果
+5. 效果
    ```
    wosperry 17:58:54
    #你好
@@ -258,3 +270,4 @@ services:
    
    ```
 
+好了，以上就是简单介绍怎么给框架添加自己想要加的命令，如果感觉看的懵逼，可以打开 `Command/Handlers` 文件夹看看现在有的命令，CV改改就是了。
