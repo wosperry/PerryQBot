@@ -22,7 +22,7 @@ public class MessageCollectionQueryCommandHandler : CommandHandlerBase
             .Take(MessageCollectionOptions.Value.MaxResultCount)
             .ToListAsync();
 
-        ResponseMessage = "OK，这是您要的结果：" + string.Join("-------------------", result.Select(x =>
+        ResponseMessage = "OK，这是您要的结果：\r\n" + string.Join("-------------------", result.Select(x =>
         {
             return $"""
 
