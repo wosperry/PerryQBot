@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Volo.Abp.EntityFrameworkCore;
@@ -11,9 +12,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace PerryQBot.Migrations
 {
     [DbContext(typeof(QBotDbContext))]
-    partial class QBotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230422135640_Init1")]
+    partial class Init1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,10 +41,6 @@ namespace PerryQBot.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
-                    b.Property<string>("QuoteMessage")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
                     b.Property<string>("UserName")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
@@ -52,7 +51,29 @@ namespace PerryQBot.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DialogCollection", (string)null);
+                    b.ToTable("DialogCollections");
+                });
+
+            modelBuilder.Entity("PerryQBot.EntityFrameworkCore.Entities.DialogCollectionItem", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("DialogCollectionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Message")
+                        .HasMaxLength(5000)
+                        .HasColumnType("character varying(5000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DialogCollectionId");
+
+                    b.ToTable("DialogCollectionItem", (string)null);
                 });
 
             modelBuilder.Entity("PerryQBot.EntityFrameworkCore.Entities.User", b =>
@@ -107,6 +128,17 @@ namespace PerryQBot.Migrations
                     b.ToTable("UserHistory");
                 });
 
+            modelBuilder.Entity("PerryQBot.EntityFrameworkCore.Entities.DialogCollectionItem", b =>
+                {
+                    b.HasOne("PerryQBot.EntityFrameworkCore.Entities.DialogCollection", "DialogCollection")
+                        .WithMany("Items")
+                        .HasForeignKey("DialogCollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DialogCollection");
+                });
+
             modelBuilder.Entity("PerryQBot.EntityFrameworkCore.Entities.UserHistory", b =>
                 {
                     b.HasOne("PerryQBot.EntityFrameworkCore.Entities.User", "User")
@@ -116,6 +148,11 @@ namespace PerryQBot.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PerryQBot.EntityFrameworkCore.Entities.DialogCollection", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("PerryQBot.EntityFrameworkCore.Entities.User", b =>

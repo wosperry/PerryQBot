@@ -12,8 +12,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace PerryQBot.Migrations
 {
     [DbContext(typeof(QBotDbContext))]
-    [Migration("20230421175358_UserAddHistory")]
-    partial class UserAddHistory
+    [Migration("20230422140955_Init6")]
+    partial class Init6
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,38 @@ namespace PerryQBot.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("PerryQBot.EntityFrameworkCore.Entities.DialogCollection", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Message")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("QuoteMessage")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("UserQQ")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DialogCollection", (string)null);
+                });
 
             modelBuilder.Entity("PerryQBot.EntityFrameworkCore.Entities.User", b =>
                 {
@@ -65,10 +97,10 @@ namespace PerryQBot.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("ResponseMessage")
+                    b.Property<string>("Message")
                         .HasColumnType("text");
 
-                    b.Property<long?>("UserId")
+                    b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -80,9 +112,13 @@ namespace PerryQBot.Migrations
 
             modelBuilder.Entity("PerryQBot.EntityFrameworkCore.Entities.UserHistory", b =>
                 {
-                    b.HasOne("PerryQBot.EntityFrameworkCore.Entities.User", null)
+                    b.HasOne("PerryQBot.EntityFrameworkCore.Entities.User", "User")
                         .WithMany("History")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PerryQBot.EntityFrameworkCore.Entities.User", b =>

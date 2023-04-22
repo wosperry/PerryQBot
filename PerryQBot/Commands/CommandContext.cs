@@ -8,5 +8,6 @@ public class CommandContext
     public string GroupId { get; set; }
     public string GroupName { get; set; }
     public string Message { get; set; }
-    public string CommandString { get; internal set; }
+    public string CommandString { get; set; }
+    public MessageChain MessageChain { get; set; }
 }

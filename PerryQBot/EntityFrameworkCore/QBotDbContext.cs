@@ -7,6 +7,7 @@ using Volo.Abp.EntityFrameworkCore;
 public class QBotDbContext : AbpDbContext<QBotDbContext>
 {
     public DbSet<User> Users { get; set; }
+    public DbSet<DialogCollection> DialogCollections { get; set; }
 
     public QBotDbContext(DbContextOptions<QBotDbContext> options) : base(options)
     {
