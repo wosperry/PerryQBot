@@ -27,7 +27,6 @@ public class MessageCollectionQueryCommandHandler : CommandHandlerBase
             return $"""
 
             {x.UserName}({x.UserQQ}) 收藏于 [{x.DateTime:yyyy-MM-dd HH:mm:ss}]
-
             备注：{x.Message}
             内容：{x.QuoteMessage}
 
