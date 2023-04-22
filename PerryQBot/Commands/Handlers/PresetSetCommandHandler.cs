@@ -25,13 +25,13 @@ namespace PerryQBot.Commands.Handlers
                     QQNickName = context.SenderName,
                     History = new List<UserHistory>(),
                     Preset = messageString
-                });
+                }, true);
             }
             else
             {
                 user.Preset = messageString;
                 user.History.Clear();
-                await UserRepository.UpdateAsync(user);
+                await UserRepository.UpdateAsync(user, true);
             }
 
             ResponseMessage = $"您的预设成功修改为：{messageString}";
