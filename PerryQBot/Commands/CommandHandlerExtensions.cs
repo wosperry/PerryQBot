@@ -46,7 +46,7 @@ public static class CommandHandlerExtensions
             {
                 if (!string.IsNullOrWhiteSpace(commandAttribute?.Command))
                 {
-                    result.Add(commandAttribute.WithPrefix ? commandPrefix : "" + commandAttribute.Command);
+                    result.Add((commandAttribute.WithPrefix ? commandPrefix : "") + commandAttribute.Command);
                 }
             }
         }
