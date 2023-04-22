@@ -46,19 +46,20 @@
 代码结构
 
 ``` mathematica
-PerryQBot
-    ├─Commands
-    │  └─Handlers
-    ├─EntityFrameworkCore
-    │  ├─Configurations
-    │  └─Entities
-    ├─Migrations
-    ├─OpenAI
-    │  ├─BackgroundJobs
-    │  └─HttpRequests
-    ├─Options
-    ├─Properties
-    └─QQBot
+PerryQBot               项目根目录
+├─Commands              命令相关文件夹
+│  └─Handlers           命令处理程序
+├─EntityFrameworkCore   数据库实体相关文件夹
+│  ├─Configurations     实体配置文件夹
+│  └─Entities           实体文件夹
+├─Migrations            数据库迁移文件夹
+├─OpenAI                OpenAI相关文件夹
+│  ├─BackgroundJobs     后台任务文件夹
+│  └─HttpRequests       HTTP请求文件夹
+├─Options               选项相关文件夹
+├─Properties            项目属性相关文件夹
+└─QQBot                 QQ机器人相关文件夹
+
 ```
 
 
