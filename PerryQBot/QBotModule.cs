@@ -1,4 +1,5 @@
 ﻿using PerryQBot.EntityFrameworkCore;
+using PerryQBot.Options;
 using PerryQBot.QQBot;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Autofac;
@@ -19,5 +20,10 @@ namespace PerryQBot
     )]
     public class QBotModule : AbpModule
     {
+        public override void ConfigureServices(ServiceConfigurationContext context)
+        {
+            var configuration = context.Services.GetConfiguration();
+            Configure<MessageCollectionOptions>(configuration.GetSection(nameof(MessageCollectionOptions)));
+        }
     }
 }
