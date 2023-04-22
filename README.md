@@ -206,21 +206,32 @@ services:
    - 标记 `[ExposeService(typeof(ICommandHandler))]` 特性（可选，如果你认为Abp框架可以正常注入这个类型，则可以不写这个特性。）
    
 3. 代码示例：
-      ``` csharp
-      using Volo.Abp.DependencyInjection;
+   ``` csharp
+   using Volo.Abp.DependencyInjection;
+   
+   namespace PerryQBot.Commands.Handlers;
+   
+   [Command("你好")]
+   [ExposeServices(typeof(ICommandHandler))]
+   public class GreetingCommandHandler : CommandHandlerBase
+   {
+       public override async Task<string> HandleAndResponseAsync(CommandContext context)
+       {
+           // 这里为了代码直观，直接等待完成了
+           await Task.CompletedTask; 
+   
+           return $"你好，{context.SenderName}";
+       }
+   }
+   ```
 
-      namespace PerryQBot.Commands.Handlers;
+4. 效果
+```
+wosperry 17:58:54
+#你好
 
-      [Command("你好")]
-      [ExposeServices(typeof(ICommandHandler))]
-      public class GreetingCommandHandler : CommandHandlerBase
-      {
-          public override async Task<string> HandleAndResponseAsync(CommandContext context)
-          {
-              // 这里为了代码直观，直接等待完成了
-              await Task.CompletedTask; 
+Mochi 17:58:54
+你好，wosperry
 
-              return $"你好，{context.SenderName}";
-          }
-      }
-      ```
+```
+
