@@ -38,9 +38,10 @@ services:
   perrybot_bot:
     # 容器名
     container_name: perrybot_bot
-    # 根据当前路径Dockerfile构建
     build:
+      # 指定执行位置
       context: .
+      # 指定Dockerfile
       dockerfile: ./PerryQBot/Dockerfile
     # 加入到网络 pqcnet
     networks:
