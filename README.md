@@ -5,7 +5,7 @@
 使用了Mirai.Net类库对接Mirai，能够自动处理QQ消息并回复。该项目的主要功能是管理QQ用户或者群聊中@机器人的人的消息，每个用户都有一个预设功能，并且都保留若干条历史记录。通过拼接参数并访问openai api，实现智能的自动回复。
 
 此项目采用AGPL3.0开源协议，任何人都可以自由使用、复制、修改和传播该项目的代码。当您使用该项目及代码的时候，需要遵循AGPL3.0协议的规定，即在您发布基于该项目的代码时，必须发布您的代码，并且将其中的修改也一并开源。此外，您还需要将该项目的许可证和版权信息放在您发布的文档和代码文件中。
- 
+
 ## 引用
 
 使用了以下开源组件:
@@ -20,11 +20,6 @@
 - [Volo.Abp.BackgroundJobs](https://abp.io/) - 后台任务。
 - [Volo.Abp.EntityFrameworkCore.PostgreSql](https://abp.io/) - PostgreSQL 数据库集成。
 - [Volo.Abp.Uow](https://abp.io/) - 工作单元 (Unit of Work) 设计模式的实现。
-
-## 使用
-
-1. 请根据说明更改 `appsettings.json` 中的配置。
-2. 运行程序时，请注意如果使用 Docker Compose，需要先将 `appsettings.json` 文件存放在正确的位置，并修改 `.yml` 文件中对应的挂载路径。如果不挂载配置文件，可以把docker-compose.yml内的挂载部分删掉。
 
 ## 准备做的东西
 
@@ -47,6 +42,25 @@
    - [ ] 搜索收藏的消息
 
 ## 项目结构
+
+代码结构
+
+``` shell
+PerryQBot
+    ├─Commands
+    │  └─Handlers
+    ├─EntityFrameworkCore
+    │  ├─Configurations
+    │  └─Entities
+    ├─Migrations
+    ├─OpenAI
+    │  ├─BackgroundJobs
+    │  └─HttpRequests
+    ├─Options
+    ├─Properties
+    └─QQBot
+```
+
 
 ## 部署说明
 
