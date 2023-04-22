@@ -1,10 +1,12 @@
 ﻿using System.Reflection;
 
+namespace PerryQBot.Commands;
+
 public static class CommandHandlerExtensions
 {
-    public static (bool isCommand, string commandString, string messageString) TryGetCommand<TCommand>(this TCommand handler, string message) where TCommand : ICommandHandler
+    public static (bool isCommand, string commandString, string messageString) TryGetCommand<TCommand>(this TCommand handler, string message, string commandStartChar = "#") where TCommand : ICommandHandler
     {
-        var commandStrings = handler.GetCommandStrings(message);
+        var commandStrings = handler.GetCommandStrings(commandStartChar);
         var commandString = commandStrings.FirstOrDefault(commandString => message.TrimStart().StartsWith(commandString, StringComparison.OrdinalIgnoreCase));
         if (string.IsNullOrEmpty(commandString))
         {
@@ -15,7 +17,7 @@ public static class CommandHandlerExtensions
         return (true, commandString, messageString);
     }
 
-    public static List<string> GetCommandStrings<TCommand>(this TCommand handler, string message) where TCommand : ICommandHandler
+    public static List<string> GetCommandStrings<TCommand>(this TCommand handler, string commandStartChar = "#") where TCommand : ICommandHandler
     {
         var result = new List<string>();
         var attributes = handler.GetType().GetCustomAttributes();
@@ -26,10 +28,15 @@ public static class CommandHandlerExtensions
             var targetObject = getTargetMethod.Invoke(handler, Array.Empty<object>());
             attributes = targetObject.GetType().GetCustomAttributes();
         }
-        var commandAttribute = attributes.FirstOrDefault(a => a is CommandAttribute) as CommandAttribute;
-        if (!string.IsNullOrWhiteSpace(commandAttribute?.Command))
+        foreach (var attribute in attributes)
         {
-            result.Add(commandAttribute?.Command);
+            if (attribute is CommandAttribute commandAttribute)
+            {
+                if (!string.IsNullOrWhiteSpace(commandAttribute?.Command))
+                {
+                    result.Add(commandStartChar + commandAttribute.Command);
+                }
+            }
         }
         return result;
     }

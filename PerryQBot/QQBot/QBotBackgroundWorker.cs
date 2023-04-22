@@ -6,6 +6,7 @@ using Mirai.Net.Data.Messages.Receivers;
 using Mirai.Net.Sessions;
 using Mirai.Net.Sessions.Http.Managers;
 using Mirai.Net.Utils.Scaffolds;
+using PerryQBot.Commands;
 using PerryQBot.OpenAI;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.BackgroundWorkers;
@@ -17,7 +18,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
     public IBackgroundJobManager JobManager { get; set; }
     public IOptions<MiraiBotOptions> BotOptions { get; set; }
     public IEnumerable<ICommandHandler> CommandHandlers { get; set; }
-    public IOpenAIMessageManager openAIRequestManager { get; set; }
+    public IOpenAIMessageManager OpenAIRequestManager { get; set; }
 
     public QBotBackgroundWorker(IEnumerable<ICommandHandler> commandHandlers)
     {
@@ -46,7 +47,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
             if (await HandleUserCommandAsync(message)) return;
 
             // TODO: 加预设和历史
-            var messages = await openAIRequestManager.BuildUserRequestMessagesAsync(message.Sender.Id, message.Sender.Name, userMessage);
+            var messages = await OpenAIRequestManager.BuildUserRequestMessagesAsync(message.Sender.Id, message.Sender.Name, userMessage);
 
             // 入队，发请求
             await JobManager.EnqueueAsync(new OpenAIRequestingBackgroundJobArgs
@@ -71,7 +72,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
         if (await HandleUserCommandAsync(message)) return;
 
         // TODO: 加预设和历史
-        var messages = await openAIRequestManager.BuildUserRequestMessagesAsync(message.FriendId, message.FriendName, userMessage);
+        var messages = await OpenAIRequestManager.BuildUserRequestMessagesAsync(message.FriendId, message.FriendName, userMessage);
 
         await JobManager.EnqueueAsync(new OpenAIRequestingBackgroundJobArgs
         {
@@ -86,7 +87,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
     {
         foreach (var handler in CommandHandlers)
         {
-            var (isCommand, commandString, messageString) = handler.TryGetCommand(message.MessageChain.GetPlainMessage());
+            var (isCommand, commandString, messageString) = handler.TryGetCommand(message.MessageChain.GetPlainMessage(), BotOptions.Value.CommandStartChar);
             if (isCommand)
             {
                 var context = new CommandContext
