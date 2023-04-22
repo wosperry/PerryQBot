@@ -44,7 +44,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
             if (await HandleUserCommandAsync(message)) return;
 
             // TODO: 加预设和历史
-            var messages = await openAIRequestManager.BuildUserRequestMessagesAsync(message.Sender.Id, userMessage);
+            var messages = await openAIRequestManager.BuildUserRequestMessagesAsync(message.Sender.Id, message.Sender.Name, userMessage);
 
             // 入队，发请求
             await JobManager.EnqueueAsync(new OpenAIRequestingBackgroundJobArgs
@@ -69,7 +69,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
         if (await HandleUserCommandAsync(message)) return;
 
         // TODO: 加预设和历史
-        var messages = await openAIRequestManager.BuildUserRequestMessagesAsync(message.Sender.Id, userMessage);
+        var messages = await openAIRequestManager.BuildUserRequestMessagesAsync(message.FriendId, message.FriendName, userMessage);
 
         await JobManager.EnqueueAsync(new OpenAIRequestingBackgroundJobArgs
         {

@@ -1,4 +1,4 @@
-﻿[AttributeUsage(AttributeTargets.Class)]
+﻿[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 public class CommandAttribute : Attribute
 {
     public CommandAttribute(string command)

@@ -16,7 +16,7 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
     public IOptions<MiraiBotOptions> BotOptions { get; set; }
 
     [UnitOfWork]
-    public virtual async Task<List<string>> BuildUserRequestMessagesAsync(string senderId, string message)
+    public virtual async Task<List<string>> BuildUserRequestMessagesAsync(string senderId, string senderName, string message)
     {
         var result = new List<string>();
         var user = await (await UserRepository.WithDetailsAsync(x => x.History))
@@ -49,7 +49,7 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
             await UserRepository.InsertAsync(new User
             {
                 QQ = senderId,
-                QQNickName = senderId,
+                QQNickName = senderName,
                 History = new List<UserHistory>() { new UserHistory { Message = message, DateTime = DateTime.Now } },
                 Preset = ""
             }, true);

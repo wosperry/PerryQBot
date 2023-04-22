@@ -6,5 +6,7 @@ namespace PerryQBot.EntityFrameworkCore.Entities
     {
         public string Message { get; set; }
         public DateTime DateTime { get; set; }
+        public User User { get; set; }
+        public long UserId { get; set; }
     }
 }

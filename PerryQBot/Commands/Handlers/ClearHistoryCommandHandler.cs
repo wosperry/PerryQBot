@@ -5,7 +5,11 @@ using Volo.Abp.Domain.Repositories;
 
 namespace PerryQBot.Commands.Handlers;
 
-[Command("清空历史")]
+[Command("清空")]
+[Command("清空记录")]
+[Command("清空記錄")]
+[Command("清除记录")]
+[Command("清除記錄")]
 [ExposeServices(typeof(ICommandHandler))]
 public class ClearHistoryCommandHandler : CommandHandlerBase
 {

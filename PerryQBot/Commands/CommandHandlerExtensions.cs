@@ -10,7 +10,7 @@ public static class CommandHandlerExtensions
         {
             return false;
         }
-        return message.TrimStart().StartsWith(commandString); ;
+        return message.TrimStart().StartsWith(commandString, StringComparison.OrdinalIgnoreCase);
     }
 
     public static string GetCommandString<TCommand>(this TCommand handler, string message) where TCommand : ICommandHandler

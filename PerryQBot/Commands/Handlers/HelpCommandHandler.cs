@@ -2,7 +2,9 @@
 
 namespace PerryQBot.Commands.Handlers;
 
+[Command("help")]
 [Command("帮助")]
+[Command("幫助")]
 [ExposeServices(typeof(ICommandHandler))]
 public class HelpCommandHandler : CommandHandlerBase
 {
