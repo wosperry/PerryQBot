@@ -21,7 +21,7 @@ services:
       - /perry/PerryQBotDB:/var/lib/postgresql/data 
     environment:
       # 这里2个容器同在名为pqcnet的docker网络，直接使用容器名字和5432端口即可访问数据库
-      # Bot里使用的连接字符串是是 "Host=perrybot_postgresql;Database=PerryQQBot;User ID=postgres;Password=123456;"
+      # Bot里使用的连接字符串是appsettings.json里指定的 "Host=perrybot_postgresql;Database=PerryQQBot;User ID=postgres;Password=123456;"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "Aa123456."
       POSTGRES_DB: "PerryQQBot"
