@@ -29,8 +29,8 @@
    - [x] 计划加上可以配置条数的历史消息上文
    - [x] 增加预设和历史信息（按QQ号区分对话）
    - [x] 计划加上群里按发送者QQ号区分历史消息
+   - [x] 支持修改历史消息条数
    - [ ] 支持修改温度
-   - [ ] 支持修改历史消息条数
 
 2. 命令
    - [x] 增加约定，用于控制，需要增加一个命令就增加一个Handler实现类即可
@@ -40,8 +40,8 @@
    - [ ] 唤醒词现在是在Handler里添加的，导致handle了一次之后，不会再触发其他命令，如果发送 ai #help 之类的，会被拿去请求openAI。。。累了不想了
    
 3. 其他功能
-   - [ ] 在群里引用某个信息，并收藏
-   - [ ] 搜索收藏的消息
+   - [x] 在群里引用某个信息，并收藏
+   - [x] 搜索收藏的消息
 
 ## 项目结构
 
@@ -49,16 +49,16 @@
 
 ``` mathematica
 PerryQBot               # 项目根目录
-├─Commands              #   命令相关文件夹
-│  └─Handlers           #       命令处理程序 可在此处参考原有的Handler创建新的命令，重新运行之后即可生效
-├─EntityFrameworkCore   #   EFCore
-│  ├─Configurations     #       实体配置文件夹
-│  └─Entities           #   实体文件夹
-├─OpenAI                #   OpenAI
-│  ├─BackgroundJobs     #       后台任务执行OpenAI请求、发送QQ消息回复（这个考虑迁到QQBot）
-│  └─HttpRequests       #       管理OpenAI请求参数等
-├─Options               #   管理选项配置
-└─QQBot                 #   QQ信息监听等，如果是添加命令建议直接添加命令Handler实现。
+├──Commands              #   命令相关文件夹
+│  └──Handlers           #       命令处理程序 可在此处参考原有的Handler创建新的命令，重新运行之后即可生效
+├──EntityFrameworkCore   #   EFCore
+│  ├──Configurations     #       实体配置文件夹
+│  └──Entities           #   实体文件夹
+├──OpenAI                #   OpenAI
+│  ├──BackgroundJobs     #       后台任务执行OpenAI请求、发送QQ消息回复（这个考虑迁到QQBot）
+│  └──HttpRequests       #       管理OpenAI请求参数等
+├──Options               #   管理选项配置
+└──QQBot                 #   QQ信息监听等，如果是添加命令建议直接添加命令Handler实现。
 ```
 
 
