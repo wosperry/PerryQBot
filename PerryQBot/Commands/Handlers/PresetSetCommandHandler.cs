@@ -34,7 +34,7 @@ namespace PerryQBot.Commands.Handlers
                 await UserRepository.UpdateAsync(user, true);
             }
 
-            ResponseMessage = $"您的预设成功修改为：{messageString}";
+            ResponseMessage = $"预设修改成功";
         }
     }
 }
