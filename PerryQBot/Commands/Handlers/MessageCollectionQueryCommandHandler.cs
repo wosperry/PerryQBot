@@ -22,14 +22,14 @@ public class MessageCollectionQueryCommandHandler : CommandHandlerBase
             .Take(MessageCollectionOptions.Value.MaxResultCount)
             .ToListAsync();
 
-        ResponseMessage = string.Join("------------", result.Select(x =>
+        ResponseMessage = "OK，这是您要的结果：" + string.Join("-------------------", result.Select(x =>
         {
             return $"""
 
-            收藏者: {x.UserName}({x.UserQQ})
-            收藏备注：{x.Message}
-            收藏时间：{x.DateTime:yyyy-MM-dd HH:mm:ss}
-            收藏内容：{x.QuoteMessage}
+            {x.UserName}({x.UserQQ}) 收藏于 [{x.DateTime:yyyy-MM-dd HH:mm:ss}]
+
+            备注：{x.Message}
+            内容：{x.QuoteMessage}
 
             """;
         }));
