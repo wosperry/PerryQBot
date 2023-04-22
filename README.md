@@ -169,3 +169,26 @@ services:
 
 3. ConnectionStrings
    - Default: 数据库连接字符串，这里使用的是PostgreSQL，如果要使用其他数据库，需要修改对应的Nuget包，然后修改这里的连接字符串。并且修改程序里所依赖的 `AbpEntityFrameworkCoreXXXModule` 为对应的module
+
+
+## 命令说明
+
+命令前缀默认为"$$"，如果需要修改，在配置文件的`MiraiBotOptions`下修改`CommandPrefix`的值。
+以下是以"#"为前缀的命令说明
+
+1. #帮助
+   - 说明：显示帮助信息
+2. #预设
+   - 参数：预设文本
+   - 说明：修改发送者的预设文本，同时清理发送者的历史消息
+   - 示例：
+      - #预设 你好，我的名字叫Perry。
+      - #预设 我想让你充当英英词典，对于给出的英文单词，你要给出其中文意思以及英文解释，此外不要有其他反馈，第一个单词是“Hello"。
+3. #清空历史
+   - 说明：清空历史记录（不包含预设）
+
+``` mathematica
+PerryQBot               # 项目根目录
+├─Commands              #   命令相关文件夹
+│  └─Handlers           #       命令处理程序 可在此处参考原有的Handler创建新的命令，重新运行之后即可生效
+```
