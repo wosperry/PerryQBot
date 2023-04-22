@@ -6,17 +6,14 @@ public static class CommandHandlerExtensions
 {
     public static (bool isCommand, string commandString, string messageString) TryGetCommand<TCommand>(this TCommand handler, string message, string commandStartChar = "#") where TCommand : ICommandHandler
     {
-        var commandStrings = handler.GetCommandStrings(commandStartChar);
-        var commandString = commandStrings.FirstOrDefault(commandString =>
+        // help特殊处理，以免不知道前缀时无法唤醒
+        if (message.Trim() == "帮助" || message.Trim() == "幫助" || message.Trim().Equals("help", StringComparison.OrdinalIgnoreCase))
         {
-            // 帮助特殊处理，以免不知道前缀时无法唤醒
-            if (message.Trim() == "帮助" || message.Trim() == "幫助" || message.Trim().Equals("help", StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
+            return (true, "help", "");
+        }
 
-            return message.TrimStart().StartsWith(commandString, StringComparison.OrdinalIgnoreCase);
-        });
+        var commandStrings = handler.GetCommandStrings(commandStartChar);
+        var commandString = commandStrings.FirstOrDefault(commandString => message.TrimStart().StartsWith(commandString, StringComparison.OrdinalIgnoreCase));
         if (string.IsNullOrEmpty(commandString))
         {
             return (false, null, message);
