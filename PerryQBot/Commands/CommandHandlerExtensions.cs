@@ -4,12 +4,14 @@ namespace PerryQBot.Commands;
 
 public static class CommandHandlerExtensions
 {
-    public static (bool isCommand, string commandString, string messageString) TryGetCommand<TCommand>(this TCommand handler, string message, string commandStartChar = "#") where TCommand : ICommandHandler
+    public static (bool isCommand, string commandString, string messageString) TryGetCommand<TCommand>(this TCommand handler, string message, string commandPrefix = "#") where TCommand : ICommandHandler
     {
-        var commandStrings = handler.GetCommandStrings(commandStartChar);
+        var commandStrings = handler.GetCommandStrings(commandPrefix);
 
         // help特殊处理，以免不知道前缀时无法唤醒
-        if (commandStrings.Any(t => t.StartsWith(commandStartChar + "help", StringComparison.OrdinalIgnoreCase)))
+        if (commandStrings.Any(t => t.StartsWith(commandPrefix + "help", StringComparison.OrdinalIgnoreCase)) ||
+            commandStrings.Any(t => t.StartsWith("help", StringComparison.OrdinalIgnoreCase))
+            )
         {
             if (message.Trim() == "命令" || message.Trim() == "帮助" || message.Trim() == "幫助" || message.Trim().Equals("help", StringComparison.OrdinalIgnoreCase))
             {
@@ -27,7 +29,7 @@ public static class CommandHandlerExtensions
         return (true, commandString, messageString);
     }
 
-    public static List<string> GetCommandStrings<TCommand>(this TCommand handler, string commandStartChar = "#") where TCommand : ICommandHandler
+    public static List<string> GetCommandStrings<TCommand>(this TCommand handler, string commandPrefix = "#") where TCommand : ICommandHandler
     {
         var result = new List<string>();
         var attributes = handler.GetType().GetCustomAttributes();
@@ -44,7 +46,7 @@ public static class CommandHandlerExtensions
             {
                 if (!string.IsNullOrWhiteSpace(commandAttribute?.Command))
                 {
-                    result.Add(commandStartChar + commandAttribute.Command);
+                    result.Add(commandAttribute.WithPrefix ? commandPrefix : "" + commandAttribute.Command);
                 }
             }
         }

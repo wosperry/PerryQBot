@@ -6,16 +6,23 @@ using Newtonsoft.Json;
 using PerryQBot.Commands.Handlers;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Uow;
+using Websocket.Client;
 
 namespace PerryQBot.Commands;
 
 public abstract class CommandHandlerBase : ICommandHandler, ITransientDependency
 {
+    public virtual bool IsContinueAfterHandled { get; set; } = false;
+    public virtual string ResponseMessage { get; set; }
+    public virtual string RequestMessage { get; set; }
     public ILogger<HelpCommandHandler> Logger { get; set; }
     public IOptions<MiraiBotOptions> BotOptions { get; set; }
     public IServiceProvider ServiceProvider { get; set; }
 
-    public abstract Task<string> HandleAndResponseAsync(CommandContext context);
+    public virtual async Task ExecuteAsync(CommandContext context)
+    {
+        await Task.CompletedTask;
+    }
 
     public Task SendMessageToAdminAsync(string message) => MessageManager.SendFriendMessageAsync(BotOptions.Value.AdminQQ, message);
 
@@ -24,20 +31,22 @@ public abstract class CommandHandlerBase : ICommandHandler, ITransientDependency
     {
         try
         {
-            var message = await HandleAndResponseAsync(context);
-
-            if (context.Type == MessageReceivers.Friend)
+            await ExecuteAsync(context);
+            if (!IsContinueAfterHandled)
             {
-                await MessageManager.SendFriendMessageAsync(context.SenderId, message);
-            }
-            if (context.Type == MessageReceivers.Group)
-            {
-                var messageChain = new MessageChainBuilder()
-                    .At(context.SenderId)
-                    .Plain(" ")
-                    .Plain(message)
-                    .Build();
-                await MessageManager.SendGroupMessageAsync(context.GroupId, messageChain);
+                if (context.Type == MessageReceivers.Friend)
+                {
+                    await MessageManager.SendFriendMessageAsync(context.SenderId, ResponseMessage);
+                }
+                if (context.Type == MessageReceivers.Group)
+                {
+                    var messageChain = new MessageChainBuilder()
+                        .At(context.SenderId)
+                        .Plain(" ")
+                        .Plain(ResponseMessage)
+                        .Build();
+                    await MessageManager.SendGroupMessageAsync(context.GroupId, messageChain);
+                }
             }
         }
         catch (Exception ex)

@@ -12,7 +12,7 @@ namespace PerryQBot.Commands.Handlers
     {
         public IRepository<User> UserRepository { get; set; }
 
-        public override async Task<string> HandleAndResponseAsync(CommandContext context)
+        public override async Task ExecuteAsync(CommandContext context)
         {
             var (isCommand, commandString, messageString) = this.TryGetCommand(context.Message);
             var user = await (await UserRepository.WithDetailsAsync(x => x.History)).FirstOrDefaultAsync(t => t.QQ == context.SenderId);
@@ -34,7 +34,7 @@ namespace PerryQBot.Commands.Handlers
                 await UserRepository.UpdateAsync(user);
             }
 
-            return $"您的预设成功修改为：{messageString}";
+            ResponseMessage = $"您的预设成功修改为：{messageString}";
         }
     }
 }

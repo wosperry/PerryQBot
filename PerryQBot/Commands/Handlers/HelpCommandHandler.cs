@@ -8,11 +8,11 @@ namespace PerryQBot.Commands.Handlers;
 [ExposeServices(typeof(ICommandHandler))]
 public class HelpCommandHandler : CommandHandlerBase
 {
-    public override async Task<string> HandleAndResponseAsync(CommandContext context)
+    public override async Task ExecuteAsync(CommandContext context)
     {
         await Task.CompletedTask;
         var cmd = BotOptions.Value.CommandPrefix;
-        return $"""
+        ResponseMessage = $"""
                 支持的命令：
                 1. {cmd}帮助
                    - 说明：显示帮助信息

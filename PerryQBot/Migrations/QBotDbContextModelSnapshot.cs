@@ -62,7 +62,7 @@ namespace PerryQBot.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("Message")
+                    b.Property<string>("ResponseMessage")
                         .HasColumnType("text");
 
                     b.Property<long>("UserId")

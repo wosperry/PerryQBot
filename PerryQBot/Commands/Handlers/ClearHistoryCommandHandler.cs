@@ -12,7 +12,7 @@ public class ClearHistoryCommandHandler : CommandHandlerBase
 {
     public IRepository<User> UserRepository { get; set; }
 
-    public override async Task<string> HandleAndResponseAsync(CommandContext context)
+    public override async Task ExecuteAsync(CommandContext context)
     {
         var user = await (await UserRepository.WithDetailsAsync(x => x.History)).FirstOrDefaultAsync(t => t.QQ == context.SenderId);
 
@@ -32,6 +32,6 @@ public class ClearHistoryCommandHandler : CommandHandlerBase
             await UserRepository.UpdateAsync(user);
         }
 
-        return "您的历史已清空";
+        ResponseMessage = "您的历史已清空";
     }
 }

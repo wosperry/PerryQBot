@@ -38,15 +38,17 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
 
     private async void OnGroupMessageReceived(GroupMessageReceiver message)
     {
-        if (message.MessageChain.Any(t => t is AtMessage at && at.Target == Bot.QQ))
+        // Handle到了，就结束
+        var commandHandler = await HandleCommandAsync(message);
+        if (commandHandler is not null && !commandHandler.IsContinueAfterHandled) return;
+
+        var isAt = message.MessageChain.Any(t => t is AtMessage at && at.Target == Bot.QQ);
+        var isCommandContinue = commandHandler?.IsContinueAfterHandled ?? false;
+        if (isAt || isCommandContinue)
         {
-            var userMessage = message.MessageChain.GetPlainMessage();
+            // 编辑消息链，预设和历史
+            var userMessage = (commandHandler is not null) ? commandHandler.RequestMessage : message.MessageChain.GetPlainMessage();
             Logger.LogInformation("{friendName}在群【{groupName}】@我：{plainText}", message.Sender.Name, message.GroupName, userMessage);
-
-            // Handle到了，就结束
-            if (await HandleUserCommandAsync(message)) return;
-
-            // TODO: 加预设和历史
             var messages = await OpenAIRequestManager.BuildUserRequestMessagesAsync(message.Sender.Id, message.Sender.Name, userMessage);
 
             // 入队，发请求
@@ -64,16 +66,14 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
 
     private async void OnFriendMessageReceived(FriendMessageReceiver message)
     {
-        Logger.LogInformation("{friendName} 私聊我：{qqMessage}", message.FriendName, message.MessageChain.GetPlainMessage());
-
-        var userMessage = message.MessageChain.GetPlainMessage();
-
         // Handle到了，就结束
-        if (await HandleUserCommandAsync(message)) return;
+        var commandHandler = await HandleCommandAsync(message);
+        if (commandHandler is not null && !commandHandler.IsContinueAfterHandled) return;
 
-        // TODO: 加预设和历史
+        // 编辑消息链，预设和历史
+        var userMessage = (commandHandler is not null) ? commandHandler.RequestMessage : message.MessageChain.GetPlainMessage();
+        Logger.LogInformation("{friendName} 私聊我：{qqMessage}", message.FriendName, userMessage);
         var messages = await OpenAIRequestManager.BuildUserRequestMessagesAsync(message.FriendId, message.FriendName, userMessage);
-
         await JobManager.EnqueueAsync(new OpenAIRequestingBackgroundJobArgs
         {
             SenderId = message.Sender.Id,
@@ -83,7 +83,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
         });
     }
 
-    private async Task<bool> HandleUserCommandAsync(MessageReceiverBase message)
+    private async Task<ICommandHandler> HandleCommandAsync(MessageReceiverBase message)
     {
         foreach (var handler in CommandHandlers)
         {
@@ -113,10 +113,11 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
 
                 // 执行命令
                 await handler.HandleAsync(context);
-                return true;
+                handler.RequestMessage = context.Message;
+                return handler;
             }
         }
 
-        return false;
+        return null;
     }
 }

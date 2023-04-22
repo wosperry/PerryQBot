@@ -6,10 +6,9 @@ namespace PerryQBot.Commands.Handlers;
 [ExposeServices(typeof(ICommandHandler))]
 public class GreetingCommandHandler : CommandHandlerBase
 {
-    public override async Task<string> HandleAndResponseAsync(CommandContext context)
+    public override async Task ExecuteAsync(CommandContext context)
     {
         await Task.CompletedTask;
-
-        return $"你好，{context.SenderName}";
+        ResponseMessage = $"你好，{context.SenderName}";
     }
 }
