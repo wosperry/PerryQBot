@@ -132,6 +132,27 @@ services:
 
 ### 程序配置介绍
 
+``` json
+{
+  "MiraiBotOptions": {
+    "Host": "your-website.com",
+    "Port": 9010,
+    "QQ": "12345678",
+    "AdminQQ": "1111111",
+    "MaxHistory": 4,
+    "VerifyKey": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "CommandPrefix": "#"
+  },
+  "OpenAiOptions": {
+    "CompletionUrl": "https://api.openai.com/v1/chat/completions",
+    "Key": "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  "ConnectionStrings": {
+    "Default": "Host=localhost;Port=5432;Database=MyBotDB;User ID=postgres;Password=postgres;"
+  }
+}
+```
+
 1. MiraiBotOptions
    - Host: Mirai所在的服务器地址
    - Port: Mirai放出来的端口
@@ -147,24 +168,3 @@ services:
 
 3. ConnectionStrings
    - Default: 数据库连接字符串，这里使用的是PostgreSQL，如果要使用其他数据库，需要修改对应的Nuget包，然后修改这里的连接字符串。并且修改程序里所依赖的 `AbpEntityFrameworkCoreXXXModule` 为对应的module
-
-``` json
-{
-  "MiraiBotOptions": {
-    "Host": "your-website.com", // Mirai所在的服务器地址
-    "Port": 9010, // Mirai放出来的端口
-    "QQ": "12345678", // Mirai登录的QQ
-    "AdminQQ": "1111111", // 管理员QQ，接收登录或者超时消息
-    "MaxHistory": 4, // 连续对话最大历史条数
-    "VerifyKey": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", // Mirai 设置的http-client的 verifyKey
-    "CommandStartChar": "#" // 命令前缀 如 #帮助 $$帮助
-  },
-  "OpenAiOptions": {
-    "CompletionUrl": "https://api.openai.com/v1/chat/completions",
-    "Key": "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  },
-  "ConnectionStrings": {
-    "Default": "Host=localhost;Port=5432;Database=MyBotDB;User ID=postgres;Password=postgres;"
-  }
-}
-```
