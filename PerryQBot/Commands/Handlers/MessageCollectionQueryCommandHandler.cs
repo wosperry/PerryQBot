@@ -7,7 +7,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace PerryQBot.Commands.Handlers;
 
-[Command("收藏列表")]
+[Command("查询收藏")]
 [ExposeServices(typeof(ICommandHandler))]
 public class MessageCollectionQueryCommandHandler : CommandHandlerBase
 {
@@ -21,13 +21,15 @@ public class MessageCollectionQueryCommandHandler : CommandHandlerBase
             .Take(MessageCollectionOptions.Value.MaxResultCount)
             .ToListAsync();
 
-        ResponseMessage = string.Join("------------\r\n", result.Select(x =>
+        ResponseMessage = string.Join("------------", result.Select(x =>
         {
             return $"""
+            
             收藏者: {x.UserName}({x.UserQQ})
             收藏备注：{x.Message}
             收藏时间：{x.DateTime:yyyy-MM-dd HH:mm:ss}
             收藏内容：{x.QuoteMessage}
+
             """;
         }));
     }
