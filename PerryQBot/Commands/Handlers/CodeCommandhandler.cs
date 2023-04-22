@@ -17,8 +17,9 @@ public class CodeCommandhandler : CommandHandlerBase
     {
         await Task.CompletedTask;
         return """
-            Gitee: https://gitee.com/wosperry/PerryQBot
-            Github: https://github.com/wosperry/PerryQBot
+            项目地址：
+            - Gitee: https://gitee.com/wosperry/PerryQBot
+            - Github: https://github.com/wosperry/PerryQBot
             """;
     }
 }
