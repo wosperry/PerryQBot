@@ -52,4 +52,3 @@ services:
       # 挂载路径下的appsettings.json文件到容器内的/app/appsettings.json使用
       # 这里容器里的/app，是Dockerfile内指定的工作目录，如果需要修改，则需要一起改。
       - /perry/PerryQBotConfig/appsettings.json:/app/appsettings.json
-

@@ -5,7 +5,7 @@
 使用了Mirai.Net类库对接Mirai，能够自动处理QQ消息并回复。该项目的主要功能是管理QQ用户或者群聊中@机器人的人的消息，每个用户都有一个预设功能，并且都保留若干条历史记录。通过拼接参数并访问openai api，实现智能的自动回复。
 
 此项目采用AGPL3.0开源协议，任何人都可以自由使用、复制、修改和传播该项目的代码。当您使用该项目及代码的时候，需要遵循AGPL3.0协议的规定，即在您发布基于该项目的代码时，必须发布您的代码，并且将其中的修改也一并开源。此外，您还需要将该项目的许可证和版权信息放在您发布的文档和代码文件中。
-
+ 
 ## 引用
 
 使用了以下开源组件:
@@ -45,3 +45,67 @@
 3. 其他功能
    - [ ] 在群里引用某个信息，并收藏
    - [ ] 搜索收藏的消息
+
+## 项目结构
+
+## 部署说明
+
+### 使用 Docker Compose
+
+``` yaml
+version: "3.4"
+
+# 定义网络
+networks:
+  pqcnet:
+    driver: bridge
+
+# 定义服务
+services: 
+  # 数据库
+  perrybot_postgresql:
+    image: postgres:latest
+    # 容器名
+    container_name: perrybot_postgresql
+    restart: always
+    # 映射宿主机端口12345到数据库容器的5432，用于外部使用工具访问数据库查看数据
+    ports:
+      - "12345:5432"
+    # 挂载路径
+    volumes:
+      - /perry/PerryQBotDB:/var/lib/postgresql/data 
+    environment:
+      # 这里2个容器同在名为pqcnet的docker网络，直接使用容器名字和5432端口即可访问数据库
+      # Bot里使用的连接字符串是是 "Host=perrybot_postgresql;Database=PerryQQBot;User ID=postgres;Password=123456;"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "Aa123456."
+      POSTGRES_DB: "ai-db"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # 加入到网络 pqcnet
+    networks:
+      - pqcnet
+
+  # QBot
+  perrybot_bot:
+    # 容器名
+    container_name: perrybot_bot
+    build:
+      # 指定执行位置
+      context: .
+      # 指定Dockerfile
+      dockerfile: ./PerryQBot/Dockerfile
+    # 加入到网络 pqcnet
+    networks:
+      - pqcnet
+    restart: always
+    volumes:
+      # 这里其实是由于开源项目，我的真实配置放在了 /perry/PerryQBotConfig/appsettings.json
+      # 挂载路径下的appsettings.json文件到容器内的/app/appsettings.json使用
+      # 这里容器里的/app，是Dockerfile内指定的工作目录，如果需要修改，则需要一起改。
+      - /perry/PerryQBotConfig/appsettings.json:/app/appsettings.json
+
+```
