@@ -47,7 +47,7 @@
 
 ``` mathematica
 PerryQBot               #项目根目录
-├─Commands              命令相关文件夹
+├─Commands              //命令相关文件夹
 │  └─Handlers           命令处理程序
 ├─EntityFrameworkCore   数据库实体相关文件夹
 │  ├─Configurations     实体配置文件夹
