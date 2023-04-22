@@ -15,7 +15,7 @@ services:
     restart: always
     # 映射宿主机端口12345到数据库容器的5432，用于外部使用工具访问数据库查看数据
     ports:
-      - "12345:5432"
+      - "65432:5432"
     # 挂载路径
     volumes:
       - /perry/PerryQBotDB:/var/lib/postgresql/data 
