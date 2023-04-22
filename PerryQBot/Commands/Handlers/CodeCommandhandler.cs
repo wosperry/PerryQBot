@@ -18,8 +18,8 @@ public class CodeCommandhandler : CommandHandlerBase
             聊天中可以保持数条历史记录以实现连续对话，智能对话是通过 GPT-3.5-turbo 的接口实现的。
 
             该项目已在GitHub上公开，同时也在Gitee有开放的仓库，开源协议为AGPL3.0。如果您希望查看或贡献该项目，请点击以下链接访问：
-            - Gitee: https://gitee.com/wosperry/PerryQBot
-            - Github: https://github.com/wosperry/PerryQBot
+                https://github.com/wosperry/PerryQBot
+
             感谢您的兴趣和支持！
             """;
     }
