@@ -17,14 +17,15 @@ public class MessageCollectionQueryCommandHandler : CommandHandlerBase
     public override async Task ExecuteAsync(CommandContext context)
     {
         var result = await (await DialogCollectionRepository.GetQueryableAsync())
-            .Where(t => t.Message.Contains(context.Message) || t.QuoteMessage.Contains(context.Message))
+            .Where(t => t.Message.Contains(context.Message, StringComparison.OrdinalIgnoreCase)
+                || t.QuoteMessage.Contains(context.Message, StringComparison.OrdinalIgnoreCase))
             .Take(MessageCollectionOptions.Value.MaxResultCount)
             .ToListAsync();
 
         ResponseMessage = string.Join("------------", result.Select(x =>
         {
             return $"""
-            
+
             收藏者: {x.UserName}({x.UserQQ})
             收藏备注：{x.Message}
             收藏时间：{x.DateTime:yyyy-MM-dd HH:mm:ss}
