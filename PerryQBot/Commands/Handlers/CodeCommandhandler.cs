@@ -3,7 +3,6 @@
 namespace PerryQBot.Commands.Handlers;
 
 [Command("代码")]
-[ExposeServices(typeof(ICommandHandler))]
 public class CodeCommandhandler : CommandHandlerBase
 {
     public override async Task<string> HandleAndResponseAsync(CommandContext context)

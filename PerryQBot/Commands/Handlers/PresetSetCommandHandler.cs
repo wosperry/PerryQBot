@@ -6,7 +6,6 @@ using Volo.Abp.Domain.Repositories;
 namespace PerryQBot.Commands.Handlers
 {
     [Command("预设")]
-    [ExposeServices(typeof(ICommandHandler))]
     public class PresetSetCommandHandler : CommandHandlerBase
     {
         public IRepository<User> UserRepository { get; set; }
