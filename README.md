@@ -203,7 +203,8 @@ services:
    在1中位置，创建新的类，比如 `GreetingCommandHandler.cs`，要成为一个可被框架使用的命令，还需要满足以下条件：
    - 继承 `CommandHandlerBase` 并重写 `HandleAndResponseAsync` 方法，添加你的逻辑，并返回需要回复用户的消息。
    - 标记 `[Command("[不带前缀的命令字符]")]` 特性
-   - 标记 `[ExposeService(typeof(ICommandHandler))]` 特性（可选，如果你认为Abp框架可以正常注入这个类型，则可以不写这个特性。）
+   - 标记 `[ExposeService(typeof(ICommandHandler))]` 特性
+      `[ExposeService(typeof(ICommandHandler))]` 可选，如果你认为Abp框架可以正常注入这个类型，则可以不写这个特性。
    
 3. 代码示例：
    ``` csharp
