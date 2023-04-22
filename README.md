@@ -141,3 +141,19 @@ services:
   }
 }
 ```
+
+1. MiraiBotOptions
+   1. Host: Mirai所在的服务器地址
+   2. Port: Mirai放出来的端口
+   3. QQ: Mirai登录的QQ
+   4. AdminQQ: 管理员QQ，接收登录或者超时消息
+   5. MaxHistory: 连续对话最大历史条数
+   6. VerifyKey: Mirai 设置的http-client的 verifyKey
+   7. CommandStartChar: 命令前缀 如 #帮助 $$帮助
+
+2. OpenAiOptions
+   1. CompletionUrl: OpenAI的API地址，不用修改，如果要改，从官方文档查看。
+   2. Key: OpenAI的Key
+
+3. ConnectionStrings
+   1. Default: 数据库连接字符串，这里使用的是PostgreSQL，如果要使用其他数据库，需要修改对应的Nuget包，然后修改这里的连接字符串。并且修改程序里所依赖的 `AbpEntityFrameworkCoreXXXModule` 为对应的module
