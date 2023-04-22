@@ -47,18 +47,18 @@
 
 ``` mathematica
 PerryQBot               #项目根目录
-├─Commands              //命令相关文件夹
-│  └─Handlers           命令处理程序
-├─EntityFrameworkCore   数据库实体相关文件夹
-│  ├─Configurations     实体配置文件夹
-│  └─Entities           实体文件夹
-├─Migrations            数据库迁移文件夹
-├─OpenAI                OpenAI相关文件夹
-│  ├─BackgroundJobs     后台任务文件夹
-│  └─HttpRequests       HTTP请求文件夹
-├─Options               选项相关文件夹
-├─Properties            项目属性相关文件夹
-└─QQBot                 QQ机器人相关文件夹
+├─Commands              #命令相关文件夹
+│  └─Handlers           #命令处理程序
+├─EntityFrameworkCore   #数据库实体相关文件夹
+│  ├─Configurations     #实体配置文件夹
+│  └─Entities           #实体文件夹
+├─Migrations            #数据库迁移文件夹
+├─OpenAI                #OpenAI相关文件夹
+│  ├─BackgroundJobs     #后台任务文件夹
+│  └─HttpRequests       #HTTP请求文件夹
+├─Options               #选项相关文件夹
+├─Properties            #项目属性相关文件夹
+└─QQBot                 #QQ机器人相关文件夹
 
 ```
 
@@ -70,9 +70,8 @@ PerryQBot               #项目根目录
 1. 需要安装 Docker 和 Docker Compose。
 2. 在 `docker-compose.yml` 文件所在目录下，运行 `docker-compose up -d`。
 3. 如果需要修改配置，请先将 `appsettings.json` 文件存放在正确的位置，并修改 `.yml` 文件中对应的挂载路径。如果不挂载配置文件，可以把docker-compose.yml内的挂载部分删掉。
-4. 注意appsettings.json内的连接字符串配置的主机地址应该是数据库容器的名称，而不是localhost.
-5. 首次运行的时候数据库是不存在的，你需要在项目所在的地方修改配置为真实的连接字符串，并执行EntityFrameworkCore.Tools的Update-Database命令，将数据库结构生成出来。
-6. 运行Bot的机器需要可以访问外网。
+4. 首次运行的时候数据库是不存在的，你需要在项目所在的地方修改配置为真实的连接字符串，并执行EntityFrameworkCore.Tools的Update-Database命令，将数据库结构生成出来。
+5. 运行Bot的机器需要可以访问外网。
 
 ### `docker-compose.yml`
 
@@ -136,6 +135,22 @@ services:
 
 ### 程序配置介绍
 
+1. MiraiBotOptions
+   - Host: Mirai所在的服务器地址
+   - Port: Mirai放出来的端口
+   - QQ: Mirai登录的QQ
+   - AdminQQ: 管理员QQ，接收登录或者超时消息
+   - MaxHistory: 连续对话最大历史条数
+   - VerifyKey: Mirai 设置的http-client的 verifyKey
+   - CommandStartChar: 命令前缀 如 #帮助 $$帮助
+
+2. OpenAiOptions
+   - CompletionUrl: OpenAI的API地址，不用修改，如果要改，从官方文档查看。
+   - Key: OpenAI的Key
+
+3. ConnectionStrings
+   - Default: 数据库连接字符串，这里使用的是PostgreSQL，如果要使用其他数据库，需要修改对应的Nuget包，然后修改这里的连接字符串。并且修改程序里所依赖的 `AbpEntityFrameworkCoreXXXModule` 为对应的module
+
 ``` json
 {
   "MiraiBotOptions": {
@@ -156,19 +171,3 @@ services:
   }
 }
 ```
-
-1. MiraiBotOptions
-   - Host: Mirai所在的服务器地址
-   - Port: Mirai放出来的端口
-   - QQ: Mirai登录的QQ
-   - AdminQQ: 管理员QQ，接收登录或者超时消息
-   - MaxHistory: 连续对话最大历史条数
-   - VerifyKey: Mirai 设置的http-client的 verifyKey
-   - CommandStartChar: 命令前缀 如 #帮助 $$帮助
-
-2. OpenAiOptions
-   - CompletionUrl: OpenAI的API地址，不用修改，如果要改，从官方文档查看。
-   - Key: OpenAI的Key
-
-3. ConnectionStrings
-   - Default: 数据库连接字符串，这里使用的是PostgreSQL，如果要使用其他数据库，需要修改对应的Nuget包，然后修改这里的连接字符串。并且修改程序里所依赖的 `AbpEntityFrameworkCoreXXXModule` 为对应的module
