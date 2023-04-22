@@ -7,6 +7,8 @@ using PerryQBot.Commands.Handlers;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Uow;
 
+namespace PerryQBot.Commands;
+
 public abstract class CommandHandlerBase : ICommandHandler, ITransientDependency
 {
     public ILogger<HelpCommandHandler> Logger { get; set; }

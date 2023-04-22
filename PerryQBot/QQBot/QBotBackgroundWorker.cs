@@ -10,6 +10,8 @@ using PerryQBot.OpenAI;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.BackgroundWorkers;
 
+namespace PerryQBot.QQBot;
+
 public class QBotBackgroundWorker : BackgroundWorkerBase
 {
     public IBackgroundJobManager JobManager { get; set; }
@@ -35,7 +37,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
 
     private async void OnGroupMessageReceived(GroupMessageReceiver message)
     {
-        if (message.MessageChain.Any(t => (t is AtMessage at) && at.Target == Bot.QQ))
+        if (message.MessageChain.Any(t => t is AtMessage at && at.Target == Bot.QQ))
         {
             var userMessage = message.MessageChain.GetPlainMessage();
             Logger.LogInformation("{friendName}在群【{groupName}】@我：{plainText}", message.Sender.Name, message.GroupName, userMessage);
@@ -84,13 +86,14 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
     {
         foreach (var handler in CommandHandlers)
         {
-            if (handler.IsCommand(message.MessageChain.GetPlainMessage()))
+            var (isCommand, commandString, messageString) = handler.TryGetCommand(message.MessageChain.GetPlainMessage());
+            if (isCommand)
             {
                 var context = new CommandContext
                 {
                     Type = message.Type,
-                    Message = message.MessageChain.GetPlainMessage(),
-                    CommandString = handler.GetCommandString(message.MessageChain.GetPlainMessage())
+                    Message = messageString,
+                    CommandString = commandString
                 };
 
                 if (message is GroupMessageReceiver groupMessage)

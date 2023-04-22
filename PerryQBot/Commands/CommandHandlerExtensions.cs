@@ -2,41 +2,35 @@
 
 public static class CommandHandlerExtensions
 {
-    public static bool IsCommand<TCommand>(this TCommand handler, string message) where TCommand : ICommandHandler
+    public static (bool isCommand, string commandString, string messageString) TryGetCommand<TCommand>(this TCommand handler, string message) where TCommand : ICommandHandler
     {
-        var commandString = handler.GetCommandString(message);
-
-        if (string.IsNullOrWhiteSpace(commandString))
+        var commandStrings = handler.GetCommandStrings(message);
+        var commandString = commandStrings.FirstOrDefault(commandString => message.TrimStart().StartsWith(commandString, StringComparison.OrdinalIgnoreCase));
+        if (string.IsNullOrEmpty(commandString))
         {
-            return false;
+            return (false, null, message);
         }
-        return message.TrimStart().StartsWith(commandString, StringComparison.OrdinalIgnoreCase);
+
+        var messageString = message.Replace(commandString, "").TrimStart();
+        return (true, commandString, messageString);
     }
 
-    public static string GetCommandString<TCommand>(this TCommand handler, string message) where TCommand : ICommandHandler
+    public static List<string> GetCommandStrings<TCommand>(this TCommand handler, string message) where TCommand : ICommandHandler
     {
-        var result = "";
+        var result = new List<string>();
+        var attributes = handler.GetType().GetCustomAttributes();
         if (handler.GetType().Namespace.StartsWith("Castle.Proxies"))
         {
             // Autofac真滴烦，把我类型代理掉了，拿不到特性
             var getTargetMethod = handler.GetType().GetMethod("DynProxyGetTarget");
             var targetObject = getTargetMethod.Invoke(handler, Array.Empty<object>());
-            var attributes = targetObject.GetType().GetCustomAttributes(); ;
-            var commandAttribute = attributes.FirstOrDefault(a => a is CommandAttribute) as CommandAttribute;
-            result = commandAttribute?.Command ?? "";
+            attributes = targetObject.GetType().GetCustomAttributes();
         }
-        else
+        var commandAttribute = attributes.FirstOrDefault(a => a is CommandAttribute) as CommandAttribute;
+        if (!string.IsNullOrWhiteSpace(commandAttribute?.Command))
         {
-            var attributes = handler.GetType().GetCustomAttributes();
-            var commandAttribute = attributes.FirstOrDefault(a => a is CommandAttribute) as CommandAttribute;
-            result = commandAttribute?.Command ?? "";
+            result.Add(commandAttribute?.Command);
         }
-        return string.IsNullOrWhiteSpace(result) ? "" : ("#" + result);
-    }
-
-    public static string GetMessageString<TCommand>(this TCommand handler, string message) where TCommand : ICommandHandler
-    {
-        var commandString = handler.GetCommandString(message);
-        return message.Replace(commandString, "").TrimStart();
+        return result;
     }
 }

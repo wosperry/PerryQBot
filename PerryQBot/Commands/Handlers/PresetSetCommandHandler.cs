@@ -15,7 +15,7 @@ namespace PerryQBot.Commands.Handlers
 
         public override async Task<string> HandleAndResponseAsync(CommandContext context)
         {
-            var presetMessage = this.GetMessageString(context.Message);
+            var (isCommand, commandString, messageString) = this.TryGetCommand(context.Message);
             var user = await (await UserRepository.WithDetailsAsync(x => x.History)).FirstOrDefaultAsync(t => t.QQ == context.SenderId);
 
             if (user is null)
@@ -25,17 +25,17 @@ namespace PerryQBot.Commands.Handlers
                     QQ = context.SenderId,
                     QQNickName = context.SenderName,
                     History = new List<UserHistory>(),
-                    Preset = presetMessage
+                    Preset = messageString
                 });
             }
             else
             {
-                user.Preset = presetMessage;
+                user.Preset = messageString;
                 user.History.Clear();
                 await UserRepository.UpdateAsync(user);
             }
 
-            return $"您的预设成功修改为：{presetMessage}";
+            return $"您的预设成功修改为：{messageString}";
         }
     }
 }
