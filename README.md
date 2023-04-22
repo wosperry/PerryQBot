@@ -45,7 +45,7 @@
 
 代码结构
 
-``` shell
+``` mathematica
 PerryQBot
     ├─Commands
     │  └─Handlers
