@@ -28,7 +28,7 @@ namespace PerryQBot.Commands.Handlers
                 .SetQueryParam("extensions", "all");
 
             var result = await url.GetJsonAsync();
-
+            // TODO：偷懒，直接dynamic了
             if (result.status == "1")
             {
                 var weatherDetail = string.Join("", (result.forecasts.casts as dynamic[]).Select(d => $"""
