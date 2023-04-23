@@ -48,7 +48,7 @@ namespace PerryQBot.Commands.Handlers
                     IsContinueAfterHandled = true;
                     // 修改请求内容为新的
                     RequestMessage = $"""
-                    给你一个天气信息，完整输出这个数据，然后加上你的分析。
+                    给你一个天气信息，记得完整输出这个数据，记得说明这份数据是{DateTime.Now}访问高德接口查询的，最后分析这个天气。
 
                     {weatherMessage}
                     """;
