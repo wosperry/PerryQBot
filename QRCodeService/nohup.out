@@ -1,0 +1,18 @@
+========================二维码生成API服务========================
+加载配置参数......
+   - 版本： v1.0.0
+   - 端口： 9030
+加载数据......服务启动......[OK]
+接口地址：
+   - Local：  http://127.0.0.1:9030/query?text=juhe.cn
+   - Network：http://10.0.0.6:9030/query?text=juhe.cn
+服务状态：
+   - Statics：http://10.0.0.6:9030/statics
+接口文档：
+   - Docs：   http://10.0.0.6:9030/docs
+================================================================
+
+TRACE: 2023/04/23 16:52:37.921685 
+clientip:113.88.5.53:13217
+request: https://wosperry.com
+response:{"code":0,"msg":"success","result":{"base64_image":"iVBORw0KGgoAAAANSUhEUgAAASwAAAEsAQMAAABDsxw2AAAABlBMVEX///8ARADB11l/AAABg0lEQVR42uyZMY6EMAxFjSgoc4QchaPB0TgKR0hJEeGV7cwQYHckEhht8X+T1eZVE+f7OxAEQRD0r9WxKbQr8djPbpE/koBVY1EXH4hsV7FJ/tcAuwFrmHnyYfvxBfPMEdiNGDXMI3lgD2I98yLVDuw2LHmIWTSLl3yyGmDXMPT6J7FNDdMwkeP4OckBewDrzFG87Mph2eXQ9ehIwK5jqoFnF83Jg10OuRMMrB5rV6JBGqNoEu/RFO32jRJYGdYlw3ayDmlbh5XTiA2sAIuWnoPU9MDmIcyzHQ+wSoxsOCGnNa0eYkW+0N6igZVg6shjlqJTrP7FQ4Bdx0z97FjDs3W+s4cAK8PsFHqdqNMLhg0t1J5mGWCXsTxoaLGbNftA1ACrxrYR2wKG8SnPAfsWlr3h6yqNUmbC5RBXgJVh2SuonEb3shr687EUWAFmDTO9fr4sB9hNWIp5+olE0vShnwIrxHbfT2fHvGaeAqwSyzvg25rfxQ6sDoMgCIK+qp8AAAD//0A7AlPoT9KwAAAAAElFTkSuQmCC"}}
