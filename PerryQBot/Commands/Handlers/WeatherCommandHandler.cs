@@ -37,10 +37,26 @@ namespace PerryQBot.Commands.Handlers
 
                 """));
 
-                ResponseMessage = $"""
+                var weatherMessage = $"""
                 {result.forecasts.First().city}的天气预报：
                 {weatherDetail}
                 """;
+
+                if (WeatherOptions.Value.ResponseByAi)
+                {
+                    // Handle 之后继续后面的AI请求
+                    IsContinueAfterHandled = true;
+                    // 修改请求内容为新的
+                    RequestMessage = $"""
+                    下面是一段天气预告信息，请给我一些建议，我要求你在开头输出以下信息的完整内容，然后在其后面加上你的建议。
+                    
+                    {weatherMessage}
+                    """;
+                }
+                else
+                {
+                    ResponseMessage = weatherMessage;
+                }
             }
         }
     }
