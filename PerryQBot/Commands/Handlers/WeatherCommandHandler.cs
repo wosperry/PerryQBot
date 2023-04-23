@@ -29,15 +29,15 @@ namespace PerryQBot.Commands.Handlers
 
             var result = await url.GetJsonAsync();
 
-            if (result.Status == "1")
+            if (result.status == "1")
             {
                 var weatherDetail = string.Join("", (result.forecasts.casts as dynamic[]).Select(d => $"""
 
-                 {d.date},{d.DayWeather}-{d.NightWeather},{d.DayTemp}℃-{d.NightTemp}℃
+                 {d.date},{d.dayweather}-{d.nightweather},{d.daytemp}℃-{d.nighttemp}℃
                  """));
 
                 ResponseMessage = $"""
-                好的，这是{result.Forecasts.City}的天气预报：
+                好的，这是{result.forecasts.city}的天气预报：
                 {weatherDetail}
                 """;
             }
