@@ -9,11 +9,12 @@
 
 ## 引用
 
-使用了以下组件:
+使用了以下工具:
 
 | 工具名称 | 用途 | 协议 |
 | --- | --- | --- |
-| [Mirai.Net](https://github.com/project-mirai/mirai.net) | 用于编写 QQ 机器人。 | AGPL-3.0 |
+| [Mirai](https://github.com/mamoe/mirai) | 用于编写 QQ 机器人。 | AGPL-3.0 |
+| [Mirai.Net](https://github.com/SinoAHpx/Mirai.Net) | 用于编写 QQ 机器人。 | AGPL-3.0 |
 | [Serilog.AspNetCore](https://github.com/serilog/serilog-aspnetcore) | 用于记录应用程序日志。 | Apache License 2.0 |
 | [Flurl.Http](https://github.com/tmenier/Flurl) | 用于 HTTP 请求。 | MIT |
 | [Volo.Abp.AspNetCore.Mvc](https://abp.io/) | ASP.NET Core MVC 集成。 | LGPL-3.0-only |
