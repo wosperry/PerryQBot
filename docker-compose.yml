@@ -7,51 +7,51 @@ networks:
 
 # 定义服务
 services: 
-  ## 数据库
-  #perrybot_postgresql:
-  #  image: postgres:latest
-  #  # 容器名
-  #  container_name: perrybot_postgresql
-  #  restart: always
-  #  # 映射宿主机端口12345到数据库容器的5432，用于外部使用工具访问数据库查看数据
-  #  ports:
-  #    - "65432:5432"
-  #  # 挂载路径
-  #  volumes:
-  #    - /perry/PerryQBotDB:/var/lib/postgresql/data 
-  #  environment:
-  #    # 这里2个容器同在名为pqcnet的docker网络，直接使用容器名字和5432端口即可访问数据库
-  #    # Bot里使用的连接字符串是appsettings.json里指定的 "Host=perrybot_postgresql;Database=PerryQQBot;User ID=postgres;Password=123456;"
-  #    POSTGRES_USER: "postgres"
-  #    POSTGRES_PASSWORD: "Aa123456."
-  #    POSTGRES_DB: "PerryQQBot"
-  #  healthcheck:
-  #    test: ["CMD-SHELL", "pg_isready -U postgres"]
-  #    interval: 10s
-  #    timeout: 5s
-  #    retries: 5
-  #  # 加入到网络 pqcnet
-  #  networks:
-  #    - pqcnet
+  # 数据库
+  perrybot_postgresql:
+    image: postgres:latest
+    # 容器名
+    container_name: perrybot_postgresql
+    restart: always
+    # 映射宿主机端口12345到数据库容器的5432，用于外部使用工具访问数据库查看数据
+    ports:
+      - "65432:5432"
+    # 挂载路径
+    volumes:
+      - /perry/PerryQBotDB:/var/lib/postgresql/data 
+    environment:
+      # 这里2个容器同在名为pqcnet的docker网络，直接使用容器名字和5432端口即可访问数据库
+      # Bot里使用的连接字符串是appsettings.json里指定的 "Host=perrybot_postgresql;Database=PerryQQBot;User ID=postgres;Password=123456;"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "Aa123456."
+      POSTGRES_DB: "PerryQQBot"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # 加入到网络 pqcnet
+    networks:
+      - pqcnet
 
-  ## QBot
-  #perrybot_bot:
-  #  # 容器名
-  #  container_name: perrybot_bot
-  #  build:
-  #    # 指定执行位置
-  #    context: .
-  #    # 指定Dockerfile
-  #    dockerfile: ./PerryQBot/Dockerfile
-  #  # 加入到网络 pqcnet
-  #  restart: always
-  #  volumes:
-  #    # 这里其实是由于开源项目，我的真实配置放在了 /perry/PerryQBotConfig/appsettings.json
-  #    # 挂载路径下的appsettings.json文件到容器内的/app/appsettings.json使用
-  #    # 这里容器里的/app，是Dockerfile内指定的工作目录，如果需要修改，则需要一起改。
-  #    - /perry/PerryQBotConfig/appsettings.json:/app/appsettings.json
-  #  networks:
-  #    - pqcnet
+  # QBot
+  perrybot_bot:
+    # 容器名
+    container_name: perrybot_bot
+    build:
+      # 指定执行位置
+      context: .
+      # 指定Dockerfile
+      dockerfile: ./PerryQBot/Dockerfile
+    # 加入到网络 pqcnet
+    restart: always
+    volumes:
+      # 这里其实是由于开源项目，我的真实配置放在了 /perry/PerryQBotConfig/appsettings.json
+      # 挂载路径下的appsettings.json文件到容器内的/app/appsettings.json使用
+      # 这里容器里的/app，是Dockerfile内指定的工作目录，如果需要修改，则需要一起改。
+      - /perry/PerryQBotConfig/appsettings.json:/app/appsettings.json
+    networks:
+      - pqcnet
 
   # QRCode
   perrybot_qrcode:
