@@ -40,6 +40,7 @@ namespace PerryQBot.Commands.Handlers
 
             IsContinueAfterHandled = true;
             RequestMessage = $"""
+                城市是接口返回中的location
                 {now}
                 {climate}
                 ---------
