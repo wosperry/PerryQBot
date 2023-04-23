@@ -3,9 +3,11 @@ using Flurl.Http;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using PerryQBot.EntityFrameworkCore.Entities;
 using PerryQBot.Options;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.Domain.Repositories;
 
 namespace PerryQBot.Commands.Handlers
 {
@@ -14,6 +16,8 @@ namespace PerryQBot.Commands.Handlers
     [ExposeServices(typeof(ICommandHandler))]
     public class WeatherCommandHandler : CommandHandlerBase
     {
+        public ClearHistoryCommandHandler ClearHistoryCommandHandler { get; set; }
+
         public override async Task ExecuteAsync(CommandContext context)
         {
             var url = new Url("https://weather.cma.cn/api/autocomplete")
@@ -56,8 +60,6 @@ namespace PerryQBot.Commands.Handlers
                 return dynamicObject;
             }).ToList();
 
-            // 获取当天详细数据
-            // 获取当天详细数据
             var dayNodes = doc.DocumentNode.SelectSingleNode("//table[@class='hour-table' and @id='hourTable_0']");
             var dayData = new List<dynamic>();
             if (dayNodes != null)
@@ -88,6 +90,8 @@ namespace PerryQBot.Commands.Handlers
             result.DayData = dayData;
 
             var str = JsonConvert.SerializeObject(result);
+
+            await ClearHistoryCommandHandler.ExecuteAsync(context);
 
             IsContinueAfterHandled = true;
             RequestMessage = $"""
