@@ -23,7 +23,7 @@ public class MessageCollectionQueryCommandHandler : CommandHandlerBase
         if (pageMatch.Success)
         {
             int.TryParse(pageMatch.Groups[1].ToString(), out page);
-            message = message.Replace($"第{pageMatch.Groups[1]}页", "");
+            message = message.Replace($"第{pageMatch.Groups[1]}页", "").Trim();
         }
 
         var result = await (await DialogCollectionRepository.GetQueryableAsync())
