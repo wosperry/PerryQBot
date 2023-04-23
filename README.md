@@ -9,18 +9,22 @@
 
 ## 引用
 
-使用了以下开源组件:
+使用了以下组件:
 
-- [Mirai.Net](https://github.com/project-mirai/mirai.net) - 用于编写 QQ 机器人。
-- [Serilog.AspNetCore](https://github.com/serilog/serilog-aspnetcore) - 用于记录应用程序日志。
-- [Flurl.Http](https://github.com/tmenier/Flurl) - 用于 HTTP 请求。
-- [Volo.Abp.AspNetCore.Mvc](https://abp.io/) - ASP.NET Core MVC 集成。
-- [Volo.Abp.EventBus](https://abp.io/) - 事件总线。
-- [Volo.Abp.Autofac](https://abp.io/) - 依赖注入与控制反转。
-- [Volo.Abp.BackgroundWorkers](https://abp.io/) - 后台工作者。
-- [Volo.Abp.BackgroundJobs](https://abp.io/) - 后台任务。
-- [Volo.Abp.EntityFrameworkCore.PostgreSql](https://abp.io/) - PostgreSQL 数据库集成。
-- [Volo.Abp.Uow](https://abp.io/) - 工作单元 (Unit of Work) 设计模式的实现。
+| 工具名称 | 用途 | 协议 |
+| --- | --- | --- |
+| [Mirai.Net](https://github.com/project-mirai/mirai.net) | 用于编写 QQ 机器人。 | AGPL-3.0 |
+| [Serilog.AspNetCore](https://github.com/serilog/serilog-aspnetcore) | 用于记录应用程序日志。 | Apache License 2.0 |
+| [Flurl.Http](https://github.com/tmenier/Flurl) | 用于 HTTP 请求。 | MIT |
+| [Volo.Abp.AspNetCore.Mvc](https://abp.io/) | ASP.NET Core MVC 集成。 | LGPL-3.0-only |
+| [Volo.Abp.EventBus](https://abp.io/) | 事件总线。 | LGPL-3.0-only |
+| [Volo.Abp.Autofac](https://abp.io/) | 依赖注入与控制反转。 | LGPL-3.0-only |
+| [Volo.Abp.BackgroundWorkers](https://abp.io/) | 后台工作者。 | LGPL-3.0-only |
+| [Volo.Abp.BackgroundJobs](https://abp.io/) | 后台任务。 | LGPL-3.0-only |
+| [Volo.Abp.EntityFrameworkCore.PostgreSql](https://abp.io/) | PostgreSQL 数据库集成。 | LGPL-3.0-only |
+| [Volo.Abp.Uow](https://abp.io/) | 工作单元 (Unit of Work) 设计模式的实现。 | LGPL-3.0-only |
+| [聚合数据二维码生成器](https://www.juhe.cn/papi/qrcode) | 生成二维码。 | 非开源项目，不可商用 |
+
 
 ## 准备做的东西
 
