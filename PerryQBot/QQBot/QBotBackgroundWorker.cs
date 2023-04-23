@@ -38,7 +38,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
 
     private async void OnGroupMessageReceived(GroupMessageReceiver messageReceiver)
     {
-        // Handle到了，就结束
+        // 默认Handle到了，就结束，除非设置 IsContinueAfterHandled=true
         var commandHandler = await HandleCommandAsync(messageReceiver);
         if (commandHandler is not null && !commandHandler.IsContinueAfterHandled) return;
 

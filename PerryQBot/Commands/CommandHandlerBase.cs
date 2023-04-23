@@ -2,11 +2,9 @@
 using Mirai.Net.Data.Messages;
 using Mirai.Net.Sessions.Http.Managers;
 using Mirai.Net.Utils.Scaffolds;
-using Newtonsoft.Json;
 using PerryQBot.Commands.Handlers;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Uow;
-using Websocket.Client;
 
 namespace PerryQBot.Commands;
 
@@ -36,15 +34,15 @@ public abstract class CommandHandlerBase : ICommandHandler, ITransientDependency
             {
                 if (context.Type == MessageReceivers.Friend)
                 {
-                    await MessageManager.SendFriendMessageAsync(context.SenderId, ResponseMessage);
+                    var messageChainBuilder = OnMessageChainBuilding(new MessageChainBuilder());
+                    var messageChain = messageChainBuilder.Build();
+                    await MessageManager.SendFriendMessageAsync(context.SenderId, messageChain);
                 }
                 if (context.Type == MessageReceivers.Group)
                 {
-                    var messageChain = new MessageChainBuilder()
-                        .At(context.SenderId)
-                        .Plain(" ")
-                        .Plain(ResponseMessage)
-                        .Build();
+                    var messageChainBuilder = OnMessageChainBuilding(new MessageChainBuilder().At(context.SenderId).Plain(" "));
+                    var messageChain = messageChainBuilder.Build();
+
                     await MessageManager.SendGroupMessageAsync(context.GroupId, messageChain);
                 }
             }
@@ -61,5 +59,10 @@ public abstract class CommandHandlerBase : ICommandHandler, ITransientDependency
             await SendMessageToAdminAsync(errorMessage);
             Logger.LogError(errorMessage);
         }
+    }
+
+    public virtual MessageChainBuilder OnMessageChainBuilding(MessageChainBuilder builder)
+    {
+        return builder.Plain(ResponseMessage);
     }
 }

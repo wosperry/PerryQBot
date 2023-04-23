@@ -26,7 +26,7 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
         {
             if (!string.IsNullOrWhiteSpace(senderName))
             {
-                result.Add($"我QQ昵称是{senderName}，如果我没有额外说明我的名字，那就叫我{senderName}，如果额外说明了名字，就叫我真正的名字。");
+                result.Add($"我QQ昵称是{senderName}，请以{senderName}称呼我。");
             }
             // 添加预设
             if (!string.IsNullOrWhiteSpace(user.Preset))
