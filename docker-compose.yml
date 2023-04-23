@@ -65,6 +65,5 @@ services:
     # 加入到网络 pqcnet
     ports:
       - "9030:80"
-    restart: always
     networks:
       - pqcnet
