@@ -11,6 +11,7 @@ namespace PerryQBot.Commands;
 public abstract class CommandHandlerBase : ICommandHandler, ITransientDependency
 {
     public virtual bool IsContinueAfterHandled { get; set; } = false;
+    public virtual bool AutoResponse { get; set; } = true;
     public virtual string ResponseMessage { get; set; }
     public virtual string RequestMessage { get; set; }
     public ILogger<HelpCommandHandler> Logger { get; set; }
@@ -36,13 +37,17 @@ public abstract class CommandHandlerBase : ICommandHandler, ITransientDependency
                 {
                     var messageChainBuilder = OnMessageChainBuilding(new MessageChainBuilder());
                     var messageChain = messageChainBuilder.Build();
+                    if (AutoResponse) { 
                     await MessageManager.SendFriendMessageAsync(context.SenderId, messageChain);
+                    }
                 }
                 if (context.Type == MessageReceivers.Group)
                 {
                     var messageChainBuilder = OnMessageChainBuilding(new MessageChainBuilder().At(context.SenderId).Plain(" "));
                     var messageChain = messageChainBuilder.Build();
+                    if (AutoResponse) { 
                     await MessageManager.SendGroupMessageAsync(context.GroupId, messageChain);
+                    }
                 }
             }
         }

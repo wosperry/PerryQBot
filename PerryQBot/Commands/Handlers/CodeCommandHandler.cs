@@ -1,6 +1,9 @@
-﻿namespace PerryQBot.Commands.Handlers
+﻿using Volo.Abp.DependencyInjection;
+
+namespace PerryQBot.Commands.Handlers
 {
     [Command("代码")]
+    [ExposeServices(typeof(ICommandHandler))]
     public class CodeCommandHandler : CommandHandlerBase
     {
         public override async Task ExecuteAsync(CommandContext context)
