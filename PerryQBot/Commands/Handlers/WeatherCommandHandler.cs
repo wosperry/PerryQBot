@@ -1,6 +1,7 @@
 ﻿using Flurl;
 using Flurl.Http;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using PerryQBot.Options;
 using Volo.Abp.DependencyInjection;
 
@@ -26,7 +27,8 @@ namespace PerryQBot.Commands.Handlers
                 .SetQueryParam("city", city)
                 .SetQueryParam("extensions", "all");
 
-            var result = await url.GetJsonAsync<GaodeWeatherResponse>();
+            var strResult = await url.GetStringAsync();
+            var result = JsonConvert.DeserializeObject<GaodeWeatherResponse>(strResult);
 
             if (result.Status == GaodeResponseResultStatus.成功)
             {
