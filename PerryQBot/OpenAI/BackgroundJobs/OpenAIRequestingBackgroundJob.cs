@@ -59,7 +59,7 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
             {
                 var errorMessage = $"""
                     --------------------
-                    {args.SenderName}({args.SenderId}) 消息发送失败
+                    【{args.SenderName}({args.SenderId})】消息发送失败：
                     消息内容：{args.Messages.Last()}
                     错误类型：OpenAI请求失败
                     错误消息：{ex.Message}
@@ -73,7 +73,7 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
         {
             var errorMessage = $"""
                 --------------------
-                {args.SenderName}({args.SenderId}) 消息发送失败
+                【{args.SenderName}({args.SenderId})】消息发送失败：
                 消息内容：{args.Messages.Last()}
                 错误类型：无发送权限
                 错误消息：{ex.Message}
