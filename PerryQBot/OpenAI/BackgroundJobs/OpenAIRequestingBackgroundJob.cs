@@ -57,28 +57,30 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
             }
             catch (Exception ex)
             {
-                await MessageManager.SendFriendMessageAsync(BotOptions.Value.AdminQQ, new PlainMessage($"""
+                var errorMessage = $"""
                     --------------------
                     {args.SenderName}({args.SenderId}) 消息发送失败
                     消息内容：{args.Messages.Last()}
                     错误类型：OpenAI请求失败
                     错误消息：{ex.Message}
                     --------------------
-                    """
-               ));
+                    """;
+                await MessageManager.SendFriendMessageAsync(BotOptions.Value.AdminQQ, new PlainMessage(errorMessage));
+                Logger.LogError(errorMessage);
             }
         }
         catch (Exception ex)
         {
-            await MessageManager.SendFriendMessageAsync(BotOptions.Value.AdminQQ, new PlainMessage($"""
-                    --------------------
-                    {args.SenderName}({args.SenderId}) 消息发送失败
-                    消息内容：{args.Messages.Last()}
-                    错误类型：无发送权限
-                    错误消息：{ex.Message}
-                    --------------------
-                    """
-               ));
+            var errorMessage = $"""
+                --------------------
+                {args.SenderName}({args.SenderId}) 消息发送失败
+                消息内容：{args.Messages.Last()}
+                错误类型：无发送权限
+                错误消息：{ex.Message}
+                --------------------
+                """;
+            await MessageManager.SendFriendMessageAsync(BotOptions.Value.AdminQQ, new PlainMessage(errorMessage));
+            Logger.LogError(errorMessage);
         }
     }
 }
