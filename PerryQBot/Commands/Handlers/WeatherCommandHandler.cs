@@ -40,7 +40,7 @@ namespace PerryQBot.Commands.Handlers
                 城市是接口返回中的location
                 {now}
                 ---------
-                加上你对天气的分析。记住一定要加上数据来源于中国气象局网站weather.cma.cn
+                加上你对天气的分析，不允许胡编乱造假数据。记住一定要加上数据来源于中国气象局网站weather.cma.cn
                 此回复用于群聊，尽可能不要换行两次，而且不应用markdown格式
                 """;
         }
