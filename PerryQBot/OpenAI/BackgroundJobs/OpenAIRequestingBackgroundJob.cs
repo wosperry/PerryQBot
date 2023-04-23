@@ -29,40 +29,56 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
 
             var requestContent = new AiRequestContent(args.Messages.Select(m => new OpenAiMessage("user", m)).ToList());
 
-            var flurlResult = await url.PostAsync(JsonContent.Create(requestContent));
-            var result = await flurlResult.GetJsonAsync<AiResponse>();
-            var message = " " + (result.Choices.FirstOrDefault()?.Message?.Content?.Replace("\r\n", "\r").Replace("\r\r", "\r") ?? "啊对对对");
-
-            lock ("bot")
+            try
             {
-                if (args.Type == MessageReceivers.Friend)
-                {
-                    MessageManager.SendFriendMessageAsync(args.SenderId, new PlainMessage(message)).Wait();
-                    Logger.LogInformation("成功回复QQ好友【{friendName}】: {message}", args.SenderName, message);
-                }
-                if (args.Type == MessageReceivers.Group)
-                {
-                    var messageChain = new MessageChainBuilder()
-                        .At(args.SenderId)
-                        .Plain(message)
-                        .Build();
+                var flurlResult = await url.PostAsync(JsonContent.Create(requestContent));
+                var result = await flurlResult.GetJsonAsync<AiResponse>();
 
-                    MessageManager.SendGroupMessageAsync(args.GroupId, messageChain).Wait();
-                    Logger.LogInformation("成功回复群聊【{groupName}】：{message}", args.GroupName, message);
+                var message = " " + (result.Choices.FirstOrDefault()?.Message?.Content?.Replace("\r\n", "\r").Replace("\r\r", "\r") ?? "啊对对对");
+
+                lock ("bot")
+                {
+                    if (args.Type == MessageReceivers.Friend)
+                    {
+                        MessageManager.SendFriendMessageAsync(args.SenderId, new PlainMessage(message)).Wait();
+                        Logger.LogInformation("成功回复QQ好友【{friendName}】: {message}", args.SenderName, message);
+                    }
+                    if (args.Type == MessageReceivers.Group)
+                    {
+                        var messageChain = new MessageChainBuilder()
+                            .At(args.SenderId)
+                            .Plain(message)
+                            .Build();
+
+                        MessageManager.SendGroupMessageAsync(args.GroupId, messageChain).Wait();
+                        Logger.LogInformation("成功回复群聊【{groupName}】：{message}", args.GroupName, message);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                await MessageManager.SendFriendMessageAsync(BotOptions.Value.AdminQQ, new PlainMessage($"""
+                    --------------------
+                    {args.SenderName}({args.SenderId}) 消息发送失败
+                    消息内容：{args.Messages.Last()}
+                    错误类型：OpenAI请求失败
+                    错误消息：{ex.Message}
+                    --------------------
+                    """
+               ));
             }
         }
         catch (Exception ex)
         {
-            Logger.LogError("OpenAI请求失败", ex);
-            await MessageManager.SendFriendMessageAsync(BotOptions.Value.AdminQQ, new PlainMessage(JsonConvert.SerializeObject(new
-            {
-                ErrorType = "OpenAI请求失败",
-                ErrorMessage = "执行失败：" + ex.Message,
-                args.SenderId,
-                args.SenderName,
-                Message = args.Messages.Last(),
-            }, Formatting.Indented)));
+            await MessageManager.SendFriendMessageAsync(BotOptions.Value.AdminQQ, new PlainMessage($"""
+                    --------------------
+                    {args.SenderName}({args.SenderId}) 消息发送失败
+                    消息内容：{args.Messages.Last()}
+                    错误类型：无发送权限
+                    错误消息：{ex.Message}
+                    --------------------
+                    """
+               ));
         }
     }
 }
