@@ -38,10 +38,13 @@ public class QRCodeCommandHandler : CommandHandlerBase
 
     public override MessageChainBuilder OnMessageChainBuilding(MessageChainBuilder builder)
     {
-        // 不保留正常的文本
-        //base.OnMessageChainBuilding(builder);
+        // 默认的回复
+        base.OnMessageChainBuilding(builder);
+
         if (!string.IsNullOrEmpty(ImageBase64))
         {
+            // 当是图片的时候，不带其他信息。
+            builder.Clear();
             builder.ImageFromBase64(ImageBase64);
         }
         return builder;
