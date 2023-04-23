@@ -31,7 +31,7 @@ namespace PerryQBot.Commands.Handlers
             // TODO：偷懒，直接dynamic了
             if (result.status == "1")
             {
-                var weatherDetail = string.Join("", (result.forecasts.casts as dynamic[]).Select(d => $"""
+                var weatherDetail = string.Join("", (result.forecasts[0].casts as dynamic[]).Select(d => $"""
 
                  {d.date},{d.dayweather}-{d.nightweather},{d.daytemp}℃-{d.nighttemp}℃
                  """));
