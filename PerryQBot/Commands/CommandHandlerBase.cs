@@ -42,7 +42,6 @@ public abstract class CommandHandlerBase : ICommandHandler, ITransientDependency
                 {
                     var messageChainBuilder = OnMessageChainBuilding(new MessageChainBuilder().At(context.SenderId).Plain(" "));
                     var messageChain = messageChainBuilder.Build();
-
                     await MessageManager.SendGroupMessageAsync(context.GroupId, messageChain);
                 }
             }
