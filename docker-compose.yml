@@ -59,9 +59,9 @@ services:
     container_name: perrybot_qrcode
     build:
       # 指定执行位置
-      context: .
+      context: ./QRCodeService
       # 指定Dockerfile
-      dockerfile: ./QRCodeService/Dockerfile
+      dockerfile: Dockerfile
     # 加入到网络 pqcnet
     ports:
       - "9030:80"
