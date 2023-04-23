@@ -22,6 +22,8 @@ public class QRCodeCommandHandler : CommandHandlerBase
         var result = await url
             .SetQueryParam("text", context.Message)
             .SetQueryParam("size", 200)
+            .SetQueryParam("bgcolor", "e5e5e5")
+            .SetQueryParam("fgcolor", "001529")
             .GetJsonAsync();
         if (result.code == 0)
         {
