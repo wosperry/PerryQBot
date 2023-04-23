@@ -24,11 +24,16 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
 
         if (user is not null)
         {
+            if (!string.IsNullOrWhiteSpace(senderName))
+            {
+                result.Add($"我QQ昵称是{senderName}，如果我没有额外说明我的名字，那就叫我{senderName}，如果额外说明了名字，就叫我真正的名字。");
+            }
             // 添加预设
             if (!string.IsNullOrWhiteSpace(user.Preset))
             {
                 result.Add(user.Preset);
             }
+            // 添加历史记录
             if (user.History.Count > 0)
             {
                 foreach (var his in user.History.OrderBy(x => x.DateTime))
