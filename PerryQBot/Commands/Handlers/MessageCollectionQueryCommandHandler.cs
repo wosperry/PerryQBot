@@ -17,12 +17,13 @@ public class MessageCollectionQueryCommandHandler : CommandHandlerBase
 
     public override async Task ExecuteAsync(CommandContext context)
     {
-        var message = context.Message;
+        var message = context.Message.Trim();
         var page = 1;
         var pageMatch = Regex.Match(message, "第([0-9]{1,3})页");
         if (pageMatch.Success)
         {
             int.TryParse(pageMatch.Groups[1].ToString(), out page);
+            message = message.Replace($"第{pageMatch.Groups[1]}页", "");
         }
 
         var result = await (await DialogCollectionRepository.GetQueryableAsync())
