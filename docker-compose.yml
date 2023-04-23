@@ -64,7 +64,7 @@ services:
       dockerfile: Dockerfile
     # 加入到网络 pqcnet
     ports:
-      - "9030:80"
+      - "9030:8369"
     restart: always
     networks:
       - pqcnet
