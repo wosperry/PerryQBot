@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using PerryQBot.Options;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.Domain.Entities.Auditing;
 
 namespace PerryQBot.Commands.Handlers
 {
@@ -12,98 +13,39 @@ namespace PerryQBot.Commands.Handlers
     [ExposeServices(typeof(ICommandHandler))]
     public class WeatherCommandHandler : CommandHandlerBase
     {
-        public IOptions<WeatherOptions> WeatherOptions { get; set; }
-
         public override async Task ExecuteAsync(CommandContext context)
         {
-            if (string.IsNullOrEmpty(WeatherOptions.Value.QueryUrl))
+            var url = new Url("https://weather.cma.cn/api/autocomplete")
+                .SetQueryParam("q", context.Message.Trim());
+
+            var autocomplete = await url.GetJsonAsync();
+            if (autocomplete.code != 0)
             {
-                ResponseMessage = "没有配置天气查询Url，无法使用此功能。";
+                ResponseMessage = "未找到城市";
+                return;
             }
 
-            var city = context.Message.Trim();
-            var url = new Url(WeatherOptions.Value.QueryUrl)
-                .SetQueryParam("key", WeatherOptions.Value.Key)
-                .SetQueryParam("city", city)
-                .SetQueryParam("extensions", "all");
-
-            var strResult = await url.GetStringAsync();
-            var result = JsonConvert.DeserializeObject<GaodeWeatherResponse>(strResult);
-
-            if (result.status == GaodeResponseResultStatus.成功)
+            var cityId = (autocomplete.data as List<dynamic>)[0].Split('|')?[0];
+            if (string.IsNullOrEmpty(cityId))
             {
-                var weatherDetail = string.Join("", result.forecasts.First().casts.Select(d => $"""
-                {d.date},{d.dayweather}-{d.nightweather},{d.daytemp}℃-{d.nighttemp}℃
+                ResponseMessage = "未找到城市";
+                return;
+            }
 
-                """));
+            var nowUrl = new Url($"https://weather.cma.cn/api/now/{cityId}");
+            var now = await nowUrl.GetStringAsync();
 
-                var weatherMessage = $"""
-                {result.forecasts.First().city}的天气预报：
-                {weatherDetail}
+            var climateUrl = new Url($"https://weather.cma.cn/api/climate?stationid={cityId}");
+            var climate = await climateUrl.GetStringAsync();
+
+            IsContinueAfterHandled = true;
+            RequestMessage = $"""
+                {now}
+                {climate}
+                ---------
+                记得强调数据来源于中国气象局网站weather.cma.cn
+                分析天气数据，按日期分成多行，显示今天开始的三天数据详情，然后加上你对天气的分析，比如：今天天气晴朗，气温适宜，空气质量优，适合户外活动。分析和展示要分开。
                 """;
-
-                if (WeatherOptions.Value.ResponseByAi)
-                {
-                    // Handle 之后继续后面的AI请求
-                    IsContinueAfterHandled = true;
-                    // 修改请求内容为新的
-                    RequestMessage = $"""
-                    给你一个天气信息，记得完整输出这个数据，记得说明这份数据是{DateTime.Now}访问高德接口查询的，最后分析这个天气。
-
-                    {weatherMessage}
-                    """;
-                }
-                else
-                {
-                    ResponseMessage = weatherMessage;
-                }
-            }
         }
     }
-}
-
-public class GaodeWeatherResponse
-{
-    public GaodeResponseResultStatus status { get; set; }
-    public string info { get; set; }
-    public string infocode { get; set; }
-    public List<GaodeWeatherResponseForecasts> forecasts { get; set; }
-}
-
-public class GaodeWeatherResponseForecasts
-{
-    public string city { get; set; }
-    public string adcode { get; set; }
-    public string province { get; set; }
-    public string reporttime { get; set; }
-    public List<GaodeWeatherResponseForecastsCasts> casts { get; set; }
-}
-
-public class GaodeWeatherResponseForecastsCasts
-{
-    public string date { get; set; }
-    public GaodeWeek week { get; set; }
-    public string dayweather { get; set; }
-    public string nightweather { get; set; }
-    public string daytemp { get; set; }
-    public string nighttemp { get; set; }
-    public string daywind { get; set; }
-    public string nightwind { get; set; }
-}
-
-public enum GaodeWeek
-{
-    周一 = 1,
-    周二 = 2,
-    周三 = 3,
-    周四 = 4,
-    周五 = 5,
-    周六 = 6,
-    周日 = 7
-}
-
-public enum GaodeResponseResultStatus
-{
-    失败 = 0,
-    成功 = 1
 }

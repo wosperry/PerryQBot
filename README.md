@@ -25,7 +25,6 @@
 | [Volo.Abp.EntityFrameworkCore.PostgreSql](https://abp.io/) | PostgreSQL 数据库集成。 | LGPL-3.0-only |
 | [Volo.Abp.Uow](https://abp.io/) | 工作单元 (Unit of Work) 设计模式的实现。 | LGPL-3.0-only |
 | [聚合数据二维码生成器](https://www.juhe.cn/papi/qrcode) | 生成二维码。 | 非开源项目，不可商用 |
-| [高德天气API](https://developer.amap.com/api/webservice/guide/api/weatherinfo/) | 获取天气信息。 | 需要申请使用 |
 
 
 ## 准备做的东西
@@ -165,11 +164,6 @@ services:
   },
   "MessageCollectionOptions": {
     "MaxResultCount": 3 
-  },
-  "WeatherOptions": {
-    "QueryUrl": "https://restapi.amap.com/v3/weather/weatherInfo",
-    "Key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    "ResponseByAi": true 
   }
 }
 ```
@@ -192,11 +186,6 @@ services:
 
 4. MessageCollectionOptions
    - MaxResultCount: 每次查询的最大条数
-
-5. WeatherOptions
-   - QueryUrl: 高德地图的天气查询API地址
-   - Key: 高德地图的Key
-   - ResponseByAi: 是否使用AI回复天气信息
    
 ## 命令
 
@@ -234,7 +223,7 @@ services:
    - 说明：1~6随机的骰子
 7. $$二维码、$$qrcode
    - 说明：生成紧跟着关键词后的内容的二维码
-8. $$天气
+8. $$天气 、 $$weather
    - 说明：查询当前所在城市的天气
    - 示例：
 	  - $$天气 深圳
