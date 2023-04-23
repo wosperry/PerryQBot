@@ -1,11 +1,10 @@
-﻿namespace PerryQBot.Commands
-{
-    public interface ICommandHandler
-    {
-        bool IsContinueAfterHandled { get; set; }
-        string ResponseMessage { get; set; }
-        string RequestMessage { get; set; }
+﻿namespace PerryQBot.Commands;
 
-        Task HandleAsync(CommandContext context);
-    }
+public interface ICommandHandler
+{
+    bool IsContinueAfterHandled { get; set; }
+    string ResponseMessage { get; set; }
+    string RequestMessage { get; set; }
+
+    Task HandleAsync(CommandContext context);
 }
