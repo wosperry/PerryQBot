@@ -27,20 +27,67 @@ namespace PerryQBot.Commands.Handlers
                 .SetQueryParam("city", city)
                 .SetQueryParam("extensions", "all");
 
-            var result = await url.GetJsonAsync();
-            // TODO：偷懒，直接dynamic了
-            if (result.status == "1")
-            {
-                var weatherDetail = string.Join("", (result.forecasts[0].casts as dynamic[]).Select(d => $"""
+            var strResult = await url.GetStringAsync();
+            var result = JsonConvert.DeserializeObject<GaodeWeatherResponse>(strResult);
 
-                 {d.date},{d.dayweather}-{d.nightweather},{d.daytemp}℃-{d.nighttemp}℃
-                 """));
+            if (result.status == GaodeResponseResultStatus.成功)
+            {
+                var weatherDetail = string.Join("", result.forecasts.First().casts.Select(d => $"""
+                {d.date},{d.dayweather}-{d.nightweather},{d.daytemp}℃-{d.nighttemp}℃
+
+                """));
 
                 ResponseMessage = $"""
-                好的，这是{result.forecasts.city}的天气预报：
+                {result.forecasts.First().city}的天气预报：
                 {weatherDetail}
                 """;
             }
         }
     }
+}
+
+public class GaodeWeatherResponse
+{
+    public GaodeResponseResultStatus status { get; set; }
+    public string info { get; set; }
+    public string infocode { get; set; }
+    public List<GaodeWeatherResponseForecasts> forecasts { get; set; }
+}
+
+public class GaodeWeatherResponseForecasts
+{
+    public string city { get; set; }
+    public string adcode { get; set; }
+    public string province { get; set; }
+    public string reporttime { get; set; }
+    public List<GaodeWeatherResponseForecastsCasts> casts { get; set; }
+}
+
+public class GaodeWeatherResponseForecastsCasts
+{
+    public string date { get; set; }
+    public GaodeWeek week { get; set; }
+    public string dayweather { get; set; }
+    public string nightweather { get; set; }
+    public string daytemp { get; set; }
+    public string nighttemp { get; set; }
+    public string daywind { get; set; }
+    public string nightwind { get; set; }
+}
+
+public enum GaodeWeek
+{
+    周一 = 1,
+    周二 = 2,
+    周三 = 3,
+    周四 = 4,
+    周五 = 5,
+    周六 = 6,
+    周日 = 7
+}
+
+public enum GaodeResponseResultStatus
+{
+    失败 = 0,
+    成功 = 1
 }
