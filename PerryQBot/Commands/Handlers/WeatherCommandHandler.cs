@@ -48,7 +48,7 @@ namespace PerryQBot.Commands.Handlers
                     IsContinueAfterHandled = true;
                     // 修改请求内容为新的
                     RequestMessage = $"""
-                    我要求你直接输出以下天气信息的完整内容，并最后在其后面附加上你的建议。
+                    给你一个天气信息，完整输出这个数据，然后加上你的分析。
 
                     {weatherMessage}
                     """;
