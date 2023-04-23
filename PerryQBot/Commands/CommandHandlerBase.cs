@@ -37,16 +37,18 @@ public abstract class CommandHandlerBase : ICommandHandler, ITransientDependency
                 {
                     var messageChainBuilder = OnMessageChainBuilding(new MessageChainBuilder());
                     var messageChain = messageChainBuilder.Build();
-                    if (AutoResponse) { 
-                    await MessageManager.SendFriendMessageAsync(context.SenderId, messageChain);
+                    if (AutoResponse)
+                    {
+                        await MessageManager.SendFriendMessageAsync(context.SenderId, messageChain);
                     }
                 }
                 if (context.Type == MessageReceivers.Group)
                 {
                     var messageChainBuilder = OnMessageChainBuilding(new MessageChainBuilder().At(context.SenderId).Plain(" "));
                     var messageChain = messageChainBuilder.Build();
-                    if (AutoResponse) { 
-                    await MessageManager.SendGroupMessageAsync(context.GroupId, messageChain);
+                    if (AutoResponse)
+                    {
+                        await MessageManager.SendGroupMessageAsync(context.GroupId, messageChain);
                     }
                 }
             }
