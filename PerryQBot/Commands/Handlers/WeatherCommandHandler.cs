@@ -30,7 +30,9 @@ namespace PerryQBot.Commands.Handlers
                 return;
             }
 
-            var cityId = (autocomplete.data as List<dynamic>)[0].Split('|')?[0];
+            var cityStr = (autocomplete.data as List<dynamic>)[0];
+            var cityId = cityStr.Split('|')?[0];
+            var cityName = cityStr.Split('|')?[1].Split('|')[0];
             if (string.IsNullOrEmpty(cityId))
             {
                 ResponseMessage = "未找到城市";
@@ -97,18 +99,18 @@ namespace PerryQBot.Commands.Handlers
             RequestMessage = $"""
                 {str}
                 ---------
-                分析以上数据，不允许胡编乱造假数据。记住一定要加上数据来源于中国气象局网站weather.cma.cn
+                分析{cityName}的天气数据，不允许胡编乱造假数据。记住一定要加上数据来源于中国气象局网站weather.cma.cn
                 此回复用于群聊，尽可能不要换行两次，而且不应用markdown格式。参考下列格式输出，不要在开头加任何你的话：
 
-                某市今天天气：晴，气温：-5℃~+5℃，风力：3级，风向：东北风
+                {cityName}市今天天气：晴，气温：-5℃~+5℃，风力：3级，风向：东北风
                 --------------------------------
                 1月1日 星期一 晴 -5℃~+5℃ 东北风3级
                 1月2日 星期二 晴 -5℃~+5℃ 东北风3级
                 ...
                 1月7日 星期日 晴 -5℃~+5℃ 东北风3级
-                以上数据来源于中国气象局网站weather.cma.cn
                 --------------------------------
-                根据气象数据显示，今天某市天气xxx，适合xxx,紫外线强度xxx，建议xxx，注意xxx。
+                以上数据来源于中国气象局网站weather.cma.cn
+                根据气象数据显示，今天{cityName}市天气xxx，适合xxx,紫外线强度xxx，建议xxx，注意xxx。
                 """;
         }
     }
