@@ -25,6 +25,7 @@
 | [Volo.Abp.EntityFrameworkCore.PostgreSql](https://abp.io/) | PostgreSQL 数据库集成。 | LGPL-3.0-only |
 | [Volo.Abp.Uow](https://abp.io/) | 工作单元 (Unit of Work) 设计模式的实现。 | LGPL-3.0-only |
 | [聚合数据二维码生成器](https://www.juhe.cn/papi/qrcode) | 生成二维码。 | 非开源项目，不可商用 |
+| [高德天气API](https://developer.amap.com/api/webservice/guide/api/weatherinfo/) | 获取天气信息。 | 需要申请使用 |
 
 
 ## 准备做的东西
@@ -49,6 +50,9 @@
    - [x] 搜索收藏的消息
    - [x] 骰子
    - [x] 对接二维码生成
+   - [x] 增加天气预报，对接了高德的
+   - [x] 天气预报配置里增加了开关，可配置是否让AI分析天气并给建议。
+   - [ ] 每日技术新闻（暂时不知道哪里能免费查每天的开发者新闻）
 
 ## 项目结构
 
@@ -161,6 +165,11 @@ services:
   },
   "MessageCollectionOptions": {
     "MaxResultCount": 3 
+  },
+  "WeatherOptions": {
+    "QueryUrl": "https://restapi.amap.com/v3/weather/weatherInfo",
+    "Key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "ResponseByAi": true 
   }
 }
 ```
@@ -184,6 +193,11 @@ services:
 4. MessageCollectionOptions
    - MaxResultCount: 每次查询的最大条数
 
+5. WeatherOptions
+   - QueryUrl: 高德地图的天气查询API地址
+   - Key: 高德地图的Key
+   - ResponseByAi: 是否使用AI回复天气信息
+   
 ## 命令
 
 当收到私聊@机器人时，如果聊天开头是以命令开头的，则进入命令处理程序，默认不走OpenAI请求。
@@ -220,8 +234,13 @@ services:
    - 说明：1~6随机的骰子
 7. $$二维码、$$qrcode
    - 说明：生成紧跟着关键词后的内容的二维码
+8. $$天气
+   - 说明：查询当前所在城市的天气
+   - 示例：
+	  - $$天气 深圳
+	  - $$天气 上海
       
-### 命令处理程序
+### 命令处理程序（不开发不用看）
 
 1. 位置
    ``` mathematica
@@ -314,6 +333,15 @@ Mochi 0:56:03
    - 示例：
       - #查询收藏 Perry
       - #查询收藏 MongoDB
+6. $$骰子
+   - 说明：1~6随机的骰子
+7. $$二维码、$$qrcode
+   - 说明：生成紧跟着关键词后的内容的二维码
+8. $$天气
+   - 说明：查询当前所在城市的天气
+   - 示例：
+	  - $$天气 深圳
+	  - $$天气 上海
 
 ```
 
@@ -374,3 +402,21 @@ Mochi 0:56:56
 预设修改成功
 
 ```
+
+
+``` plaintext
+wosperry 22:51:41
+#天气 张家界
+
+【管理员】Perry 22:53:57
+@Mochi #天气 深圳
+
+【潜水】Mochi 22:54:31
+@Perry 深圳市的天气预报：
+2023-04-23，阴-阴，27℃-24℃。今天深圳仍然处于阴雨天气中，气温较高，建议居民注意携带雨具和保湿用品，避免着凉感冒。
+2023-04-24，阴-多云，29℃-23℃。明天深圳有望逐渐转晴，但仍有多云天气，气温相较昨天有所上升，建议居民注意及时添衣保暖，预防感冒。
+2023-04-25，雷阵雨-雷阵雨，29℃-21℃。周三深圳有可能出现雷阵雨天气，气温适中，建议注意安全，在室外时需注意避雷。
+2023-04-26，多云-多云，26℃-21℃。周四深圳天气转为多云天气，气温适宜，建议居民适量锻炼身体，享受天气带来的舒适感。
+
+```
+ 
