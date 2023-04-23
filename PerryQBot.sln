@@ -11,7 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决�
 		docker-compose.yml = docker-compose.yml
 		LICENSE = LICENSE
 		README.md = README.md
-		restart = restart
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "QRCodeService", "QRCodeService", "{B72AF199-EC6C-4AFE-98C8-53CCB7C25C7D}"
+	ProjectSection(SolutionItems) = preProject
+		QRCodeService\Dockerfile = QRCodeService\Dockerfile
 	EndProjectSection
 EndProject
 Global
@@ -27,6 +31,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B72AF199-EC6C-4AFE-98C8-53CCB7C25C7D} = {54911FF4-AE96-4A1B-84B9-59E2C982B39A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D8B091F2-4ECC-4F91-B61A-BB836FCE66E0}

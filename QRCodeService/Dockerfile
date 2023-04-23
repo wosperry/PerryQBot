@@ -1,5 +1,5 @@
 FROM ubuntu:latest
 COPY . /app
 WORKDIR /app
-RUN "./server"
+ENTRYPOINT ["./server","--port=80"]
 
