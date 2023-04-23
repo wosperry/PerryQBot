@@ -35,25 +35,13 @@ namespace PerryQBot.Commands.Handlers
             var nowUrl = new Url($"https://weather.cma.cn/api/now/{cityId}");
             var now = await nowUrl.GetStringAsync();
 
-            var climateUrl = new Url($"https://weather.cma.cn/api/climate?stationid={cityId}");
-            var climate = await climateUrl.GetStringAsync();
-
             IsContinueAfterHandled = true;
             RequestMessage = $"""
                 城市是接口返回中的location
                 {now}
-                {climate}
                 ---------
                 加上你对天气的分析。记住一定要加上数据来源于中国气象局网站weather.cma.cn
-                此回复用于群聊，尽可能不要换行两次，而且不应用markdown格式。要求参考以下格式回复：
-                ---------
-                某城市5月1日天气（数据来源于中国气象局网站weather.cma.cn）
-                5月1日，多云，14~20℃，微风
-                5月2日，暴雨转多云，8~14℃，东北风5级
-                5月3日，晴，20~32℃，东北风2级
-
-                今天天气晴朗，明天有雨，后天有风，预计明天会下雨，后天会有风，但是后天的风不会很大，所以不会影响出行。
-                日照时间较长，紫外线较强，注意防晒。
+                此回复用于群聊，尽可能不要换行两次，而且不应用markdown格式
                 """;
         }
     }
