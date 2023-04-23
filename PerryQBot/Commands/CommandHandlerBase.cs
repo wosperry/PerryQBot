@@ -51,14 +51,15 @@ public abstract class CommandHandlerBase : ICommandHandler, ITransientDependency
         }
         catch (Exception ex)
         {
-            await SendMessageToAdminAsync(JsonConvert.SerializeObject(new
-            {
-                context.SenderId,
-                context.SenderName,
-                Command = context.CommandString,
-                ErrorMessage = "任务执行失败，请查看系统日志。"
-            }));
-            Logger.LogError("任务执行失败{message}", ex.Message);
+            var errorMessage = $"""
+                ----------------
+                【{context.SenderName}({context.SenderId})】命令处理失败：
+                命令：{context.CommandString}
+                错误：{ex.Message}
+                ----------------
+                """;
+            await SendMessageToAdminAsync(errorMessage);
+            Logger.LogError(errorMessage);
         }
     }
 }
