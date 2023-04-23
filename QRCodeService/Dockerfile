@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-COPY . /app
 WORKDIR /app
+COPY . .
 ENTRYPOINT ["./server","--port","80"]
 
