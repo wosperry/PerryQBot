@@ -102,7 +102,7 @@ namespace PerryQBot.Commands.Handlers
                 --------------------------------
                 以上数据来源于中国气象局网站weather.cma.cn
 
-                根据气象数据显示，今天{cityName}市【详细分析今天数据，包括云雨风日照等】（例如：天气xxx，适合xxx,紫外线强度xxx，建议xxx，注意xxx）。
+                根据气象数据显示，今天{cityName}市【详细分析今天数据】
                 """;
         }
     }
