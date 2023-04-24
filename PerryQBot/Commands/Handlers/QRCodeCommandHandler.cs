@@ -13,24 +13,12 @@ namespace PerryQBot.Commands.Handlers;
 public class QRCodeCommandHandler : CommandHandlerBase
 {
     public IOptions<QRCodeOptions> QRCodeOptions { get; set; }
-    public string ImageBase64 { get; set; }
+    public string ImageUrl { get; set; }
 
     public override async Task ExecuteAsync(CommandContext context)
     {
-        var url = new Url(QRCodeOptions.Value.QueryUrl);
-
-        var result = await url
-            .SetQueryParam("data", context.Message)
-            .GetJsonAsync();
-        if (result.code == 0)
-        {
-            ResponseMessage = context.Message;
-            ImageBase64 = result.result.base64_image;
-        }
-        else
-        {
-            ResponseMessage = "生成失败";
-        }
+        ImageUrl = $"{QRCodeOptions.Value.QueryUrl}?data={context.Message.Trim()}";
+        await Task.CompletedTask;
     }
 
     public override MessageChainBuilder OnMessageChainBuilding(MessageChainBuilder builder)
@@ -38,11 +26,11 @@ public class QRCodeCommandHandler : CommandHandlerBase
         // 默认的回复
         base.OnMessageChainBuilding(builder);
 
-        if (!string.IsNullOrEmpty(ImageBase64))
+        if (!string.IsNullOrEmpty(ImageUrl))
         {
             // 当是图片的时候，不带其他信息。
             builder.Clear();
-            builder.ImageFromBase64(ImageBase64);
+            builder.ImageFromUrl(ImageUrl);
         }
         return builder;
     }
