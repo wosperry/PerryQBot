@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Manganese.Array;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using PerryQBot.EntityFrameworkCore.Entities;
@@ -15,33 +16,29 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
     public IOptions<MiraiBotOptions> BotOptions { get; set; }
 
     [UnitOfWork]
-    public virtual async Task<List<string>> BuildUserRequestMessagesAsync(string senderId, string senderName, string message)
+    public virtual async Task<List<OpenAiMessage>> BuildUserRequestMessagesAsync(string senderId, string senderName, string message)
     {
-        var result = new List<string>();
+        var result = new List<OpenAiMessage>();
         var user = await (await UserRepository.WithDetailsAsync(x => x.History))
             .FirstOrDefaultAsync(t => t.QQ == senderId);
 
         if (user is not null)
         {
-            if (!string.IsNullOrWhiteSpace(senderName))
-            {
-                result.Add($"我QQ昵称是{senderName}，请以{senderName}称呼我。");
-            }
             // 添加预设
             if (!string.IsNullOrWhiteSpace(user.Preset))
             {
-                result.Add(user.Preset);
+                result.Add(new("user", user.Preset));
             }
             // 添加历史记录
             if (user.History.Count > 0)
             {
                 foreach (var his in user.History.OrderBy(x => x.DateTime))
                 {
-                    result.Add(his.Message);
+                    result.Add(new(his.Role, his.Message));
                 }
             }
 
-            user.History.Add(new UserHistory { Message = message, DateTime = DateTime.Now });
+            user.History.Add(new UserHistory { Role = "user", Message = message, DateTime = DateTime.Now });
             if (user.History.Count > BotOptions.Value.MaxHistory)
             {
                 user.History.Remove(user.History.OrderBy(x => x.DateTime).First());
@@ -54,12 +51,12 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
             {
                 QQ = senderId,
                 QQNickName = senderName,
-                History = new List<UserHistory>() { new UserHistory { Message = message, DateTime = DateTime.Now } },
+                History = new List<UserHistory>() { new UserHistory { Role = "user", Message = message, DateTime = DateTime.Now } },
                 Preset = ""
             }, true);
         }
         // 添加当前请求
-        result.Add(message);
+        result.Add(new("user", message));
 
         Logger.LogInformation("请求参数：");
         Logger.LogInformation(JsonConvert.SerializeObject(result));
