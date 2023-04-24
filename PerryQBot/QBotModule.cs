@@ -1,5 +1,4 @@
-﻿using PerryQBot.Commands;
-using PerryQBot.EntityFrameworkCore;
+﻿using PerryQBot.EntityFrameworkCore;
 using PerryQBot.Options;
 using PerryQBot.QQBot;
 using Volo.Abp.AspNetCore.Mvc;

@@ -1,7 +1,8 @@
 ﻿using Mirai.Net.Utils.Scaffolds;
+using PerryQBot.Commands;
 using Volo.Abp.DependencyInjection;
 
-namespace PerryQBot.Commands.Handlers;
+namespace PerryQBot.CommandHandlers;
 
 [Command("骰子")]
 [ExposeServices(typeof(ICommandHandler))]

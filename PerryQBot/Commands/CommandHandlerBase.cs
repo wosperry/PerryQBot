@@ -2,7 +2,7 @@
 using Mirai.Net.Data.Messages;
 using Mirai.Net.Sessions.Http.Managers;
 using Mirai.Net.Utils.Scaffolds;
-using PerryQBot.Commands.Handlers;
+using PerryQBot.CommandHandlers;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Uow;
 

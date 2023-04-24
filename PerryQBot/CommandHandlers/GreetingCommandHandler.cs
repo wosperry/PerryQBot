@@ -1,6 +1,7 @@
-﻿using Volo.Abp.DependencyInjection;
+﻿using PerryQBot.Commands;
+using Volo.Abp.DependencyInjection;
 
-namespace PerryQBot.Commands.Handlers;
+namespace PerryQBot.CommandHandlers;
 
 [Command("你好")]
 [ExposeServices(typeof(ICommandHandler))]

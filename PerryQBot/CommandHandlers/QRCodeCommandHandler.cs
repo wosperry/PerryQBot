@@ -1,11 +1,10 @@
-﻿using Flurl;
-using Flurl.Http;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Mirai.Net.Utils.Scaffolds;
+using PerryQBot.Commands;
 using PerryQBot.Options;
 using Volo.Abp.DependencyInjection;
 
-namespace PerryQBot.Commands.Handlers;
+namespace PerryQBot.CommandHandlers;
 
 [Command("qrcode")]
 [Command("二维码")]

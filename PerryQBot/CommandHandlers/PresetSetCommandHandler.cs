@@ -1,19 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PerryQBot.Commands;
 using PerryQBot.EntityFrameworkCore.Entities;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
 
-namespace PerryQBot.Commands.Handlers;
+namespace PerryQBot.CommandHandlers;
 
-[Command("清空")]
-[Command("清空记录")]
-[ExposeServices(typeof(ICommandHandler), typeof(ClearHistoryCommandHandler))]
-public class ClearHistoryCommandHandler : CommandHandlerBase
+[Command("preset")]
+[Command("预设")]
+[ExposeServices(typeof(ICommandHandler))]
+public class PresetSetCommandHandler : CommandHandlerBase
 {
     public IRepository<User> UserRepository { get; set; }
 
     public override async Task ExecuteAsync(CommandContext context)
     {
+        var (isCommand, commandString, messageString) = this.TryGetCommand(context.Message);
         var user = await (await UserRepository.WithDetailsAsync(x => x.History)).FirstOrDefaultAsync(t => t.QQ == context.SenderId);
 
         if (user is null)
@@ -23,15 +25,16 @@ public class ClearHistoryCommandHandler : CommandHandlerBase
                 QQ = context.SenderId,
                 QQNickName = context.SenderName,
                 History = new List<UserHistory>(),
-                Preset = ""
-            });
+                Preset = messageString
+            }, true);
         }
         else
         {
+            user.Preset = messageString;
             user.History.Clear();
-            await UserRepository.UpdateAsync(user);
+            await UserRepository.UpdateAsync(user, true);
         }
 
-        ResponseMessage = "您的历史已清空";
+        ResponseMessage = $"预设修改成功";
     }
 }

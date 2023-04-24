@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
+using PerryQBot.Commands;
 using PerryQBot.Options;
 using Volo.Abp.DependencyInjection;
 
-namespace PerryQBot.Commands.Handlers;
+namespace PerryQBot.CommandHandlers;
 
 [Command("help")]
 [Command("帮助")]

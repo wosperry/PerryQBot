@@ -1,12 +1,13 @@
 ﻿using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using PerryQBot.Commands;
 using PerryQBot.EntityFrameworkCore.Entities;
 using PerryQBot.Options;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
 
-namespace PerryQBot.Commands.Handlers;
+namespace PerryQBot.CommandHandlers;
 
 [Command("查询收藏")]
 [ExposeServices(typeof(ICommandHandler))]
