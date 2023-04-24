@@ -16,7 +16,9 @@ namespace PerryQBot.Commands.Handlers
 
         public override async Task ExecuteAsync(CommandContext context)
         {
-            var url = new Url(RandomImageOptions.Value.Url)
+            var rand = new Random(DateTime.Now.Millisecond).Next(1, 2); // 1横版 2竖版
+
+            var url = new Url(RandomImageOptions.Value.Url + rand)
                 .SetQueryParam("format", "json")
                 .SetQueryParam("sort", "二次元");
 
