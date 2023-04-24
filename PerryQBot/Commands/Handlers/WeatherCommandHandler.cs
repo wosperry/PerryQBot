@@ -27,7 +27,7 @@ namespace PerryQBot.Commands.Handlers
 
             var cityStr = (autocomplete.data as List<dynamic>)[0];
             var cityId = cityStr.Split('|')?[0];
-            var cityName = (cityStr.Split('|')?[1].Split('|')[0] as string).Trim();
+            var cityName = cityStr.Split('|')?[1].Split('|')[0];
             if (string.IsNullOrEmpty(cityId))
             {
                 ResponseMessage = "未找到城市";
