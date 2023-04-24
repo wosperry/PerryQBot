@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Mirai.Net.Sessions.Http.Managers;
 using PerryQBot.EntityFrameworkCore.Entities;
 using PerryQBot.Options;
 using Volo.Abp.DependencyInjection;

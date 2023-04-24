@@ -113,8 +113,8 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
                 }
 
                 // 执行命令
-                await handler.HandleAsync(context);
                 handler.RequestMessage = context.Message;
+                await handler.HandleAsync(context);
                 return handler;
             }
         }

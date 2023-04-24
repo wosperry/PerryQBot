@@ -7,7 +7,7 @@ namespace PerryQBot.Commands.Handlers;
 
 [Command("清空")]
 [Command("清空记录")]
-[ExposeServices(typeof(ICommandHandler))]
+[ExposeServices(typeof(ICommandHandler), typeof(ClearHistoryCommandHandler))]
 public class ClearHistoryCommandHandler : CommandHandlerBase
 {
     public IRepository<User> UserRepository { get; set; }
