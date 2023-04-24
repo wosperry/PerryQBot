@@ -16,9 +16,9 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
     public IOptions<MiraiBotOptions> BotOptions { get; set; }
 
     [UnitOfWork]
-    public virtual async Task<List<(string Role, string Message)>> BuildUserRequestMessagesAsync(string senderId, string senderName, string message)
+    public virtual async Task<List<OpenAiMessage>> BuildUserRequestMessagesAsync(string senderId, string senderName, string message)
     {
-        var result = new List<(string Role, string Message)>();
+        var result = new List<OpenAiMessage>();
         var user = await (await UserRepository.WithDetailsAsync(x => x.History))
             .FirstOrDefaultAsync(t => t.QQ == senderId);
 
@@ -27,14 +27,14 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
             // 添加预设
             if (!string.IsNullOrWhiteSpace(user.Preset))
             {
-                result.Add(("system", user.Preset));
+                result.Add(new("user", user.Preset));
             }
             // 添加历史记录
             if (user.History.Count > 0)
             {
                 foreach (var his in user.History.OrderBy(x => x.DateTime))
                 {
-                    result.Add((his.Role, his.Message));
+                    result.Add(new(his.Role, his.Message));
                 }
             }
 
@@ -56,7 +56,7 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
             }, true);
         }
         // 添加当前请求
-        result.Add(("user", message));
+        result.Add(new("user", message));
 
         Logger.LogInformation("请求参数：");
         Logger.LogInformation(JsonConvert.SerializeObject(result));

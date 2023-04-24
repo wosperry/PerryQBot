@@ -19,8 +19,7 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
     public IOptions<OpenAiOptions> OpenAiOptions { get; set; }
     public IOptions<MiraiBotOptions> BotOptions { get; set; }
     public IAbpDistributedLock DistributedLock { get; set; }
-
-    public IReadOnlyRepository<User> UserRepository { get; set; }
+    public IUnitOfWorkManager UnitOfWorkManager { get; set; }
 
     private static readonly object _lock = new object();
 
@@ -32,10 +31,10 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
             .WithHeader("Authorization", $"Bearer {OpenAiOptions.Value.Key}");
         try
         {
-            var currentMessage = args.Messages[^1];
+            var currentMessage = args.Messages.Last();
             Logger.LogInformation("请求OpenAI：{friendMessage}", currentMessage);
 
-            var requestContent = new AiRequestContent(args.Messages.Select(m => new OpenAiMessage(m.Role, m.Message)).ToList());
+            var requestContent = new AiRequestContent(args.Messages.Select(m => new OpenAiMessage(m.Role, m.Content)).ToList());
 
             try
             {
@@ -94,12 +93,12 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
         }
     }
 
-    [UnitOfWork]
-    public virtual async Task AddHistoryAsync(string qq, string message)
+    public async Task AddHistoryAsync(string qq, string message)
     {
-        var user = await (await UserRepository.WithDetailsAsync(x => x.History))
-                   .Where(t => t.QQ == qq)
-                   .FirstOrDefaultAsync();
+        using var uow = UnitOfWorkManager.Begin();
+        var userRepository = uow.ServiceProvider.GetService<IRepository<User>>();
+        var user = await (await userRepository.WithDetailsAsync(x => x.History)).Where(t => t.QQ == qq)
+            .FirstOrDefaultAsync();
         if (user is not null)
         {
             user.History.Add(new UserHistory
@@ -110,5 +109,6 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
                 UserId = user.Id
             });
         }
+        await uow.CompleteAsync();
     }
 }
