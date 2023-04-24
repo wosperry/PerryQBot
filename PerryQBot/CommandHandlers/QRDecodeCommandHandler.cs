@@ -3,11 +3,9 @@ using Flurl.Http;
 using Microsoft.Extensions.Options;
 using Mirai.Net.Data.Messages;
 using Mirai.Net.Data.Messages.Concretes;
-using Mirai.Net.Data.Messages.Receivers;
 using Mirai.Net.Sessions.Http.Managers;
 using Mirai.Net.Utils.Scaffolds;
 using PerryQBot.Commands;
-using PerryQBot.EntityFrameworkCore.Entities;
 using PerryQBot.Options;
 
 namespace PerryQBot.CommandHandlers;
