@@ -1,21 +1,42 @@
----
+# 发布Bot镜像
 kind: pipeline
-type: ssh
-name: 发布
-
-server:
-  host: 
-    from_secret: host
-  user: 
-    from_secret: user
-  password:
-    from_secret: password
-
+type: docker
+name: perrybot
 steps:
-- name: ssh发布
-  commands:
-    - docker-compose down
-    - git pull
-    - docker-compose build 
-    - docker-compose up -d
-    - docker container prune -f
+  - name: 构建镜像
+    image: docker
+    volumes:
+      - name: docker
+        path: /var/run/docker.sock
+    commands:
+      - docker rm -f perrybot || true
+      - docker rmi -f perrybot:latest || true
+      - docker build -f ./src/PerryQBot/Dockerfile -t perrybot .
+  - name: 推送镜像
+    image: docker
+    volumes:
+      - name: docker
+        path: /var/run/docker.sock
+      - name: daemon
+        path: /etc/docker
+    environment:
+      DOCKER_REGISTRY:
+        from_secret: docker_registry
+    commands:
+      - docker login --username=wosperry $DOCKER_REGISTRY --password-stdin < /etc/docker/ali_password
+      - docker tag perrybot:latest perrybot:$DRONE_TAG
+      - docker tag perrybot:latest $DOCKER_REGISTRY/wosperry/perrybot:latest
+      - docker tag perrybot:latest $DOCKER_REGISTRY/wosperry/perrybot:$DRONE_TAG
+      - docker push $DOCKER_REGISTRY/wosperry/perrybot:$DRONE_TAG
+      - docker push $DOCKER_REGISTRY/wosperry/perrybot:latest
+volumes:
+  - name: docker
+    host:
+      path: /var/run/docker.sock
+  - name: daemon
+    host:
+      path: /etc/docker
+trigger:
+  ref:
+    include:
+      - refs/tags/v*
