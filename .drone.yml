@@ -12,6 +12,6 @@ server:
     from_secret: password
 
 steps:
-- name: greeting
+- name: ssh发布
   commands:
   - /perry/PerryQBot/restart
