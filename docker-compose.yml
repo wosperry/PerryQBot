@@ -52,19 +52,4 @@ services:
       - /perry/PerryQBotConfig/appsettings.json:/app/appsettings.json
     networks:
       - pqcnet
-
-  # QRCode
-  perrybot_qrcode:
-    # 容器名
-    container_name: perrybot_qrcode
-    build:
-      # 指定执行位置
-      context: ./QRCodeService
-      # 指定Dockerfile
-      dockerfile: Dockerfile
-    # 加入到网络 pqcnet
-    ports:
-      - "9030:8369"
-    restart: always
-    networks:
-      - pqcnet
+      
