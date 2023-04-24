@@ -40,9 +40,6 @@ public class QRDecodeCommandHandler : CommandHandlerBase
                 var result = url.GetJsonAsync().Result;
                 if (result.code == 1)
                 {
-                    // 放一个图片
-                    builder.Append(imageMessage);
-
                     // 放上解析后的字符串
                     builder.Plain($"内容：{result.qrurl}");
                 }
