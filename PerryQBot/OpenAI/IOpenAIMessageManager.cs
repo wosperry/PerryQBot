@@ -2,5 +2,5 @@
 
 public interface IOpenAIMessageManager
 {
-    Task<List<string>> BuildUserRequestMessagesAsync(string senderId, string senderName, string message);
+    Task<List<(string Role, string Message)>> BuildUserRequestMessagesAsync(string senderId, string senderName, string message);
 }

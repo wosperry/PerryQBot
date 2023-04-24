@@ -5,18 +5,26 @@ using Mirai.Net.Data.Messages;
 using Mirai.Net.Data.Messages.Concretes;
 using Mirai.Net.Sessions.Http.Managers;
 using Mirai.Net.Utils.Scaffolds;
+using PerryQBot.EntityFrameworkCore.Entities;
 using PerryQBot.Options;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.DistributedLocking;
+using Volo.Abp.Domain.Repositories;
 
 public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackgroundJobArgs>, ITransientDependency
 {
     public IOptions<OpenAiOptions> OpenAiOptions { get; set; }
     public IOptions<MiraiBotOptions> BotOptions { get; set; }
     public IAbpDistributedLock DistributedLock { get; set; }
+    public IRepository<UserHistory> UserHistoryRepository { get; set; }
+
+    public IReadOnlyRepository<User> UserRepository { get; set; }
+
+    private static readonly object _lock = new object();
 
     // TODO: 考虑发消息改到一个独立的后台任务中
+
     public override async void Execute(OpenAIRequestingBackgroundJobArgs args)
     {
         var url = new Url(new Uri(OpenAiOptions.Value.CompletionUrl))
@@ -26,16 +34,28 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
             var currentMessage = args.Messages[^1];
             Logger.LogInformation("请求OpenAI：{friendMessage}", currentMessage);
 
-            var requestContent = new AiRequestContent(args.Messages.Select(m => new OpenAiMessage("user", m)).ToList());
+            var requestContent = new AiRequestContent(args.Messages.Select(m => new OpenAiMessage(m.Role, m.Message)).ToList());
 
             try
             {
                 var flurlResult = await url.PostAsync(JsonContent.Create(requestContent));
                 var result = await flurlResult.GetJsonAsync<AiResponse>();
 
-                var message = " " + (result.Choices.FirstOrDefault()?.Message?.Content?.Replace("\r\n", "\r").Replace("\r\r", "\r") ?? "啊对对对");
+                var message = result.Choices.FirstOrDefault()?.Message?.Content ?? "啊对对对";
 
-                lock ("bot")
+                var user = await UserRepository.FirstOrDefaultAsync(t => t.QQ == args.SenderId);
+                if (user is not null)
+                {
+                    await UserHistoryRepository.InsertAsync(new UserHistory
+                    {
+                        DateTime = DateTime.Now,
+                        Message = message,
+                        Role = "assistant",
+                        UserId = user.Id
+                    }, true);
+                }
+
+                lock (_lock)
                 {
                     if (args.Type == MessageReceivers.Friend)
                     {

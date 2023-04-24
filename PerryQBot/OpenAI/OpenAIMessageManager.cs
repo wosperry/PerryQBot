@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Manganese.Array;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using PerryQBot.EntityFrameworkCore.Entities;
@@ -15,29 +16,25 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
     public IOptions<MiraiBotOptions> BotOptions { get; set; }
 
     [UnitOfWork]
-    public virtual async Task<List<string>> BuildUserRequestMessagesAsync(string senderId, string senderName, string message)
+    public virtual async Task<List<(string Role, string Message)>> BuildUserRequestMessagesAsync(string senderId, string senderName, string message)
     {
-        var result = new List<string>();
+        var result = new List<(string Role, string Message)>();
         var user = await (await UserRepository.WithDetailsAsync(x => x.History))
             .FirstOrDefaultAsync(t => t.QQ == senderId);
 
         if (user is not null)
         {
-            if (!string.IsNullOrWhiteSpace(senderName))
-            {
-                result.Add($"我QQ昵称是{senderName}，请以{senderName}称呼我。");
-            }
             // 添加预设
             if (!string.IsNullOrWhiteSpace(user.Preset))
             {
-                result.Add(user.Preset);
+                result.Add(("system", user.Preset));
             }
             // 添加历史记录
             if (user.History.Count > 0)
             {
                 foreach (var his in user.History.OrderBy(x => x.DateTime))
                 {
-                    result.Add(his.Message);
+                    result.Add((his.Role, his.Message));
                 }
             }
 
@@ -59,7 +56,7 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
             }, true);
         }
         // 添加当前请求
-        result.Add(message);
+        result.Add(("user", message));
 
         Logger.LogInformation("请求参数：");
         Logger.LogInformation(JsonConvert.SerializeObject(result));
