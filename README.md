@@ -24,7 +24,7 @@
 | [Volo.Abp.BackgroundJobs](https://abp.io/) | 后台任务。 | LGPL-3.0-only |
 | [Volo.Abp.EntityFrameworkCore.PostgreSql](https://abp.io/) | PostgreSQL 数据库集成。 | LGPL-3.0-only |
 | [Volo.Abp.Uow](https://abp.io/) | 工作单元 (Unit of Work) 设计模式的实现。 | LGPL-3.0-only |
-| [DANNY API](https://api.wrdan.com/#/qrcode) | 生成二维码。 | 非开源项目，不可商用 |
+| [UomgAPI](https://api.uomg.com/doc-qrcode.html) | UomgAPI ||
 | [中国气象局网站](http://weather.cma.cn/) | 查看天气 | 网页数据 |
 
 ## TODO
@@ -54,6 +54,7 @@
    - [x] 增加天气预报，对接了高德的
    - [x] 天气预报配置里增加了开关，可配置是否让AI分析天气并给建议。
    - [x] 加上一个二次元随机图片
+   - [x] 加上一个随机头像动漫图片
    - [ ] 每日技术新闻（暂时不知道哪里能免费查每天的开发者新闻）
 
 ## 项目结构

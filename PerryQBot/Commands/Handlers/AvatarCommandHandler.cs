@@ -7,11 +7,9 @@ using Volo.Abp.DependencyInjection;
 
 namespace PerryQBot.Commands.Handlers
 {
-    [Command("二刺螈")]
-    [Command("二刺猿")]
-    [Command("二次元")]
+    [Command("随机头像")]
     [ExposeServices(typeof(ICommandHandler))]
-    public class ScgCommandHandler : CommandHandlerBase
+    public class AvatarCommandHandler : CommandHandlerBase
     {
         public IOptions<Apis> Apis { get; set; }
         public string ImgUrl { get; set; }
@@ -20,9 +18,9 @@ namespace PerryQBot.Commands.Handlers
         {
             var rand = new Random(DateTime.Now.Millisecond).Next(1, 2); // 1横版 2竖版
 
-            var url = new Url($"{Apis.Value.UomgAPI}/rand.img{rand}")
+            var url = new Url($"{Apis.Value.UomgAPI}/rand.avatar")
                 .SetQueryParam("format", "json")
-                .SetQueryParam("sort", "二次元");
+                .SetQueryParam("sort", new string[] { "动漫男", "动漫女" }[rand]);
 
             // 偷懒，直接dynamic了
             var result = await url.GetJsonAsync();
@@ -40,8 +38,6 @@ namespace PerryQBot.Commands.Handlers
         {
             if (!string.IsNullOrEmpty(ImgUrl))
             {
-                // 前面有个At消息，清理掉
-                builder.Clear();
                 builder.ImageFromUrl(ImgUrl);
             }
             return builder;

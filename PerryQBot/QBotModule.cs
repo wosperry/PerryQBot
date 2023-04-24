@@ -25,8 +25,7 @@ namespace PerryQBot
         {
             var configuration = context.Services.GetConfiguration();
             Configure<MessageCollectionOptions>(configuration.GetSection(nameof(MessageCollectionOptions)));
-            Configure<QRCodeOptions>(configuration.GetSection(nameof(QRCodeOptions)));
-            Configure<RandomImageOptions>(configuration.GetSection(nameof(RandomImageOptions)));
+            Configure<Apis>(configuration.GetSection(nameof(Apis)));
         }
     }
 }
