@@ -1,0 +1,17 @@
+---
+kind: pipeline
+type: ssh
+name: 发布
+
+server:
+  host: 
+    from_secret: host
+  user: 
+    from_secret: user
+  password:
+    from_secret: password
+
+steps:
+- name: greeting
+  commands:
+  - /perry/PerryQBot/restart
