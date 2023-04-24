@@ -1,6 +1,7 @@
 ﻿using Flurl;
 using Flurl.Http;
 using Microsoft.Extensions.Options;
+using Mirai.Net.Data.Messages;
 using Mirai.Net.Data.Messages.Concretes;
 using Mirai.Net.Data.Messages.Receivers;
 using Mirai.Net.Sessions.Http.Managers;
@@ -26,7 +27,8 @@ public class QRDecodeCommandHandler : CommandHandlerBase
         var quoteMessage = context.MessageChain.FirstOrDefault(t => t is QuoteMessage) as QuoteMessage;
         if (quoteMessage is not null)
         {
-            var quoteMessageReceiver = await MessageManager.GetMessageReceiverByIdAsync<GroupMessageReceiver>(quoteMessage.MessageId, context.GroupId);
+            var quoteMessageReceiver = await MessageManager.GetMessageReceiverByIdAsync<MessageReceiverBase>(quoteMessage.MessageId,
+                context.Type == MessageReceivers.Friend ? context.SenderId : context.GroupId);
             if (quoteMessageReceiver is not null)
             {
                 // TODO: 有个问题，如果是其他类型消息怎么处理，比如图片，语音，表情等
