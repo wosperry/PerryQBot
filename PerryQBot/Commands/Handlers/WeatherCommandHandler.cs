@@ -1,4 +1,5 @@
-﻿using Flurl;
+﻿using System.Text;
+using Flurl;
 using Flurl.Http;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
@@ -35,58 +36,53 @@ namespace PerryQBot.Commands.Handlers
             }
 
             var web = new HtmlWeb();
+            web.OverrideEncoding = Encoding.UTF8;
             var doc = web.Load($"https://weather.cma.cn/web/weather/{cityId}.html");
 
             // 获取一周天气数据
             var weekNodes = doc.DocumentNode.SelectNodes("//div[contains(@class, 'pull-left day')]");
             var weekData = weekNodes.Select(item =>
             {
-                dynamic dynamicObject = new System.Dynamic.ExpandoObject();
-                dynamicObject.Day = item.SelectSingleNode(".//div[contains(@class, 'day-item')][1]").InnerText.Trim();
-                dynamicObject.Date = item.SelectSingleNode(".//div[contains(@class, 'day-item')][1]/br").NextSibling.InnerText.Trim();
-                dynamicObject.DayIcon = item.SelectSingleNode(".//div[contains(@class, 'dayicon')]/img").GetAttributeValue("src", "");
-                dynamicObject.DayWeather = item.SelectSingleNode(".//div[contains(@class, 'day-item')][3]").InnerText.Trim();
-                dynamicObject.DayWindDirection = item.SelectSingleNode(".//div[contains(@class, 'day-item')][4]").InnerText.Trim();
-                dynamicObject.DayWindPower = item.SelectSingleNode(".//div[contains(@class, 'day-item')][5]").InnerText.Trim();
-                dynamicObject.HighTemperature = item.SelectSingleNode(".//div[contains(@class, 'high')]").InnerText.Trim();
-                dynamicObject.LowTemperature = item.SelectSingleNode(".//div[contains(@class, 'low')]").InnerText.Trim();
-                dynamicObject.NightIcon = item.SelectSingleNode(".//div[contains(@class, 'nighticon')]/img").GetAttributeValue("src", "");
-                dynamicObject.NightWeather = item.SelectSingleNode(".//div[contains(@class, 'day-item')][8]").InnerText.Trim();
-                dynamicObject.NightWindDirection = item.SelectSingleNode(".//div[contains(@class, 'day-item')][9]").InnerText.Trim();
-                dynamicObject.NightWindPower = item.SelectSingleNode(".//div[contains(@class, 'day-item')][10]").InnerText.Trim();
-                return dynamicObject;
+                return new WeatherForecast
+                {
+                    Day = item.SelectSingleNode(".//div[contains(@class, 'day-item')][1]").InnerText.Trim(),
+                    Date = item.SelectSingleNode(".//div[contains(@class, 'day-item')][1]/br").NextSibling.InnerText.Trim(),
+                    DayIcon = item.SelectSingleNode(".//div[contains(@class, 'dayicon')]/img").GetAttributeValue("src", ""),
+                    DayWeather = item.SelectSingleNode(".//div[contains(@class, 'day-item')][3]").InnerText.Trim(),
+                    DayWindDirection = item.SelectSingleNode(".//div[contains(@class, 'day-item')][4]").InnerText.Trim(),
+                    DayWindPower = item.SelectSingleNode(".//div[contains(@class, 'day-item')][5]").InnerText.Trim(),
+                    HighTemperature = item.SelectSingleNode(".//div[contains(@class, 'high')]").InnerText.Trim(),
+                    LowTemperature = item.SelectSingleNode(".//div[contains(@class, 'low')]").InnerText.Trim(),
+                    NightIcon = item.SelectSingleNode(".//div[contains(@class, 'nighticon')]/img").GetAttributeValue("src", ""),
+                    NightWeather = item.SelectSingleNode(".//div[contains(@class, 'day-item')][8]").InnerText.Trim(),
+                    NightWindDirection = item.SelectSingleNode(".//div[contains(@class, 'day-item')][9]").InnerText.Trim(),
+                    NightWindPower = item.SelectSingleNode(".//div[contains(@class, 'day-item')][10]").InnerText.Trim()
+                };
             }).ToList();
 
             var dayNodes = doc.DocumentNode.SelectSingleNode("//table[@class='hour-table' and @id='hourTable_0']");
-            var dayData = new List<dynamic>();
-            if (dayNodes != null)
-            {
-                var hourNodes = dayNodes.SelectNodes(".//tr[position() > 2]");
-                if (hourNodes != null)
+
+            var dayData = dayNodes?.SelectNodes(".//tr[position() > 2]")
+                ?.Select(hourNode => new HourlyWeatherData
                 {
-                    foreach (var hourNode in hourNodes)
-                    {
-                        dynamic hourData = new System.Dynamic.ExpandoObject();
-                        hourData.Time = hourNode.SelectSingleNode("./td[1]").InnerText.Trim();
-                        hourData.Temperature = hourNode.SelectSingleNode("./td[2]").InnerText.Trim();
-                        hourData.Weather = hourNode.SelectSingleNode("./td[3]").InnerText.Trim();
-                        hourData.Rain = hourNode.SelectSingleNode("./td[4]").InnerText.Trim();
-                        hourData.WindSpeed = hourNode.SelectSingleNode("./td[5]").InnerText.Trim();
-                        hourData.WindDirection = hourNode.SelectSingleNode("./td[6]").InnerText.Trim();
-                        hourData.Pressure = hourNode.SelectSingleNode("./td[7]").InnerText.Trim();
-                        hourData.Humidity = hourNode.SelectSingleNode("./td[8]").InnerText.Trim();
-                        hourData.Cloud = hourNode.SelectSingleNode("./td[9]").InnerText.Trim();
-                        dayData.Add(hourData);
-                    }
-                }
-            }
+                    Time = hourNode.SelectSingleNode("./td[1]").InnerText.Trim(),
+                    Temperature = hourNode.SelectSingleNode("./td[2]").InnerText.Trim(),
+                    Weather = hourNode.SelectSingleNode("./td[3]").InnerText.Trim(),
+                    Rain = hourNode.SelectSingleNode("./td[4]").InnerText.Trim(),
+                    WindSpeed = hourNode.SelectSingleNode("./td[5]").InnerText.Trim(),
+                    WindDirection = hourNode.SelectSingleNode("./td[6]").InnerText.Trim(),
+                    Pressure = hourNode.SelectSingleNode("./td[7]").InnerText.Trim(),
+                    Humidity = hourNode.SelectSingleNode("./td[8]").InnerText.Trim(),
+                    Cloud = hourNode.SelectSingleNode("./td[9]").InnerText.Trim()
+                })
+                ?.ToList();
 
             // 组装最终的动态对象
-            dynamic result = new System.Dynamic.ExpandoObject();
-            result.WeekData = weekData;
-            result.DayData = dayData;
-
-            var str = JsonConvert.SerializeObject(result);
+            var str = JsonConvert.SerializeObject(new
+            {
+                weekData,
+                dayData
+            });
 
             await ClearHistoryCommandHandler.ExecuteAsync(context);
 
@@ -110,4 +106,33 @@ namespace PerryQBot.Commands.Handlers
                 """;
         }
     }
+}
+
+public class WeatherForecast
+{
+    public string Day { get; set; }
+    public string Date { get; set; }
+    public string DayIcon { get; set; }
+    public string DayWeather { get; set; }
+    public string DayWindDirection { get; set; }
+    public string DayWindPower { get; set; }
+    public string HighTemperature { get; set; }
+    public string LowTemperature { get; set; }
+    public string NightIcon { get; set; }
+    public string NightWeather { get; set; }
+    public string NightWindDirection { get; set; }
+    public string NightWindPower { get; set; }
+}
+
+public class HourlyWeatherData
+{
+    public string Time { get; set; }
+    public string Temperature { get; set; }
+    public string Weather { get; set; }
+    public string Rain { get; set; }
+    public string WindSpeed { get; set; }
+    public string WindDirection { get; set; }
+    public string Pressure { get; set; }
+    public string Humidity { get; set; }
+    public string Cloud { get; set; }
 }
