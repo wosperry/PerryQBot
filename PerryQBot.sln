@@ -8,9 +8,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{54911FF4-AE96-4A1B-84B9-59E2C982B39A}"
 	ProjectSection(SolutionItems) = preProject
 		.dockerignore = .dockerignore
+		.drone.yml = .drone.yml
 		docker-compose.yml = docker-compose.yml
 		LICENSE = LICENSE
 		README.md = README.md
+		restart = restart
 	EndProjectSection
 EndProject
 Global
