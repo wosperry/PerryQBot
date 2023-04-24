@@ -12,6 +12,7 @@ using PerryQBot.Options;
 
 namespace PerryQBot.CommandHandlers;
 
+[Command("解析")]
 [Command("解析二维码")]
 [Command("qrdecode")]
 public class QRDecodeCommandHandler : CommandHandlerBase
