@@ -38,7 +38,7 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
                 }
             }
 
-            user.History.Add(new UserHistory { Message = message, DateTime = DateTime.Now });
+            user.History.Add(new UserHistory { Role = "user", Message = message, DateTime = DateTime.Now });
             if (user.History.Count > BotOptions.Value.MaxHistory)
             {
                 user.History.Remove(user.History.OrderBy(x => x.DateTime).First());
@@ -51,7 +51,7 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
             {
                 QQ = senderId,
                 QQNickName = senderName,
-                History = new List<UserHistory>() { new UserHistory { Message = message, DateTime = DateTime.Now } },
+                History = new List<UserHistory>() { new UserHistory { Role = "user", Message = message, DateTime = DateTime.Now } },
                 Preset = ""
             }, true);
         }
