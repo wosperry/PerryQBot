@@ -1,7 +1,7 @@
 # 发布Bot镜像
 kind: pipeline
 type: docker
-name: perrybot
+name: default
 steps:
   - name: 构建镜像
     image: docker
@@ -18,7 +18,7 @@ steps:
       - name: docker
         path: /var/run/docker.sock
       - name: daemon
-        path: /etc/docker
+        path: /etc/docker 
     environment:
       DOCKER_REGISTRY:
         from_secret: docker_registry
