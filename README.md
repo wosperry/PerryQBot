@@ -25,6 +25,7 @@
 | [Volo.Abp.EntityFrameworkCore.PostgreSql](https://abp.io/) | PostgreSQL 数据库集成。 | LGPL-3.0-only |
 | [Volo.Abp.Uow](https://abp.io/) | 工作单元 (Unit of Work) 设计模式的实现。 | LGPL-3.0-only |
 | [聚合数据二维码生成器](https://www.juhe.cn/papi/qrcode) | 生成二维码。 | 非开源项目，不可商用 |
+| [中国气象局网站](http://weather.cma.cn/) | 查看天气 |  |
 
 ## TODO
 
