@@ -18,7 +18,7 @@ namespace PerryQBot.Commands.Handlers
         {
             var url = new Url(RandomImageOptions.Value.Url)
                 .SetQueryParam("format", "json")
-                .SetQueryParam("sort", "svg");
+                .SetQueryParam("sort", "二次元");
 
             // 偷懒，直接dynamic了
             var result = await url.GetJsonAsync();
