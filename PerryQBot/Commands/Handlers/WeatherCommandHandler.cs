@@ -1,13 +1,8 @@
 ﻿using Flurl;
 using Flurl.Http;
 using HtmlAgilityPack;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using PerryQBot.EntityFrameworkCore.Entities;
-using PerryQBot.Options;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.Domain.Entities.Auditing;
-using Volo.Abp.Domain.Repositories;
 
 namespace PerryQBot.Commands.Handlers
 {
