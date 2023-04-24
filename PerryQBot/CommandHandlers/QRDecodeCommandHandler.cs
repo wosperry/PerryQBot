@@ -10,7 +10,7 @@ using PerryQBot.Options;
 
 namespace PerryQBot.CommandHandlers;
 
-[Command("解析")]
+// TODO: 群聊的时候二维码解析不成功，不知道为啥。代码调试看起来没错，不管了。
 [Command("解析二维码")]
 [Command("qrdecode")]
 public class QRDecodeCommandHandler : CommandHandlerBase
@@ -61,8 +61,11 @@ public class QRDecodeCommandHandler : CommandHandlerBase
                 // 放上解析后的字符串
                 builder.Plain($"内容：{result.qrurl}");
             }
+            {
+                ResponseMessage = "解析失败";
+            }
         }
 
-        return builder;
+        return base.OnMessageChainBuilding(builder);
     }
 }
