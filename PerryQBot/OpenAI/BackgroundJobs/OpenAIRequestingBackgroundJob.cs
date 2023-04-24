@@ -1,5 +1,6 @@
 ﻿using Flurl;
 using Flurl.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Mirai.Net.Data.Messages;
 using Mirai.Net.Data.Messages.Concretes;
@@ -11,13 +12,13 @@ using Volo.Abp.BackgroundJobs;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.DistributedLocking;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Uow;
 
 public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackgroundJobArgs>, ITransientDependency
 {
     public IOptions<OpenAiOptions> OpenAiOptions { get; set; }
     public IOptions<MiraiBotOptions> BotOptions { get; set; }
     public IAbpDistributedLock DistributedLock { get; set; }
-    public IRepository<UserHistory> UserHistoryRepository { get; set; }
 
     public IReadOnlyRepository<User> UserRepository { get; set; }
 
@@ -43,17 +44,7 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
 
                 var message = result.Choices.FirstOrDefault()?.Message?.Content ?? "啊对对对";
 
-                var user = await UserRepository.FirstOrDefaultAsync(t => t.QQ == args.SenderId);
-                if (user is not null)
-                {
-                    await UserHistoryRepository.InsertAsync(new UserHistory
-                    {
-                        DateTime = DateTime.Now,
-                        Message = message,
-                        Role = "assistant",
-                        UserId = user.Id
-                    }, true);
-                }
+                await AddHistoryAsync(args.SenderId, message);
 
                 lock (_lock)
                 {
@@ -100,6 +91,24 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
                 """;
             await MessageManager.SendFriendMessageAsync(BotOptions.Value.AdminQQ, new PlainMessage(errorMessage));
             Logger.LogError(errorMessage);
+        }
+    }
+
+    [UnitOfWork]
+    public virtual async Task AddHistoryAsync(string qq, string message)
+    {
+        var user = await (await UserRepository.WithDetailsAsync(x => x.History))
+                   .Where(t => t.QQ == qq)
+                   .FirstOrDefaultAsync();
+        if (user is not null)
+        {
+            user.History.Add(new UserHistory
+            {
+                DateTime = DateTime.Now,
+                Message = message,
+                Role = "assistant",
+                UserId = user.Id
+            });
         }
     }
 }
