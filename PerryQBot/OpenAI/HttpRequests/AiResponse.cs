@@ -1,5 +1,4 @@
-﻿
-public class AiResponse
+﻿public class AiResponse
 {
     public string Id { get; set; }
     public string Object { get; set; }

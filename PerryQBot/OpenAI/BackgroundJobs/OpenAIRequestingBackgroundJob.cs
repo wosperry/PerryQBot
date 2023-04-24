@@ -5,7 +5,6 @@ using Mirai.Net.Data.Messages;
 using Mirai.Net.Data.Messages.Concretes;
 using Mirai.Net.Sessions.Http.Managers;
 using Mirai.Net.Utils.Scaffolds;
-using Newtonsoft.Json;
 using PerryQBot.Options;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.DependencyInjection;

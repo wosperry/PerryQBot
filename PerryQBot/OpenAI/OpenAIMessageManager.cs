@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using NUglify.JavaScript.Syntax;
 using PerryQBot.EntityFrameworkCore.Entities;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;

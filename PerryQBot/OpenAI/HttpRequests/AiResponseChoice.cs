@@ -1,5 +1,4 @@
-﻿
-public class AiResponseChoice
+﻿public class AiResponseChoice
 {
     public OpenAiMessage Message { get; set; }
     public string FinishReason { get; set; }

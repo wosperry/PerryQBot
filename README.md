@@ -25,7 +25,7 @@
 | [Volo.Abp.EntityFrameworkCore.PostgreSql](https://abp.io/) | PostgreSQL 数据库集成。 | LGPL-3.0-only |
 | [Volo.Abp.Uow](https://abp.io/) | 工作单元 (Unit of Work) 设计模式的实现。 | LGPL-3.0-only |
 | [聚合数据二维码生成器](https://www.juhe.cn/papi/qrcode) | 生成二维码。 | 非开源项目，不可商用 |
-| [中国气象局网站](http://weather.cma.cn/) | 查看天气 |  |
+| [中国气象局网站](http://weather.cma.cn/) | 查看天气 | 网页数据 |
 
 ## TODO
 
@@ -73,12 +73,12 @@ PerryQBot                # 项目根目录
 └──QQBot                 #   QQ信息监听等，如果是添加命令建议直接添加命令Handler实现。
 ```
 
-
 ## 部署说明
 
 项目是 `.Net7` 的，这里只用Docker演示，事实上你可以Windows双击exe文件运行，或者部署到iis，或者你的MacOS，理论上你的安卓手机可能也可以运行。
 
-- [ ] 我是图部署省事，这里只用Docker的演示，以后有空闲着再来加文档
+- 我是图部署省事，这里只用Docker的演示，以后有空闲着再来加文档
+- 现在的DockerCompose配置是跑了一个bot，一个数据库，一个二维码服务，每次重新运行都会全部重跑，正确做法应该是只有bot重跑就行了。不想改，后面再说。
 
 ### 使用 Docker Compose
 
@@ -243,6 +243,11 @@ services:
    ├─Commands              #   命令相关文件夹
    │  └─Handlers           #       命令处理程序 可在此处参考原有的Handler创建新的命令，重新运行之后即可生效
    ```
+   这个CommandHandler是自动发现并注册到IOC容器内的，我自己是使用docker-compose跑的，所以我感觉用起来就是个插件。
+   这个类型你可以放到项目代码的任何一个地方，可以自己创建专门的文件夹管理。
+   和其他程序“插件”概念较像，但是这里不是发布后的程序，而是代码，需要编译后才可以使用。
+   如果想弄真正的插件应该是dll，我不确定abp会不会把项目文件夹内的dll都读取出来，如果不行，可以自行去扫描某个文件夹之类的，给他丢到IOC容器内去就行了。
+
 2. 添加自定义命令处理程序
    在1中位置，创建新的类，比如 `GreetingCommandHandler.cs`，要成为一个可被框架使用的命令，还需要满足以下条件：
    - 继承 `CommandHandlerBase` 并重写 `ExecuteAsync` 方法，添加你的逻辑，需要回复用户的消息，在方法内修改ResponseMessage即可。
@@ -418,7 +423,7 @@ Mochi 10:24:22
 --------------------------------
 以上数据来源于中国气象局网站weather.cma.cn
 
-根据气象数据显示，今天深圳市有雷阵雨，建议外出携带雨具，注意防雷电。紫外线强度较弱，适合户外活动。相对湿度较高，注意保湿。
+根据气象数据显示，今天深圳市有雷阵雨，建议外出携带雨具，注意防雷电。紫外线强度较弱，适合户外活动。相对湿度较高。
 
 
 ```
