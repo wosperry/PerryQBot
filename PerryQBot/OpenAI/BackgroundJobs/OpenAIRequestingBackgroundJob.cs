@@ -6,6 +6,7 @@ using Mirai.Net.Data.Messages;
 using Mirai.Net.Data.Messages.Concretes;
 using Mirai.Net.Sessions.Http.Managers;
 using Mirai.Net.Utils.Scaffolds;
+using Newtonsoft.Json;
 using PerryQBot.EntityFrameworkCore.Entities;
 using PerryQBot.Options;
 using Volo.Abp.BackgroundJobs;
@@ -32,9 +33,9 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
         var url = new Url(new Uri(OpenAiOptions.Value.CompletionUrl))
             .WithHeader("Authorization", $"Bearer {OpenAiOptions.Value.Key}");
         try
-        {
-            var currentMessage = args.Messages.Last();
-            Logger.LogInformation("请求OpenAI：{friendMessage}", currentMessage);
+        { 
+            var m =  JsonConvert.SerializeObject(args.Messages);
+            Logger.LogInformation("请求OpenAI：{m}", m);
 
             var requestContent = new AiRequestContent(args.Messages.Select(m => new OpenAiMessage(m.Role, m.Content)).ToList());
 
