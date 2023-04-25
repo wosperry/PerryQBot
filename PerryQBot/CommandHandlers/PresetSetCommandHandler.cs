@@ -18,6 +18,11 @@ public class PresetSetCommandHandler : CommandHandlerBase
         var (isCommand, commandString, messageString) = this.TryGetCommand(context.Message);
         var user = await (await UserRepository.WithDetailsAsync(x => x.History)).FirstOrDefaultAsync(t => t.QQ == context.SenderId);
 
+        if (user is not null)
+        {
+            var history = user.History.OrderByDescending(x => x.Id).Take(BotOptions.Value.MaxHistory).ToList();
+            await UserRepository.UpdateAsync(user, true);
+        }
         if (user is null)
         {
             await UserRepository.InsertAsync(new User

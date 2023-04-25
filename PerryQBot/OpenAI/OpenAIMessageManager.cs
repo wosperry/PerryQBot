@@ -23,6 +23,11 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
 
         if (user is not null)
         {
+            var history = user.History.OrderByDescending(x => x.Id).Take(BotOptions.Value.MaxHistory).ToList();
+            await UserRepository.UpdateAsync(user, true);
+        }
+        if (user is not null)
+        {
             // 添加预设
             if (!string.IsNullOrWhiteSpace(user.Preset))
             {
@@ -38,11 +43,6 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
             }
 
             user.History.Add(new UserHistory { Role = "user", Message = message, DateTime = DateTime.Now });
-            if (user.History.Count > BotOptions.Value.MaxHistory)
-            {
-                user.History.Remove(user.History.OrderBy(x => x.DateTime).First());
-            }
-            await UserRepository.UpdateAsync(user);
         }
         else
         {
