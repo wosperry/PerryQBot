@@ -33,7 +33,7 @@ public class GroupNewsBackgroundWorker : QuartzBackgroundWorkerBase
 
     public override async Task Execute(IJobExecutionContext context)
     {
-        var options = ServiceProvider.GetService<IOptions<NewsOptions>>();
+        var newsOptions = ServiceProvider.GetService<IOptions<NewsOptions>>();
         var jobManager = ServiceProvider.GetService<IBackgroundJobManager>();
 
         // 写死先，直接发我群里
@@ -46,17 +46,20 @@ public class GroupNewsBackgroundWorker : QuartzBackgroundWorkerBase
 
         var requestString = "这是一段新闻，希望Mochi用猫猫的语气帮我翻译并润色，要求输出所有的新闻标题不能缺少一条，要记得换行哦，当然因为是要给群里回复用的，所以结果要尽量紧凑不能出现换行两次哦。然后你应该是一个讲述新闻的猫猫，所以输出的时候不要表现出你在“翻译”，你输出的时候记得在最开始说大家好，现在是猫猫新闻时间，Mochi来给大家讲新闻啦。" + str;
 
-        await jobManager.EnqueueAsync(new OpenAIRequestingBackgroundJobArgs
-
+        foreach (var group in newsOptions.Value.Groups)
         {
-            GroupId = "693137603",
-            GroupName = "进击的码农",
-            Type = MessageReceivers.Group,
-            Messages = new List<OpenAiMessage>
+            await jobManager.EnqueueAsync(new OpenAIRequestingBackgroundJobArgs
+
             {
-                 new OpenAiMessage("user", requestString)
-            }
-        });
+                GroupId = group,
+                GroupName = group, // 配置没有群名
+                Type = MessageReceivers.Group,
+                Messages = new List<OpenAiMessage>
+                {
+                     new OpenAiMessage("user", requestString)
+                }
+            });
+        }
     }
 
     private Task<List<SimpleNews>> GetFromInfoQWebsite()
