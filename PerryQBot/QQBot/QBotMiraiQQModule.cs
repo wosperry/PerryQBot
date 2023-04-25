@@ -1,12 +1,15 @@
 ﻿using Mirai.Net.Sessions;
+using PerryQBot.Options;
 using Volo.Abp;
 using Volo.Abp.BackgroundWorkers;
+using Volo.Abp.BackgroundWorkers.Quartz;
 using Volo.Abp.Modularity;
 
 namespace PerryQBot.QQBot;
 
 [DependsOn(
-    typeof(AbpBackgroundWorkersModule)
+    typeof(AbpBackgroundWorkersModule),
+    typeof(AbpBackgroundWorkersQuartzModule)
 )]
 public class QBotMiraiQQModule : AbpModule
 {
@@ -26,11 +29,11 @@ public class QBotMiraiQQModule : AbpModule
         });
 
         Configure<MiraiBotOptions>(botOptionsSection);
+        Configure<NewsOptions>(configuration.GetSection(nameof(NewsOptions)));
     }
 
     public override async void OnApplicationInitialization(ApplicationInitializationContext context)
     {
         await context.AddBackgroundWorkerAsync<QBotBackgroundWorker>();
-        await context.AddBackgroundWorkerAsync<GroupNewsBackgroundWorker>();
     }
 }

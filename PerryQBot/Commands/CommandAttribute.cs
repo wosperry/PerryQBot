@@ -12,4 +12,5 @@ public class CommandAttribute : Attribute
 
     public bool WithPrefix { get; set; } = true;
     public string Command { get; set; }
+    public bool WorkerCanSchedule { get; set; } = false;
 }
