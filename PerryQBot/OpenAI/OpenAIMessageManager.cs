@@ -1,5 +1,4 @@
-﻿using Manganese.Array;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using PerryQBot.EntityFrameworkCore.Entities;

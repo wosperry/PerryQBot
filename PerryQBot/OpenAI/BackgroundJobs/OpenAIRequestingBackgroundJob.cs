@@ -99,9 +99,9 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
     {
         using var uow = UnitOfWorkManager.Begin();
         var userRepository = uow.ServiceProvider.GetService<IRepository<User>>();
-        var user = await (await userRepository.WithDetailsAsync(x => x.History)).Where(t => t.QQ == qq)
-            .FirstOrDefaultAsync();
-        user?.History.Add(new UserHistory
+        var user = await (await userRepository.WithDetailsAsync(x => x.History))
+            .FirstOrDefaultAsync(t => t.QQ == qq);
+        user?.History.Add(new()
         {
             DateTime = DateTime.Now,
             Message = message,

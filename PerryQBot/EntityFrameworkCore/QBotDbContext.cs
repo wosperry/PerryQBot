@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Dynamic.Core;
+using Microsoft.EntityFrameworkCore;
 using PerryQBot.EntityFrameworkCore.Entities;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;

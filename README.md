@@ -64,7 +64,7 @@
 ``` mathematica
 PerryQBot                # 项目根目录
 ├──Commands              #   命令相关文件夹
-│  └──Handlers           #       命令处理程序 可在此处参考原有的Handler创建新的命令，重新运行之后即可生效
+├──CommandsHandlers      #   命令处理程序 可在此处参考原有的Handler创建新的命令，重新运行之后即可生效
 ├──EntityFrameworkCore   #   EFCore
 │  ├──Configurations     #       实体配置文件夹
 │  └──Entities           #   实体文件夹
@@ -242,8 +242,7 @@ services:
 1. 位置
    ``` mathematica
    PerryQBot               # 项目根目录
-   ├─Commands              #   命令相关文件夹
-   │  └─Handlers           #       命令处理程序 可在此处参考原有的Handler创建新的命令，重新运行之后即可生效
+   ├─CommandsHandlers      #       命令处理程序 可在此处参考原有的Handler创建新的命令，重新运行之后即可生效
    ```
    这个CommandHandler是自动发现并注册到IOC容器内的，我自己是使用docker-compose跑的，所以我感觉用起来就是个插件。
    这个类型你可以放到项目代码的任何一个地方，可以自己创建专门的文件夹管理。
