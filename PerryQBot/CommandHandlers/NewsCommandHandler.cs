@@ -16,6 +16,7 @@ namespace PerryQBot.CommandHandlers
         public ClearHistoryCommandHandler ClearHistoryCommandHandler { get; set; }
         public IDistributedCache<List<SimpleNews>> NewsCache { get; set; }
         public List<SimpleNews> NewsSet { get; set; }
+        public SimpleNews News { get; set; } = null;
 
         public override async Task ExecuteAsync(CommandContext context)
         {
@@ -23,18 +24,40 @@ namespace PerryQBot.CommandHandlers
                 () => new() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30) });
             if (NewsSet.Any())
                 await ClearHistoryCommandHandler.ExecuteAsync(context);
+
+            if (!string.IsNullOrWhiteSpace(context.Message) && int.TryParse(context.Message.Trim(), out int id))
+            {
+                News = NewsSet?.FirstOrDefault(t => t.Id == id);
+                if (News is not null)
+                {
+                    await ClearHistoryCommandHandler.ExecuteAsync(context);
+                }
+            }
         }
 
         public override MessageChainBuilder OnMessageChainBuilding(MessageChainBuilder builder)
         {
-            if (NewsSet.Count > 0)
+            if (News is not null)
+            {
+                var str = $"""
+
+                主题：{News.Topic}
+                标题：{News.Title}
+                作者：{News.Author}
+                内容：{News.Content}
+                """;
+                AutoResponse = false;
+                IsContinueAfterHandled = true;
+                RequestMessage = "这是一段新闻，我需要你帮我翻译成中文，要求保持原格式输出" + str;
+            }
+            else if (NewsSet.Count > 0)
             {
                 var str = string.Join("", NewsSet.Select(x => $"""
                 {x.Id}. {x.Title}
                 ----
                 """));
-                IsContinueAfterHandled = true;
                 AutoResponse = false;
+                IsContinueAfterHandled = true;
                 RequestMessage = "这是一段新闻，希望Mochi用猫猫的语气帮我翻译并润色，要求输出所有的新闻标题不能缺少一条，要记得换行哦，当然因为是要给群里回复用的，所以结果要尽量紧凑不能出现换行两次哦。然后你应该是一个讲述新闻的猫猫，所以输出的时候不要表现出你在“翻译”，你输出的时候记得在最开始说大家好，现在是猫猫新闻时间，Mochi来给大家讲新闻啦。" + str;
             }
             else
@@ -44,9 +67,6 @@ namespace PerryQBot.CommandHandlers
             return new MessageChainBuilder();
         }
 
-        /// <summary>
-        /// 此方法CV了一份到查看那里，哈哈继续留坑
-        /// </summary>
         private Task<List<SimpleNews>> GetFromInfoQWebsite()
         {
             // 创建HtmlWeb对象，用于获取网页
