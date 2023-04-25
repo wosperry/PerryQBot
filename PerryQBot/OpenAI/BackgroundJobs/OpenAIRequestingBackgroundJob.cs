@@ -60,7 +60,7 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
                     if (message.Contains("咕噜"))
                     {
                         message = message.Replace("咕噜", "");
-                        messageChainBuilder.ImageFromUrl("https://wosperry.com/lsky/img/2023/04/26/64481ab72df52.jpg");
+                        messageChainBuilder.ImageFromUrl("https://wosperry.com/lsky/img/2023/04/26/64481b95c56e7.png");
                     }
 
                     if (args.Type == MessageReceivers.Friend)
