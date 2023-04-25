@@ -12,7 +12,7 @@ using Volo.Abp.EntityFrameworkCore;
 namespace PerryQBot.Migrations
 {
     [DbContext(typeof(QBotDbContext))]
-    [Migration("20230425123038_Init")]
+    [Migration("20230425181040_Init")]
     partial class Init
     {
         /// <inheritdoc />
