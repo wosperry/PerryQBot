@@ -43,7 +43,10 @@ namespace PerryQBot.CommandHandlers
                 IsContinueAfterHandled = true;
                 RequestMessage = "这是一段新闻，我需要你帮我翻译成中文，要求内容完整，保持原格式输出" + str;
             }
-            ResponseMessage = "查询失败";
+            else
+            {
+                ResponseMessage = "查询失败";
+            }
 
             return base.OnMessageChainBuilding(builder);
         }
