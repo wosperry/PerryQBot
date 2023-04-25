@@ -32,7 +32,7 @@ namespace PerryQBot.CommandHandlers
                 ----
                 """));
                 IsContinueAfterHandled = true;
-                RequestMessage = "这是一段新闻，我需要用猫猫的语气帮我翻译并润色，要求简短但包含重要信息，只需要给我最终结果，除此之外不要有任何反馈。" + str;
+                RequestMessage = "这是一段新闻，我需要用猫猫的语气帮我翻译并润色，要求每一条都简短并包含重要信息，要求输出所有的新闻标题不能缺少一条。" + str;
             }
             else
             {
