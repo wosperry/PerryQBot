@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -17,8 +18,11 @@ namespace PerryQBot.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CollectorQQ = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    CollectorMessage = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true)
+                    UserName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    UserQQ = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    Message = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
+                    QuoteMessage = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
+                    DateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,35 +36,12 @@ namespace PerryQBot.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     QQ = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    Preset = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    Preset = table.Column<string>(type: "character varying(5000)", maxLength: 5000, nullable: true),
                     QQNickName = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DialogCollectionItem",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    From = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    To = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    Message = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
-                    Time = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    DialogCollectionId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DialogCollectionItem", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DialogCollectionItem_DialogCollection_DialogCollectionId",
-                        column: x => x.DialogCollectionId,
-                        principalTable: "DialogCollection",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -71,7 +52,8 @@ namespace PerryQBot.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Message = table.Column<string>(type: "text", nullable: true),
                     DateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    UserId = table.Column<long>(type: "bigint", nullable: false)
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    Role = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -83,11 +65,6 @@ namespace PerryQBot.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DialogCollectionItem_DialogCollectionId",
-                table: "DialogCollectionItem",
-                column: "DialogCollectionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_QQ",
@@ -105,13 +82,10 @@ namespace PerryQBot.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DialogCollectionItem");
+                name: "DialogCollection");
 
             migrationBuilder.DropTable(
                 name: "UserHistory");
-
-            migrationBuilder.DropTable(
-                name: "DialogCollection");
 
             migrationBuilder.DropTable(
                 name: "User");

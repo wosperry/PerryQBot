@@ -12,8 +12,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace PerryQBot.Migrations
 {
     [DbContext(typeof(QBotDbContext))]
-    [Migration("20230423052513_alterpreset")]
-    partial class alterpreset
+    [Migration("20230425123038_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,6 +98,9 @@ namespace PerryQBot.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Message")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
                         .HasColumnType("text");
 
                     b.Property<long>("UserId")
