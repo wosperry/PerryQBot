@@ -10,7 +10,7 @@ public class DiceCommandHandler : CommandHandlerBase
 {
     public override MessageChainBuilder OnMessageChainBuilding(MessageChainBuilder builder)
     {
-        var number = new Random(DateTime.Now.Millisecond).Next(1, 6);
+        var number = new Random(DateTime.Now.Millisecond).Next(1, 7);
         return builder.Dice(number.ToString());
     }
 }
