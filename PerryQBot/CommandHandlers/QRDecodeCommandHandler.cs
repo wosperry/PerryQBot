@@ -61,6 +61,7 @@ public class QRDecodeCommandHandler : CommandHandlerBase
                 // 放上解析后的字符串
                 builder.Plain($"内容：{result.qrurl}");
             }
+            else
             {
                 ResponseMessage = "解析失败";
             }
