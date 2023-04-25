@@ -1,4 +1,5 @@
-﻿using Flurl;
+﻿using System;
+using Flurl;
 using Flurl.Http;
 using Microsoft.Extensions.Options;
 using Mirai.Net.Utils.Scaffolds;
@@ -17,7 +18,7 @@ public class AvatarCommandHandler : CommandHandlerBase
 
     public override async Task ExecuteAsync(CommandContext context)
     {
-        var rand = new Random(DateTime.Now.Millisecond).Next(1, 2); // 1横版 2竖版
+        var rand = new Random(DateTime.Now.Millisecond).NextDouble() < 0.5 ? 0 : 1;
 
         var url = new Url($"{Apis.Value.UomgAPI}/rand.avatar")
             .SetQueryParam("format", "json")

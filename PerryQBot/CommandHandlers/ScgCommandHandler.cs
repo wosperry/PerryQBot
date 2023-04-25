@@ -19,7 +19,7 @@ public class ScgCommandHandler : CommandHandlerBase
 
     public override async Task ExecuteAsync(CommandContext context)
     {
-        var rand = new Random(DateTime.Now.Millisecond).Next(1, 2); // 1横版 2竖版
+        var rand = new Random(DateTime.Now.Millisecond).NextDouble() < 0.5 ? 1 : 2;// 1横版 2竖版
 
         var url = new Url($"{Apis.Value.UomgAPI}/rand.img{rand}")
             .SetQueryParam("format", "json")
