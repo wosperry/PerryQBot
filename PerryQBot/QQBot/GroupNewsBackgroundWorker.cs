@@ -10,13 +10,13 @@ namespace PerryQBot.QQBot
         public GroupNewsBackgroundWorker()
         {
             Trigger = TriggerBuilder.Create().WithIdentity(nameof(GroupNewsBackgroundWorker))
-                .WithCronSchedule("0 30 17 ? * *")
+                .WithCronSchedule("0 34 17 ? * *")
                 .StartNow().Build();
         }
 
         public override async Task Execute(IJobExecutionContext context)
         {
-            await MessageManager.SendFriendMessageAsync("593281239", "五点半");
+            await MessageManager.SendFriendMessageAsync("593281239", $"{DateTime.Now:HH:mm:ss}");
         }
     }
 }

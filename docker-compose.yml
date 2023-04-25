@@ -38,6 +38,8 @@ services:
   perrybot_bot:
     # 容器名
     container_name: perrybot_bot
+    environment:
+      - TZ=Asia/Shanghai
     build:
       # 指定执行位置
       context: .
