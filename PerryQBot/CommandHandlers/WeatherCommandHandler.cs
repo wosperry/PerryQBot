@@ -36,8 +36,7 @@ public class WeatherCommandHandler : CommandHandlerBase
             return;
         }
 
-        var web = new HtmlWeb();
-        web.OverrideEncoding = Encoding.UTF8;
+        var web = new HtmlWeb() { OverrideEncoding = Encoding.UTF8 };
         var doc = web.Load($"https://weather.cma.cn/web/weather/{cityId}.html");
 
         // 获取一周天气数据
