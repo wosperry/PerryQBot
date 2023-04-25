@@ -19,7 +19,8 @@ namespace PerryQBot.CommandHandlers
 
         public override async Task ExecuteAsync(CommandContext context)
         {
-            NewsSet = await NewsCache.GetOrAddAsync(CacheKey, GetFromInfoQWebsite);
+            NewsSet = await NewsCache.GetOrAddAsync(CacheKey, GetFromInfoQWebsite,
+                () => new() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30) });
             if (NewsSet.Any())
                 await ClearHistoryCommandHandler.ExecuteAsync(context);
         }

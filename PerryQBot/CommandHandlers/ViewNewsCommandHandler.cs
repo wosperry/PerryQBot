@@ -20,7 +20,8 @@ namespace PerryQBot.CommandHandlers
         {
             if (int.TryParse(context.Message, out int id))
             {
-                var newsSet = await NewsCache.GetOrAddAsync(CacheKey, GetFromInfoQWebsite);
+                var newsSet = await NewsCache.GetOrAddAsync(CacheKey, GetFromInfoQWebsite,
+                    () => new() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30) });
                 if (newsSet.Any())
                 {
                     await ClearHistoryCommandHandler.ExecuteAsync(context);
