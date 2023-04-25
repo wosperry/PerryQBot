@@ -58,13 +58,13 @@ namespace PerryQBot.CommandHandlers
                 """));
                 AutoResponse = false;
                 IsContinueAfterHandled = true;
-                RequestMessage = "这是一段新闻，希望Mochi用猫猫的语气帮我翻译并润色，要求输出所有的新闻标题不能缺少一条，要记得换行哦，当然因为是要给群里回复用的，所以结果要尽量紧凑不能出现换行两次哦。然后你应该是一个讲述新闻的猫猫，所以输出的时候不要表现出你在“翻译”，你输出的时候记得在最开始说大家好，现在是猫猫新闻时间，Mochi来给大家讲新闻啦。" + str;
+                RequestMessage = "这是一段新闻，希望Mochi用猫猫的语气帮我翻译成中文，要求输出所有的新闻标题不能缺少一条，要记得换行哦，当然因为是要给群里回复用的，然后每一条新闻前面的序号都要保留的。所以结果要尽量紧凑不能出现换行两次哦。然后你应该是一个讲述新闻的猫猫，所以输出的时候不要表现出你在“翻译”，你输出的时候记得在最开始说大家好，现在是猫猫新闻时间，Mochi来给大家讲新闻啦。" + str;
             }
             else
             {
                 ResponseMessage = "查询失败";
             }
-            return new MessageChainBuilder();
+            return base.OnMessageChainBuilding(builder);
         }
 
         private Task<List<SimpleNews>> GetFromInfoQWebsite()
@@ -85,7 +85,7 @@ namespace PerryQBot.CommandHandlers
                             .FirstOrDefault()?.InnerHtml?.Replace("\n", "").Trim(),
                 Author = node.SelectNodes(".//div[contains(@class,'card__authors')]/span/a[1]")
                             .FirstOrDefault()?.InnerHtml?.Replace("\n", "").Trim()
-            }).ToList();
+            }).OrderBy(x => x.Id).Take(5).ToList();
 
             return Task.FromResult(list);
         }
