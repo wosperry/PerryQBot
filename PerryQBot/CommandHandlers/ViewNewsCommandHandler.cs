@@ -22,10 +22,10 @@ namespace PerryQBot.CommandHandlers
             {
                 var newsSet = await NewsCache.GetOrAddAsync(CacheKey, GetFromInfoQWebsite,
                     () => new() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30) });
-                if (newsSet.Any())
+                News = newsSet?.FirstOrDefault(t => t.Id == id);
+                if (News is not null)
                 {
                     await ClearHistoryCommandHandler.ExecuteAsync(context);
-                    News = newsSet.FirstOrDefault(t => t.Id == id);
                 }
             }
         }
