@@ -36,8 +36,6 @@ public class GroupNewsBackgroundWorker : QuartzBackgroundWorkerBase
         var newsOptions = ServiceProvider.GetService<IOptions<NewsOptions>>();
         var jobManager = ServiceProvider.GetService<IBackgroundJobManager>();
 
-        // 写死先，直接发我群里
-
         var news = await GetFromInfoQWebsite();
         var str = string.Join("", news.Select(x => $"""
                 {x.Id}. {x.Title}
