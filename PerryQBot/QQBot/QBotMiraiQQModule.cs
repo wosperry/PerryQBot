@@ -31,5 +31,6 @@ public class QBotMiraiQQModule : AbpModule
     public override async void OnApplicationInitialization(ApplicationInitializationContext context)
     {
         await context.AddBackgroundWorkerAsync<QBotBackgroundWorker>();
+        await context.AddBackgroundWorkerAsync<GroupNewsBackgroundWorker>();
     }
 }
