@@ -2,15 +2,16 @@
 using Mirai.Net.Sessions.Http.Managers;
 using Quartz;
 using Volo.Abp.BackgroundWorkers.Quartz;
+using Volo.Abp.DependencyInjection;
 
 namespace PerryQBot.QQBot
 {
-    public class GroupNewsBackgroundWorker : QuartzBackgroundWorkerBase
+    public class GroupNewsBackgroundWorker : QuartzBackgroundWorkerBase, ITransientDependency
     {
         public GroupNewsBackgroundWorker()
         {
             Trigger = TriggerBuilder.Create().WithIdentity(nameof(GroupNewsBackgroundWorker))
-                .WithCronSchedule("0 34 17 ? * *")
+                .WithCronSchedule("0 36 17 ? * *")
                 .StartNow().Build();
         }
 
