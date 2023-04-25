@@ -11,14 +11,17 @@ namespace PerryQBot.CommandHandlers
     [ExposeServices(typeof(ICommandHandler))]
     public class ViewNewsCommandHandler : CommandHandlerBase
     {
+        private const string CacheKey = "news_infoq";
         public ClearHistoryCommandHandler ClearHistoryCommandHandler { get; set; }
+        public IDistributedCache<List<SimpleNews>> NewsCache { get; set; }
         public SimpleNews News { get; set; }
 
         public override async Task ExecuteAsync(CommandContext context)
         {
             if (int.TryParse(context.Message, out int id))
             {
-                var newsSet = await GetFromInfoQWebsite();
+                var newsSet = await NewsCache.GetOrAddAsync(CacheKey, GetFromInfoQWebsite,
+                    () => new() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30) });
                 News = newsSet?.FirstOrDefault(t => t.Id == id);
                 if (News is not null)
                 {

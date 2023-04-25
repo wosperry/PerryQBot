@@ -12,12 +12,15 @@ namespace PerryQBot.CommandHandlers
     [ExposeServices(typeof(ICommandHandler))]
     public class NewsCommandHandler : CommandHandlerBase
     {
+        private const string CacheKey = "news_infoq";
         public ClearHistoryCommandHandler ClearHistoryCommandHandler { get; set; }
+        public IDistributedCache<List<SimpleNews>> NewsCache { get; set; }
         public List<SimpleNews> NewsSet { get; set; }
 
         public override async Task ExecuteAsync(CommandContext context)
         {
-            var newsSet = await GetFromInfoQWebsite();
+            NewsSet = await NewsCache.GetOrAddAsync(CacheKey, GetFromInfoQWebsite,
+                () => new() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30) });
             if (NewsSet.Any())
                 await ClearHistoryCommandHandler.ExecuteAsync(context);
         }
@@ -32,7 +35,7 @@ namespace PerryQBot.CommandHandlers
                 """));
                 IsContinueAfterHandled = true;
                 AutoResponse = false;
-                RequestMessage = "这是一段新闻，希望Mochi用猫猫的语气帮我翻译并润色，要求输出所有的新闻标题不能缺少一条，要记得换行哦，当然换行也要紧凑，因为是给群聊里面用的。你输出的时候记得在最开始说大家好，现在是猫猫新闻时间，Mochi来给大家讲新闻啦。" + str;
+                RequestMessage = "这是一段新闻，希望Mochi用猫猫的语气帮我翻译并润色，要求输出所有的新闻标题不能缺少一条，要记得换行哦。你输出的时候记得在最开始说大家好，现在是猫猫新闻时间，Mochi来给大家讲新闻啦。" + str;
             }
             else
             {
