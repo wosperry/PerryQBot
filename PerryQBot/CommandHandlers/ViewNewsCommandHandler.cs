@@ -41,7 +41,7 @@ namespace PerryQBot.CommandHandlers
                 内容：{News.Content}
                 """;
                 IsContinueAfterHandled = true;
-                RequestMessage = "这是一段新闻，我需要你帮我翻译成中文，要求内容完整，保持原格式输出" + str;
+                RequestMessage = "这是一段新闻，我需要你帮我翻译成中文，要求保持原格式输出" + str;
             }
             else
             {
