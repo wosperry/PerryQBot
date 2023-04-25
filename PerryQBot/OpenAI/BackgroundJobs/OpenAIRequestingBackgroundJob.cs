@@ -33,8 +33,8 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
         var url = new Url(new Uri(OpenAiOptions.Value.CompletionUrl))
             .WithHeader("Authorization", $"Bearer {OpenAiOptions.Value.Key}");
         try
-        { 
-            var m =  JsonConvert.SerializeObject(args.Messages);
+        {
+            var m = JsonConvert.SerializeObject(args.Messages);
             Logger.LogInformation("请求OpenAI：{m}", m);
 
             var requestContent = new AiRequestContent(args.Messages.Select(m => new OpenAiMessage(m.Role, m.Content)).ToList());
@@ -57,10 +57,14 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
                     }
                     if (args.Type == MessageReceivers.Group)
                     {
-                        var messageChain = new MessageChainBuilder()
-                            .At(args.SenderId)
-                            .Plain(message)
-                            .Build();
+                        var messageChainBuilder = new MessageChainBuilder();
+                        if (!string.IsNullOrEmpty(args.SenderId))
+                        {
+                            messageChainBuilder.At(args.SenderId);
+                        }
+
+                        messageChainBuilder.Plain(message);
+                        var messageChain = messageChainBuilder.Build();
 
                         MessageManager.SendGroupMessageAsync(args.GroupId, messageChain).Wait();
                         Logger.LogInformation("成功回复群聊【{groupName}】：{message}", args.GroupName, message);
