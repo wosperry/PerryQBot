@@ -34,7 +34,10 @@ namespace PerryQBot.CommandHandlers
                 IsContinueAfterHandled = true;
                 RequestMessage = "这是一段新闻，我需要你帮我翻译并整理出适合网页首页展示一列的标题，要求简短但包含重要信息，只需要给我最终结果，除此之外不要有任何反馈。" + str;
             }
-            ResponseMessage = "查询失败";
+            else
+            {
+                ResponseMessage = "查询失败";
+            }
 
             return base.OnMessageChainBuilding(builder);
         }
