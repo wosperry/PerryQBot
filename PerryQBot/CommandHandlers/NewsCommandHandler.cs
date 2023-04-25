@@ -29,7 +29,7 @@ namespace PerryQBot.CommandHandlers
             if (NewsSet.Count > 0)
             {
                 var str = string.Join("", NewsSet.Select(x => $"""
-                {x.Title}
+                {x.Id}. {x.Title}
                 ----
                 """));
                 IsContinueAfterHandled = true;
