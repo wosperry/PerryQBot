@@ -3,6 +3,7 @@ using Mirai.Net.Utils.Scaffolds;
 using PerryQBot.Commands;
 using Volo.Abp.Caching;
 using Volo.Abp.DependencyInjection;
+using Websocket.Client;
 
 namespace PerryQBot.CommandHandlers
 {
@@ -32,14 +33,14 @@ namespace PerryQBot.CommandHandlers
                 ----
                 """));
                 IsContinueAfterHandled = true;
+
                 RequestMessage = "这是一段新闻，希望Mochi用猫猫的语气帮我翻译并润色，要求输出所有的新闻标题不能缺少一条，要记得换行哦。你输出的时候记得在最开始说大家好，猫猫Mochi来给大家讲新闻啦。" + str;
             }
             else
             {
                 ResponseMessage = "查询失败";
             }
-
-            return base.OnMessageChainBuilding(builder);
+            return builder;
         }
 
         /// <summary>
