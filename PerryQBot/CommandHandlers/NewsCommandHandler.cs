@@ -64,7 +64,7 @@ namespace PerryQBot.CommandHandlers
             {
                 ResponseMessage = "查询失败";
             }
-            return new MessageChainBuilder();
+            return base.OnMessageChainBuilding(builder);
         }
 
         private Task<List<SimpleNews>> GetFromInfoQWebsite()
