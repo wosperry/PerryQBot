@@ -48,7 +48,7 @@ namespace PerryQBot.CommandHandlers
                 ResponseMessage = "查询失败";
             }
 
-            return base.OnMessageChainBuilding(builder);
+            return builder;
         }
 
         /// <summary>
