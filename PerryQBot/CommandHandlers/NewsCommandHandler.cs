@@ -64,18 +64,26 @@ namespace PerryQBot.CommandHandlers
             var doc = web.Load("https://www.infoq.com/news/");
 
             var newsNodes = doc.DocumentNode.SelectNodes("//*[@data-tax='news']/li");
-            var list = newsNodes.Select((node, index) => new SimpleNews
+            var list = newsNodes.Select((node, index) =>
             {
-                Id = index + 1,
-                Topic = node.SelectNodes(".//div[contains(@class,'card__topics')]/span/a[1]")
-                            .FirstOrDefault()?.InnerHtml?.Replace("\n", "").Trim(),
-                Title = node.SelectNodes(".//h3[contains(@class,'card__title')]/a[1]")
-                            .FirstOrDefault()?.InnerHtml?.Replace("\n", "").Trim(),
-                Content = node.SelectNodes(".//p[contains(@class,'card__excerpt')]")
-                            .FirstOrDefault()?.InnerHtml?.Replace("\n", "").Trim(),
-                Author = node.SelectNodes(".//div[contains(@class,'card__authors')]/span/a[1]")
-                            .FirstOrDefault()?.InnerHtml?.Replace("\n", "").Trim()
-            }).OrderBy(x => x.Id).Take(5).ToList();
+                var span = node.SelectNodes(".//span[contains(@class,'card__date')]/span")
+                                .FirstOrDefault()?.InnerHtml;
+
+                DateTime.TryParse(span.Replace("&nbsp;", ""), out DateTime t);
+                return new SimpleNews
+                {
+                    Id = index + 1,
+                    Topic = node.SelectNodes(".//div[contains(@class,'card__topics')]/span/a[1]")
+                                .FirstOrDefault()?.InnerHtml?.Replace("\n", "").Trim(),
+                    Title = node.SelectNodes(".//h3[contains(@class,'card__title')]/a[1]")
+                                .FirstOrDefault()?.InnerHtml?.Replace("\n", "").Trim(),
+                    Content = node.SelectNodes(".//p[contains(@class,'card__excerpt')]")
+                                .FirstOrDefault()?.InnerHtml?.Replace("\n", "").Trim(),
+                    Author = node.SelectNodes(".//div[contains(@class,'card__authors')]/span/a[1]")
+                                .FirstOrDefault()?.InnerHtml?.Replace("\n", "").Trim(),
+                    Time = t
+                };
+            }).OrderByDescending(x => x.Time).Take(5).ToList();
 
             return Task.FromResult(list);
         }
@@ -89,4 +97,5 @@ public class SimpleNews
     public string Title { get; set; }
     public string Content { get; set; }
     public string Author { get; set; }
+    public DateTime Time { get; set; }
 }
