@@ -29,7 +29,7 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
             // 添加预设
             if (!string.IsNullOrWhiteSpace(user.Preset))
             {
-                result.Add(new("user", user.Preset));
+                result.Add(new("system", user.Preset));
             }
             // 添加历史记录
             if (user.History.Count > 0)
