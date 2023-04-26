@@ -17,11 +17,6 @@ public class ClearHistoryCommandHandler : CommandHandlerBase
     {
         var user = await (await UserRepository.WithDetailsAsync(x => x.History)).FirstOrDefaultAsync(t => t.QQ == context.SenderId);
 
-        if (user is not null)
-        {
-            var history = user.History.OrderByDescending(x => x.Id).Take(BotOptions.Value.MaxHistory).ToList();
-            await UserRepository.UpdateAsync(user, true);
-        }
         if (user is null)
         {
             await UserRepository.InsertAsync(new User
@@ -35,7 +30,7 @@ public class ClearHistoryCommandHandler : CommandHandlerBase
         else
         {
             user.History.Clear();
-            await UserRepository.UpdateAsync(user);
+            await UserRepository.UpdateAsync(user, true);
         }
 
         ResponseMessage = "您的历史已清空";

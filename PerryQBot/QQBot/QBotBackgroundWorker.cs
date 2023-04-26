@@ -1,4 +1,5 @@
 ﻿using System.Reactive.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Mirai.Net.Data.Messages;
 using Mirai.Net.Data.Messages.Concretes;
@@ -7,9 +8,11 @@ using Mirai.Net.Sessions;
 using Mirai.Net.Sessions.Http.Managers;
 using Mirai.Net.Utils.Scaffolds;
 using PerryQBot.Commands;
+using PerryQBot.EntityFrameworkCore.Entities;
 using PerryQBot.OpenAI;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.BackgroundWorkers;
+using Volo.Abp.Domain.Repositories;
 
 namespace PerryQBot.QQBot;
 
@@ -19,6 +22,7 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
     public IOptions<MiraiBotOptions> BotOptions { get; set; }
     public IEnumerable<ICommandHandler> CommandHandlers { get; set; }
     public IOpenAIMessageManager OpenAIRequestManager { get; set; }
+    public IRepository<User> UserRepository { get; set; }
 
     public QBotBackgroundWorker(IEnumerable<ICommandHandler> commandHandlers)
     {
@@ -38,6 +42,22 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
 
     private async void OnGroupMessageReceived(GroupMessageReceiver messageReceiver)
     {
+        // 写死，检查敏感词并警告
+        try
+        {
+            await VpnMessageCheckAsync(messageReceiver.Sender.Id, messageReceiver.Sender.Name, messageReceiver.MessageChain.GetPlainMessage());
+        }
+        catch (WarningException ex)
+        {
+            var b = new MessageChainBuilder()
+                .At(messageReceiver.Sender.Id)
+                .Plain(" ")
+                .Plain(ex.Message);
+            await MessageManager.SendGroupMessageAsync(messageReceiver.GroupId, b.Build());
+
+            return;
+        }
+
         // 默认Handle到了，就结束，除非设置 IsContinueAfterHandled=true
         var commandHandler = await HandleCommandAsync(messageReceiver);
         if (commandHandler is not null && !commandHandler.IsContinueAfterHandled) return;
@@ -46,9 +66,10 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
         var isCommandContinue = commandHandler?.IsContinueAfterHandled ?? false;
         if (isAt || isCommandContinue)
         {
-            // 编辑消息链，预设和历史
             var userMessage = (commandHandler is not null) ? commandHandler.RequestMessage : messageReceiver.MessageChain.GetPlainMessage();
+
             Logger.LogInformation("{friendName}在群【{groupName}】@我：{plainText}", messageReceiver.Sender.Name, messageReceiver.GroupName, userMessage);
+            // 编辑消息链，预设和历史
             var messages = await OpenAIRequestManager.BuildUserRequestMessagesAsync(messageReceiver.Sender.Id, messageReceiver.Sender.Name, userMessage);
 
             // 入队，发请求
@@ -120,5 +141,33 @@ public class QBotBackgroundWorker : BackgroundWorkerBase
         }
 
         return null;
+    }
+
+    private async Task VpnMessageCheckAsync(string qq, string name, string message)
+    {
+        if (message.Contains("vpn", StringComparison.OrdinalIgnoreCase) ||
+            message.Contains("vpn", StringComparison.OrdinalIgnoreCase)
+            )
+        {
+            var user = await (await UserRepository.GetQueryableAsync())
+                .Where(t => t.QQ == qq).FirstOrDefaultAsync();
+            if (user is null)
+            {
+                user = new User()
+                {
+                    QQ = qq,
+                    QQNickName = name,
+                    WarnTime = 1
+                };
+                await UserRepository.InsertAsync(user, true);
+            }
+            else
+            {
+                user.WarnTime += 1;
+                await UserRepository.UpdateAsync(user, true);
+            }
+
+            throw new WarningException($"警告一次，用户{user.QQ}，已违规{user.WarnTime}次");
+        }
     }
 }

@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Mirai.Net.Data.Messages;
+using Mirai.Net.Sessions.Http.Managers;
+using Mirai.Net.Utils.Scaffolds;
 using Newtonsoft.Json;
 using PerryQBot.EntityFrameworkCore.Entities;
 using Volo.Abp.DependencyInjection;
@@ -21,11 +24,6 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
         var user = await (await UserRepository.WithDetailsAsync(x => x.History))
             .FirstOrDefaultAsync(t => t.QQ == senderId);
 
-        if (user is not null)
-        {
-            var history = user.History.OrderByDescending(x => x.Id).Take(BotOptions.Value.MaxHistory).ToList();
-            await UserRepository.UpdateAsync(user, true);
-        }
         if (user is not null)
         {
             // 添加预设
@@ -50,14 +48,16 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
         }
         else
         {
-            await UserRepository.InsertAsync(new User
+            user = new User
             {
                 QQ = senderId,
                 QQNickName = senderName,
                 History = new List<UserHistory>() { new UserHistory { Role = "user", Message = message, DateTime = DateTime.Now } },
                 Preset = ""
-            }, true);
+            };
+            await UserRepository.InsertAsync(user, true);
         }
+
         // 添加当前请求
         result.Add(new("user", message));
 
