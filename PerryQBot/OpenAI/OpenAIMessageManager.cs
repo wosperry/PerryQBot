@@ -36,7 +36,11 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
             // 添加历史记录
             if (user.History.Count > 0)
             {
-                foreach (var his in user.History.OrderBy(x => x.DateTime))
+                var items = user.History
+                    .OrderByDescending(x => x.DateTime)
+                    .Take(BotOptions.Value.MaxHistory)
+                    .OrderBy(x => x.DateTime);
+                foreach (var his in items)
                 {
                     result.Add(new(his.Role, his.Message));
                 }

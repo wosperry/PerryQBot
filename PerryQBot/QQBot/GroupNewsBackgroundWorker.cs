@@ -1,20 +1,10 @@
-﻿using System.Reflection;
-using System.Windows.Input;
-using Castle.Core.Internal;
-using Microsoft.Extensions.Hosting;
+﻿using HtmlAgilityPack;
 using Microsoft.Extensions.Options;
-using Mirai.Net.Data.Messages.Receivers;
 using Mirai.Net.Data.Messages;
-using Mirai.Net.Sessions.Http.Managers;
-using PerryQBot.Commands;
 using PerryQBot.Options;
 using Quartz;
-using Volo.Abp.BackgroundWorkers.Quartz;
-using Mirai.Net.Utils.Scaffolds;
-using HtmlAgilityPack;
-using Websocket.Client;
-using Volo.Abp.Caching;
 using Volo.Abp.BackgroundJobs;
+using Volo.Abp.BackgroundWorkers.Quartz;
 
 namespace PerryQBot.QQBot;
 
