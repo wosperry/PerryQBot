@@ -12,8 +12,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace PerryQBot.Migrations
 {
     [DbContext(typeof(QBotDbContext))]
-    [Migration("20230425123038_Init")]
-    partial class Init
+    [Migration("20230426080133_AddWarnTime")]
+    partial class AddWarnTime
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -77,6 +77,9 @@ namespace PerryQBot.Migrations
                     b.Property<string>("QQNickName")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
+
+                    b.Property<int>("WarnTime")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

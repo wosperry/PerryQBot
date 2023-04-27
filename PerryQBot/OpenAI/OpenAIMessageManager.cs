@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Mirai.Net.Data.Messages;
+using Mirai.Net.Sessions.Http.Managers;
+using Mirai.Net.Utils.Scaffolds;
 using Newtonsoft.Json;
 using PerryQBot.EntityFrameworkCore.Entities;
 using Volo.Abp.DependencyInjection;
@@ -26,34 +29,35 @@ public class OpenAIMessageManager : IOpenAIMessageManager, ITransientDependency
             // 添加预设
             if (!string.IsNullOrWhiteSpace(user.Preset))
             {
-                result.Add(new("user", user.Preset));
+                result.Add(new("system", user.Preset));
             }
             // 添加历史记录
             if (user.History.Count > 0)
             {
-                foreach (var his in user.History.OrderBy(x => x.DateTime))
+                var items = user.History
+                    .OrderByDescending(x => x.DateTime)
+                    .Take(BotOptions.Value.MaxHistory)
+                    .OrderBy(x => x.DateTime);
+                foreach (var his in items)
                 {
                     result.Add(new(his.Role, his.Message));
                 }
             }
 
             user.History.Add(new UserHistory { Role = "user", Message = message, DateTime = DateTime.Now });
-            if (user.History.Count > BotOptions.Value.MaxHistory)
-            {
-                user.History.Remove(user.History.OrderBy(x => x.DateTime).First());
-            }
-            await UserRepository.UpdateAsync(user);
         }
         else
         {
-            await UserRepository.InsertAsync(new User
+            user = new User
             {
                 QQ = senderId,
                 QQNickName = senderName,
                 History = new List<UserHistory>() { new UserHistory { Role = "user", Message = message, DateTime = DateTime.Now } },
                 Preset = ""
-            }, true);
+            };
+            await UserRepository.InsertAsync(user, true);
         }
+
         // 添加当前请求
         result.Add(new("user", message));
 

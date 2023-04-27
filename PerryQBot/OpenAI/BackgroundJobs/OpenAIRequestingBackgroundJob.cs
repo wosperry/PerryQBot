@@ -50,23 +50,35 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
 
                 lock (_lock)
                 {
+                    var messageChainBuilder = new MessageChainBuilder();
+
+                    if (message.Contains("(=^･^=)"))
+                    {
+                        message = message.Replace("(=^･^=)", "");
+                        messageChainBuilder.ImageFromUrl("https://wosperry.com/lsky/img/2023/04/26/64480d93a17c9.png");
+                    }
+                    if (message.Contains("咕噜"))
+                    {
+                        message = message.Replace("咕噜", "");
+                        messageChainBuilder.ImageFromUrl("https://wosperry.com/lsky/img/2023/04/26/64481b95c56e7.png");
+                    }
+
                     if (args.Type == MessageReceivers.Friend)
                     {
-                        MessageManager.SendFriendMessageAsync(args.SenderId, new PlainMessage(message)).Wait();
+                        messageChainBuilder.Plain(message);
+                        MessageManager.SendFriendMessageAsync(args.SenderId, messageChainBuilder.Build()).Wait();
                         Logger.LogInformation("成功回复QQ好友【{friendName}】: {message}", args.SenderName, message);
                     }
                     if (args.Type == MessageReceivers.Group)
                     {
-                        var messageChainBuilder = new MessageChainBuilder();
                         if (!string.IsNullOrEmpty(args.SenderId))
                         {
-                            messageChainBuilder.At(args.SenderId);
+                            messageChainBuilder.At(args.SenderId).Plain(" ");
                         }
 
                         messageChainBuilder.Plain(message);
-                        var messageChain = messageChainBuilder.Build();
 
-                        MessageManager.SendGroupMessageAsync(args.GroupId, messageChain).Wait();
+                        MessageManager.SendGroupMessageAsync(args.GroupId, messageChainBuilder.Build()).Wait();
                         Logger.LogInformation("成功回复群聊【{groupName}】：{message}", args.GroupName, message);
                     }
                 }
@@ -106,6 +118,12 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
         var userRepository = uow.ServiceProvider.GetService<IRepository<User>>();
         var user = await (await userRepository.WithDetailsAsync(x => x.History))
             .FirstOrDefaultAsync(t => t.QQ == qq);
+
+        if (user is not null)
+        {
+            var history = user.History.OrderByDescending(x => x.Id).Take(BotOptions.Value.MaxHistory).ToList();
+            await userRepository.UpdateAsync(user, true);
+        }
         user?.History.Add(new()
         {
             DateTime = DateTime.Now,

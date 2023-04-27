@@ -30,7 +30,7 @@ public class ClearHistoryCommandHandler : CommandHandlerBase
         else
         {
             user.History.Clear();
-            await UserRepository.UpdateAsync(user);
+            await UserRepository.UpdateAsync(user, true);
         }
 
         ResponseMessage = "您的历史已清空";
