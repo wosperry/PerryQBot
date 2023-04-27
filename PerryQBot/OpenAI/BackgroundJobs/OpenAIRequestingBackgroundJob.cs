@@ -119,11 +119,6 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
         var user = await (await userRepository.WithDetailsAsync(x => x.History))
             .FirstOrDefaultAsync(t => t.QQ == qq);
 
-        if (user is not null)
-        {
-            var history = user.History.OrderByDescending(x => x.Id).Take(BotOptions.Value.MaxHistory).ToList();
-            await userRepository.UpdateAsync(user, true);
-        }
         user?.History.Add(new()
         {
             DateTime = DateTime.Now,
