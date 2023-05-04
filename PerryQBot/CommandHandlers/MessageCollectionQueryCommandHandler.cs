@@ -40,8 +40,8 @@ public class MessageCollectionQueryCommandHandler : CommandHandlerBase
             ResponseMessage = "\r\n" + string.Join("-------------------",
                 result.Select(x =>
                     $"""
-                    原文：{x.Message}
-                    备注：{x.QuoteMessage}
+                    原文：{x.QuoteMessage}
+                    备注：{x.Message}
                     """));
         }
         else
