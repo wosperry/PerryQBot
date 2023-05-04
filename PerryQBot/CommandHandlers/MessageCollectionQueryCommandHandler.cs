@@ -37,7 +37,7 @@ public class MessageCollectionQueryCommandHandler : CommandHandlerBase
 
         if (result.Count > 0)
         {
-            ResponseMessage = "OK，这是您要的结果：\r\n" + string.Join("-------------------",
+            ResponseMessage = "\r\n" + string.Join("-------------------",
                 result.Select(x =>
                     $"""
                     原文：{x.Message}
