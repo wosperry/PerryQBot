@@ -64,7 +64,7 @@ public class OpenAIRequestingBackgroundJob : BackgroundJob<OpenAIRequestingBackg
                     }
                     if (message.Contains("不是很懂"))
                     {
-                        messageChainBuilder.ImageFromUrl("https://wosperry.com/lsky/img/2023/05/04/6453513646126.gif");
+                        messageChainBuilder.ImageFromUrl("https://wosperry.com/lsky/img/2023/05/04/645353dbee28b.png");
                     }
 
                     if (args.Type == MessageReceivers.Friend)
