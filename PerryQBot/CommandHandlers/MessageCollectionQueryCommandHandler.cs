@@ -40,11 +40,8 @@ public class MessageCollectionQueryCommandHandler : CommandHandlerBase
             ResponseMessage = "OK，这是您要的结果：\r\n" + string.Join("-------------------",
                 result.Select(x =>
                     $"""
-
-                    {x.UserName}({x.UserQQ}) 收藏于 [{x.DateTime:yyyy-MM-dd HH:mm:ss}]
-                    内容：{x.Message}
-                    引用：{x.QuoteMessage}
-
+                    原文：{x.Message}
+                    备注：{x.QuoteMessage}
                     """));
         }
         else
